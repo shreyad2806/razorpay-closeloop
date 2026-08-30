@@ -11,8 +11,10 @@ from app.schemas.enums import (
     Currency,
     ExceptionType,
     FeeType,
+    MatchStatus,
     MissingRecordSubtype,
     PaymentStatus,
+    ReconciliationStatus,
     RefundStatus,
     ResolutionType,
     RiskCategory,
@@ -28,12 +30,19 @@ from app.schemas.financial import (
     Settlement,
     Tax,
 )
+from app.schemas.reconciliation import (
+    CalculationBreakdown,
+    MatchingRule,
+    ReconciliationResult,
+)
 
 __all__ = [
     # Enums
     "ExceptionType",
     "ResolutionType",
     "RiskCategory",
+    "MatchStatus",
+    "ReconciliationStatus",
     "MissingRecordSubtype",
     "PaymentStatus",
     "SettlementStatus",
@@ -53,6 +62,10 @@ __all__ = [
     # Case and ground truth
     "Case",
     "GroundTruth",
+    # Reconciliation
+    "ReconciliationResult",
+    "CalculationBreakdown",
+    "MatchingRule",
     # Config
     "GeneratorConfig",
     "ScenarioDistribution",
