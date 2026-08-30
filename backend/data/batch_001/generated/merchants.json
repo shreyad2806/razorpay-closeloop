@@ -1,0 +1,352 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Solutions",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-05-24T23:52:32"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Store",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-02-13T08:14:14"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Global Labs",
+    "reference": "MER-GLO-003",
+    "currency": "INR",
+    "created_at": "2025-01-20T21:39:43"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Services",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-03-23T22:17:53"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Solutions",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-01-19T04:39:05"
+  },
+  {
+    "merchant_id": "MER-0006",
+    "name": "Elite Store",
+    "reference": "MER-ELI-006",
+    "currency": "INR",
+    "created_at": "2025-04-09T03:07:34"
+  },
+  {
+    "merchant_id": "MER-0007",
+    "name": "Tech Goods",
+    "reference": "MER-TEC-007",
+    "currency": "INR",
+    "created_at": "2025-02-08T14:39:02"
+  },
+  {
+    "merchant_id": "MER-0008",
+    "name": "Crystal Store",
+    "reference": "MER-CRY-008",
+    "currency": "INR",
+    "created_at": "2025-03-29T05:27:57"
+  },
+  {
+    "merchant_id": "MER-0009",
+    "name": "Blue Digital",
+    "reference": "MER-BLU-009",
+    "currency": "INR",
+    "created_at": "2025-06-18T19:13:59"
+  },
+  {
+    "merchant_id": "MER-0010",
+    "name": "Tech Digital",
+    "reference": "MER-TEC-010",
+    "currency": "INR",
+    "created_at": "2025-06-06T11:23:23"
+  },
+  {
+    "merchant_id": "MER-0011",
+    "name": "Prime Labs",
+    "reference": "MER-PRI-011",
+    "currency": "INR",
+    "created_at": "2025-03-24T01:31:33"
+  },
+  {
+    "merchant_id": "MER-0012",
+    "name": "Red Mart",
+    "reference": "MER-RED-012",
+    "currency": "INR",
+    "created_at": "2025-01-31T04:35:13"
+  },
+  {
+    "merchant_id": "MER-0013",
+    "name": "Elite Digital",
+    "reference": "MER-ELI-013",
+    "currency": "INR",
+    "created_at": "2025-03-07T08:38:39"
+  },
+  {
+    "merchant_id": "MER-0014",
+    "name": "Smart Enterprises",
+    "reference": "MER-SMA-014",
+    "currency": "INR",
+    "created_at": "2025-03-15T18:35:22"
+  },
+  {
+    "merchant_id": "MER-0015",
+    "name": "Smart Shop",
+    "reference": "MER-SMA-015",
+    "currency": "INR",
+    "created_at": "2025-06-14T13:36:36"
+  },
+  {
+    "merchant_id": "MER-0016",
+    "name": "Silver Services",
+    "reference": "MER-SIL-016",
+    "currency": "INR",
+    "created_at": "2025-02-21T08:45:23"
+  },
+  {
+    "merchant_id": "MER-0017",
+    "name": "Fresh Labs",
+    "reference": "MER-FRE-017",
+    "currency": "INR",
+    "created_at": "2025-03-31T05:04:30"
+  },
+  {
+    "merchant_id": "MER-0018",
+    "name": "Smart Hub",
+    "reference": "MER-SMA-018",
+    "currency": "INR",
+    "created_at": "2025-01-16T07:14:07"
+  },
+  {
+    "merchant_id": "MER-0019",
+    "name": "Green Co",
+    "reference": "MER-GRE-019",
+    "currency": "INR",
+    "created_at": "2025-05-01T02:30:39"
+  },
+  {
+    "merchant_id": "MER-0020",
+    "name": "Silver Services",
+    "reference": "MER-SIL-020",
+    "currency": "INR",
+    "created_at": "2025-02-07T08:07:47"
+  },
+  {
+    "merchant_id": "MER-0021",
+    "name": "Quick Solutions",
+    "reference": "MER-QUI-021",
+    "currency": "INR",
+    "created_at": "2025-05-09T09:42:37"
+  },
+  {
+    "merchant_id": "MER-0022",
+    "name": "Star Digital",
+    "reference": "MER-STA-022",
+    "currency": "INR",
+    "created_at": "2025-02-26T04:38:44"
+  },
+  {
+    "merchant_id": "MER-0023",
+    "name": "Quick Store",
+    "reference": "MER-QUI-023",
+    "currency": "INR",
+    "created_at": "2025-06-18T06:06:23"
+  },
+  {
+    "merchant_id": "MER-0024",
+    "name": "Smart Hub",
+    "reference": "MER-SMA-024",
+    "currency": "INR",
+    "created_at": "2025-02-23T23:27:03"
+  },
+  {
+    "merchant_id": "MER-0025",
+    "name": "Diamond Co",
+    "reference": "MER-DIA-025",
+    "currency": "INR",
+    "created_at": "2025-06-11T23:14:10"
+  },
+  {
+    "merchant_id": "MER-0026",
+    "name": "Silver Trading",
+    "reference": "MER-SIL-026",
+    "currency": "INR",
+    "created_at": "2025-03-13T21:10:06"
+  },
+  {
+    "merchant_id": "MER-0027",
+    "name": "Silver Store",
+    "reference": "MER-SIL-027",
+    "currency": "INR",
+    "created_at": "2025-05-11T03:14:33"
+  },
+  {
+    "merchant_id": "MER-0028",
+    "name": "Blue Labs",
+    "reference": "MER-BLU-028",
+    "currency": "INR",
+    "created_at": "2025-05-13T17:33:46"
+  },
+  {
+    "merchant_id": "MER-0029",
+    "name": "Quick Services",
+    "reference": "MER-QUI-029",
+    "currency": "INR",
+    "created_at": "2025-05-04T07:12:47"
+  },
+  {
+    "merchant_id": "MER-0030",
+    "name": "Prime Goods",
+    "reference": "MER-PRI-030",
+    "currency": "INR",
+    "created_at": "2025-05-22T13:58:37"
+  },
+  {
+    "merchant_id": "MER-0031",
+    "name": "Star Trading",
+    "reference": "MER-STA-031",
+    "currency": "INR",
+    "created_at": "2025-03-31T18:17:19"
+  },
+  {
+    "merchant_id": "MER-0032",
+    "name": "Gold Mart",
+    "reference": "MER-GOL-032",
+    "currency": "INR",
+    "created_at": "2025-06-29T16:38:07"
+  },
+  {
+    "merchant_id": "MER-0033",
+    "name": "Star Co",
+    "reference": "MER-STA-033",
+    "currency": "INR",
+    "created_at": "2025-03-04T23:16:01"
+  },
+  {
+    "merchant_id": "MER-0034",
+    "name": "Fresh Store",
+    "reference": "MER-FRE-034",
+    "currency": "INR",
+    "created_at": "2025-06-09T13:52:39"
+  },
+  {
+    "merchant_id": "MER-0035",
+    "name": "Fresh Digital",
+    "reference": "MER-FRE-035",
+    "currency": "INR",
+    "created_at": "2025-03-03T06:07:03"
+  },
+  {
+    "merchant_id": "MER-0036",
+    "name": "Gold Mart",
+    "reference": "MER-GOL-036",
+    "currency": "INR",
+    "created_at": "2025-01-13T20:27:40"
+  },
+  {
+    "merchant_id": "MER-0037",
+    "name": "Elite Services",
+    "reference": "MER-ELI-037",
+    "currency": "INR",
+    "created_at": "2025-06-20T04:10:08"
+  },
+  {
+    "merchant_id": "MER-0038",
+    "name": "Red Store",
+    "reference": "MER-RED-038",
+    "currency": "INR",
+    "created_at": "2025-05-08T06:33:56"
+  },
+  {
+    "merchant_id": "MER-0039",
+    "name": "Royal Hub",
+    "reference": "MER-ROY-039",
+    "currency": "INR",
+    "created_at": "2025-06-21T18:55:20"
+  },
+  {
+    "merchant_id": "MER-0040",
+    "name": "Diamond Trading",
+    "reference": "MER-DIA-040",
+    "currency": "INR",
+    "created_at": "2025-02-21T10:25:51"
+  },
+  {
+    "merchant_id": "MER-0041",
+    "name": "Global Store",
+    "reference": "MER-GLO-041",
+    "currency": "INR",
+    "created_at": "2025-05-25T15:54:01"
+  },
+  {
+    "merchant_id": "MER-0042",
+    "name": "Blue Labs",
+    "reference": "MER-BLU-042",
+    "currency": "INR",
+    "created_at": "2025-04-24T12:22:05"
+  },
+  {
+    "merchant_id": "MER-0043",
+    "name": "Crystal Services",
+    "reference": "MER-CRY-043",
+    "currency": "INR",
+    "created_at": "2025-03-19T13:20:28"
+  },
+  {
+    "merchant_id": "MER-0044",
+    "name": "Silver Store",
+    "reference": "MER-SIL-044",
+    "currency": "INR",
+    "created_at": "2025-01-27T20:40:21"
+  },
+  {
+    "merchant_id": "MER-0045",
+    "name": "Royal Enterprises",
+    "reference": "MER-ROY-045",
+    "currency": "INR",
+    "created_at": "2025-05-27T18:12:00"
+  },
+  {
+    "merchant_id": "MER-0046",
+    "name": "Fresh Enterprises",
+    "reference": "MER-FRE-046",
+    "currency": "INR",
+    "created_at": "2025-01-30T16:17:31"
+  },
+  {
+    "merchant_id": "MER-0047",
+    "name": "Prime Digital",
+    "reference": "MER-PRI-047",
+    "currency": "INR",
+    "created_at": "2025-05-13T03:16:20"
+  },
+  {
+    "merchant_id": "MER-0048",
+    "name": "Crystal Services",
+    "reference": "MER-CRY-048",
+    "currency": "INR",
+    "created_at": "2025-01-13T08:03:38"
+  },
+  {
+    "merchant_id": "MER-0049",
+    "name": "Gold Hub",
+    "reference": "MER-GOL-049",
+    "currency": "INR",
+    "created_at": "2025-04-26T17:02:28"
+  },
+  {
+    "merchant_id": "MER-0050",
+    "name": "Diamond Goods",
+    "reference": "MER-DIA-050",
+    "currency": "INR",
+    "created_at": "2025-02-18T19:40:28"
+  }
+]

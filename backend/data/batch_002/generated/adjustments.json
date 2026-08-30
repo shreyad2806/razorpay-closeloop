@@ -1,0 +1,2165 @@
+[
+  {
+    "adjustment_id": "ADJ-000001",
+    "payment_id": "PAY-000001",
+    "case_id": null,
+    "amount": 162045,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000002",
+    "payment_id": "PAY-000008",
+    "case_id": null,
+    "amount": 170287,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000003",
+    "payment_id": "PAY-000011",
+    "case_id": null,
+    "amount": 184497,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000004",
+    "payment_id": "PAY-000024",
+    "case_id": null,
+    "amount": 297235,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000005",
+    "payment_id": "PAY-000034",
+    "case_id": null,
+    "amount": 98675,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000006",
+    "payment_id": "PAY-000061",
+    "case_id": null,
+    "amount": 257685,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000007",
+    "payment_id": "PAY-000062",
+    "case_id": null,
+    "amount": 78146,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000008",
+    "payment_id": "PAY-000069",
+    "case_id": null,
+    "amount": 79272,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000009",
+    "payment_id": "PAY-000071",
+    "case_id": null,
+    "amount": 16395,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000010",
+    "payment_id": "PAY-000083",
+    "case_id": null,
+    "amount": 25530,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000011",
+    "payment_id": "PAY-000087",
+    "case_id": null,
+    "amount": -208654,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000012",
+    "payment_id": "PAY-000096",
+    "case_id": null,
+    "amount": 67560,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000013",
+    "payment_id": "PAY-000099",
+    "case_id": null,
+    "amount": -135041,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000014",
+    "payment_id": "PAY-000106",
+    "case_id": null,
+    "amount": 1192,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000015",
+    "payment_id": "PAY-000110",
+    "case_id": null,
+    "amount": -161554,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000016",
+    "payment_id": "PAY-000126",
+    "case_id": null,
+    "amount": 61971,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000017",
+    "payment_id": "PAY-000129",
+    "case_id": null,
+    "amount": 90424,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000018",
+    "payment_id": "PAY-000141",
+    "case_id": null,
+    "amount": -300766,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000019",
+    "payment_id": "PAY-000163",
+    "case_id": null,
+    "amount": 51744,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000020",
+    "payment_id": "PAY-000174",
+    "case_id": null,
+    "amount": -62844,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000021",
+    "payment_id": "PAY-000192",
+    "case_id": null,
+    "amount": 101040,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000022",
+    "payment_id": "PAY-000197",
+    "case_id": null,
+    "amount": -46933,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000023",
+    "payment_id": "PAY-000258",
+    "case_id": null,
+    "amount": 202759,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000024",
+    "payment_id": "PAY-000266",
+    "case_id": null,
+    "amount": -67942,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000025",
+    "payment_id": "PAY-000279",
+    "case_id": null,
+    "amount": 72751,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000026",
+    "payment_id": "PAY-000282",
+    "case_id": null,
+    "amount": 208438,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000027",
+    "payment_id": "PAY-000303",
+    "case_id": null,
+    "amount": 277437,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000028",
+    "payment_id": "PAY-000306",
+    "case_id": null,
+    "amount": 165467,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000029",
+    "payment_id": "PAY-000320",
+    "case_id": null,
+    "amount": 399598,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000030",
+    "payment_id": "PAY-000356",
+    "case_id": null,
+    "amount": 135208,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000031",
+    "payment_id": "PAY-000360",
+    "case_id": null,
+    "amount": -79897,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000032",
+    "payment_id": "PAY-000376",
+    "case_id": null,
+    "amount": 1480,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000033",
+    "payment_id": "PAY-000384",
+    "case_id": null,
+    "amount": 13418,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000034",
+    "payment_id": "PAY-000387",
+    "case_id": null,
+    "amount": 112548,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000035",
+    "payment_id": "PAY-000393",
+    "case_id": null,
+    "amount": 20214,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000036",
+    "payment_id": "PAY-000400",
+    "case_id": null,
+    "amount": 421287,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000037",
+    "payment_id": "PAY-000403",
+    "case_id": null,
+    "amount": 183054,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000038",
+    "payment_id": "PAY-000414",
+    "case_id": null,
+    "amount": 290759,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000039",
+    "payment_id": "PAY-000417",
+    "case_id": null,
+    "amount": 103275,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000040",
+    "payment_id": "PAY-000419",
+    "case_id": null,
+    "amount": -15540,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000041",
+    "payment_id": "PAY-000424",
+    "case_id": null,
+    "amount": 277345,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000042",
+    "payment_id": "PAY-000434",
+    "case_id": null,
+    "amount": -129159,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000043",
+    "payment_id": "PAY-000473",
+    "case_id": null,
+    "amount": 68103,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000044",
+    "payment_id": "PAY-000480",
+    "case_id": null,
+    "amount": 113662,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000045",
+    "payment_id": "PAY-000487",
+    "case_id": null,
+    "amount": 141414,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000046",
+    "payment_id": "PAY-000492",
+    "case_id": null,
+    "amount": -122101,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000047",
+    "payment_id": "PAY-000505",
+    "case_id": null,
+    "amount": 102205,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000048",
+    "payment_id": "PAY-000512",
+    "case_id": null,
+    "amount": 249917,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000049",
+    "payment_id": "PAY-000526",
+    "case_id": null,
+    "amount": 109454,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000050",
+    "payment_id": "PAY-000534",
+    "case_id": null,
+    "amount": 127939,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000051",
+    "payment_id": "PAY-000535",
+    "case_id": null,
+    "amount": 119157,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000052",
+    "payment_id": "PAY-000541",
+    "case_id": null,
+    "amount": 160901,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000053",
+    "payment_id": "PAY-000559",
+    "case_id": null,
+    "amount": -242641,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000054",
+    "payment_id": "PAY-000569",
+    "case_id": null,
+    "amount": 242863,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000055",
+    "payment_id": "PAY-000581",
+    "case_id": null,
+    "amount": 194059,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000056",
+    "payment_id": "PAY-000582",
+    "case_id": null,
+    "amount": 24355,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000057",
+    "payment_id": "PAY-000586",
+    "case_id": null,
+    "amount": -72421,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000058",
+    "payment_id": "PAY-000602",
+    "case_id": null,
+    "amount": 144423,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000059",
+    "payment_id": "PAY-000608",
+    "case_id": null,
+    "amount": 298221,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000060",
+    "payment_id": "PAY-000609",
+    "case_id": null,
+    "amount": 96400,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000061",
+    "payment_id": "PAY-000612",
+    "case_id": null,
+    "amount": 186173,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000062",
+    "payment_id": "PAY-000623",
+    "case_id": null,
+    "amount": -392583,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000063",
+    "payment_id": "PAY-000642",
+    "case_id": null,
+    "amount": -158770,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000064",
+    "payment_id": "PAY-000648",
+    "case_id": null,
+    "amount": 184996,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000065",
+    "payment_id": "PAY-000650",
+    "case_id": null,
+    "amount": 63249,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000066",
+    "payment_id": "PAY-000666",
+    "case_id": null,
+    "amount": 77537,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000067",
+    "payment_id": "PAY-000673",
+    "case_id": null,
+    "amount": 78343,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000068",
+    "payment_id": "PAY-000677",
+    "case_id": null,
+    "amount": 349675,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000069",
+    "payment_id": "PAY-000681",
+    "case_id": null,
+    "amount": -66688,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000070",
+    "payment_id": "PAY-000683",
+    "case_id": null,
+    "amount": 300866,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000071",
+    "payment_id": "PAY-000694",
+    "case_id": null,
+    "amount": -185278,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000072",
+    "payment_id": "PAY-000722",
+    "case_id": null,
+    "amount": -207940,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000073",
+    "payment_id": "PAY-000724",
+    "case_id": null,
+    "amount": 57876,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000074",
+    "payment_id": "PAY-000738",
+    "case_id": null,
+    "amount": -57000,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000075",
+    "payment_id": "PAY-000763",
+    "case_id": null,
+    "amount": 348100,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000076",
+    "payment_id": "PAY-000766",
+    "case_id": null,
+    "amount": 44209,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000077",
+    "payment_id": "PAY-000770",
+    "case_id": null,
+    "amount": -348652,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000078",
+    "payment_id": "PAY-000775",
+    "case_id": null,
+    "amount": 171492,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000079",
+    "payment_id": "PAY-000779",
+    "case_id": null,
+    "amount": 165295,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000080",
+    "payment_id": "PAY-000811",
+    "case_id": null,
+    "amount": -102103,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000081",
+    "payment_id": "PAY-000818",
+    "case_id": null,
+    "amount": -45912,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000082",
+    "payment_id": "PAY-000823",
+    "case_id": null,
+    "amount": 262965,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000083",
+    "payment_id": "PAY-000824",
+    "case_id": null,
+    "amount": -280362,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000084",
+    "payment_id": "PAY-000829",
+    "case_id": null,
+    "amount": 169674,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000085",
+    "payment_id": "PAY-000832",
+    "case_id": null,
+    "amount": -368669,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000086",
+    "payment_id": "PAY-000856",
+    "case_id": null,
+    "amount": 241168,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000087",
+    "payment_id": "PAY-000858",
+    "case_id": null,
+    "amount": -161107,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000088",
+    "payment_id": "PAY-000861",
+    "case_id": null,
+    "amount": 14801,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000089",
+    "payment_id": "PAY-000871",
+    "case_id": null,
+    "amount": 243629,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000090",
+    "payment_id": "PAY-000877",
+    "case_id": null,
+    "amount": 252562,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000091",
+    "payment_id": "PAY-000883",
+    "case_id": null,
+    "amount": 63363,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000092",
+    "payment_id": "PAY-000891",
+    "case_id": null,
+    "amount": 164389,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000093",
+    "payment_id": "PAY-000893",
+    "case_id": null,
+    "amount": 37796,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000094",
+    "payment_id": "PAY-000895",
+    "case_id": null,
+    "amount": 191711,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000095",
+    "payment_id": "PAY-000902",
+    "case_id": null,
+    "amount": -156439,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000096",
+    "payment_id": "PAY-000913",
+    "case_id": null,
+    "amount": 67847,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000097",
+    "payment_id": "PAY-000921",
+    "case_id": null,
+    "amount": 42626,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000098",
+    "payment_id": "PAY-000926",
+    "case_id": null,
+    "amount": -304502,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000099",
+    "payment_id": "PAY-000930",
+    "case_id": null,
+    "amount": 271707,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000100",
+    "payment_id": "PAY-000938",
+    "case_id": null,
+    "amount": -5689,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000101",
+    "payment_id": "PAY-000943",
+    "case_id": null,
+    "amount": -172973,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000102",
+    "payment_id": "PAY-000944",
+    "case_id": null,
+    "amount": 21199,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000103",
+    "payment_id": "PAY-000951",
+    "case_id": null,
+    "amount": 127001,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000104",
+    "payment_id": "PAY-000961",
+    "case_id": null,
+    "amount": 182920,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000105",
+    "payment_id": "PAY-000964",
+    "case_id": null,
+    "amount": -181786,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000106",
+    "payment_id": "PAY-000970",
+    "case_id": null,
+    "amount": 137025,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000107",
+    "payment_id": "PAY-000977",
+    "case_id": null,
+    "amount": 381486,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000108",
+    "payment_id": "PAY-000991",
+    "case_id": null,
+    "amount": 11455,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000109",
+    "payment_id": "PAY-001029",
+    "case_id": null,
+    "amount": 394395,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000110",
+    "payment_id": "PAY-001071",
+    "case_id": null,
+    "amount": 162987,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000111",
+    "payment_id": "PAY-001087",
+    "case_id": null,
+    "amount": 317086,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000112",
+    "payment_id": "PAY-001097",
+    "case_id": null,
+    "amount": 373230,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000113",
+    "payment_id": "PAY-001105",
+    "case_id": null,
+    "amount": 167832,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000114",
+    "payment_id": "PAY-001112",
+    "case_id": null,
+    "amount": 210805,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000115",
+    "payment_id": "PAY-001118",
+    "case_id": null,
+    "amount": 296664,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000116",
+    "payment_id": "PAY-001137",
+    "case_id": null,
+    "amount": 38942,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000117",
+    "payment_id": "PAY-001138",
+    "case_id": null,
+    "amount": 2435,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000118",
+    "payment_id": "PAY-001149",
+    "case_id": null,
+    "amount": 50191,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000119",
+    "payment_id": "PAY-001155",
+    "case_id": null,
+    "amount": -209605,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000120",
+    "payment_id": "PAY-001160",
+    "case_id": null,
+    "amount": 80865,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000121",
+    "payment_id": "PAY-001176",
+    "case_id": null,
+    "amount": 12370,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000122",
+    "payment_id": "PAY-001194",
+    "case_id": null,
+    "amount": 16810,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000123",
+    "payment_id": "PAY-001221",
+    "case_id": null,
+    "amount": 132565,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000124",
+    "payment_id": "PAY-001246",
+    "case_id": null,
+    "amount": 206390,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000125",
+    "payment_id": "PAY-001261",
+    "case_id": null,
+    "amount": -235340,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000126",
+    "payment_id": "PAY-001268",
+    "case_id": null,
+    "amount": 172698,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000127",
+    "payment_id": "PAY-001270",
+    "case_id": null,
+    "amount": -207046,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000128",
+    "payment_id": "PAY-001272",
+    "case_id": null,
+    "amount": 457271,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000129",
+    "payment_id": "PAY-001291",
+    "case_id": null,
+    "amount": 119091,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000130",
+    "payment_id": "PAY-001294",
+    "case_id": null,
+    "amount": -25279,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000131",
+    "payment_id": "PAY-001295",
+    "case_id": null,
+    "amount": -304286,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000132",
+    "payment_id": "PAY-001307",
+    "case_id": null,
+    "amount": 21639,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000133",
+    "payment_id": "PAY-001318",
+    "case_id": null,
+    "amount": 12995,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000134",
+    "payment_id": "PAY-001319",
+    "case_id": null,
+    "amount": -90837,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000135",
+    "payment_id": "PAY-001335",
+    "case_id": null,
+    "amount": 101491,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000136",
+    "payment_id": "PAY-001336",
+    "case_id": null,
+    "amount": 189135,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000137",
+    "payment_id": "PAY-001339",
+    "case_id": null,
+    "amount": 238931,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000138",
+    "payment_id": "PAY-001342",
+    "case_id": null,
+    "amount": -219557,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000139",
+    "payment_id": "PAY-001344",
+    "case_id": null,
+    "amount": -98260,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000140",
+    "payment_id": "PAY-001355",
+    "case_id": null,
+    "amount": 63965,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000141",
+    "payment_id": "PAY-001361",
+    "case_id": null,
+    "amount": 166539,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000142",
+    "payment_id": "PAY-001362",
+    "case_id": null,
+    "amount": 32101,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000143",
+    "payment_id": "PAY-001373",
+    "case_id": null,
+    "amount": 79808,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000144",
+    "payment_id": "PAY-001375",
+    "case_id": null,
+    "amount": -317933,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000145",
+    "payment_id": "PAY-001397",
+    "case_id": null,
+    "amount": -106175,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000146",
+    "payment_id": "PAY-001400",
+    "case_id": null,
+    "amount": 310407,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000147",
+    "payment_id": "PAY-001426",
+    "case_id": null,
+    "amount": -93590,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000148",
+    "payment_id": "PAY-001441",
+    "case_id": null,
+    "amount": 269437,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000149",
+    "payment_id": "PAY-001447",
+    "case_id": null,
+    "amount": -35144,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000150",
+    "payment_id": "PAY-001453",
+    "case_id": null,
+    "amount": 39211,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000151",
+    "payment_id": "PAY-001456",
+    "case_id": null,
+    "amount": 4748,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000152",
+    "payment_id": "PAY-001465",
+    "case_id": null,
+    "amount": 62320,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000153",
+    "payment_id": "PAY-001477",
+    "case_id": null,
+    "amount": 276570,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000154",
+    "payment_id": "PAY-001483",
+    "case_id": null,
+    "amount": 111992,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000155",
+    "payment_id": "PAY-001501",
+    "case_id": null,
+    "amount": 200375,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000156",
+    "payment_id": "PAY-001509",
+    "case_id": null,
+    "amount": 132363,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000157",
+    "payment_id": "PAY-001515",
+    "case_id": null,
+    "amount": 93192,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000158",
+    "payment_id": "PAY-001523",
+    "case_id": null,
+    "amount": 375519,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000159",
+    "payment_id": "PAY-001563",
+    "case_id": null,
+    "amount": 144736,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000160",
+    "payment_id": "PAY-001576",
+    "case_id": null,
+    "amount": 212644,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000161",
+    "payment_id": "PAY-001579",
+    "case_id": null,
+    "amount": 148515,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000162",
+    "payment_id": "PAY-001596",
+    "case_id": null,
+    "amount": -67440,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000163",
+    "payment_id": "PAY-001600",
+    "case_id": null,
+    "amount": -331732,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000164",
+    "payment_id": "PAY-001604",
+    "case_id": null,
+    "amount": 39443,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000165",
+    "payment_id": "PAY-001605",
+    "case_id": null,
+    "amount": -233341,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000166",
+    "payment_id": "PAY-001609",
+    "case_id": null,
+    "amount": 335797,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000167",
+    "payment_id": "PAY-001640",
+    "case_id": null,
+    "amount": -121631,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000168",
+    "payment_id": "PAY-001656",
+    "case_id": null,
+    "amount": -92854,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000169",
+    "payment_id": "PAY-001657",
+    "case_id": null,
+    "amount": 49492,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000170",
+    "payment_id": "PAY-001678",
+    "case_id": null,
+    "amount": -60888,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000171",
+    "payment_id": "PAY-001679",
+    "case_id": null,
+    "amount": 268475,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000172",
+    "payment_id": "PAY-001712",
+    "case_id": null,
+    "amount": 58117,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000173",
+    "payment_id": "PAY-001727",
+    "case_id": null,
+    "amount": 14921,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000174",
+    "payment_id": "PAY-001730",
+    "case_id": null,
+    "amount": 15152,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000175",
+    "payment_id": "PAY-001743",
+    "case_id": null,
+    "amount": 201956,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000176",
+    "payment_id": "PAY-001763",
+    "case_id": null,
+    "amount": 105475,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000177",
+    "payment_id": "PAY-001764",
+    "case_id": null,
+    "amount": -158066,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000178",
+    "payment_id": "PAY-001772",
+    "case_id": null,
+    "amount": 187040,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000179",
+    "payment_id": "PAY-001783",
+    "case_id": null,
+    "amount": 109369,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000180",
+    "payment_id": "PAY-001785",
+    "case_id": null,
+    "amount": 98439,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000181",
+    "payment_id": "PAY-001814",
+    "case_id": null,
+    "amount": 153780,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000182",
+    "payment_id": "PAY-001816",
+    "case_id": null,
+    "amount": 147678,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000183",
+    "payment_id": "PAY-001818",
+    "case_id": null,
+    "amount": 64434,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000184",
+    "payment_id": "PAY-001832",
+    "case_id": null,
+    "amount": -105041,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000185",
+    "payment_id": "PAY-001845",
+    "case_id": null,
+    "amount": 257803,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000186",
+    "payment_id": "PAY-001847",
+    "case_id": null,
+    "amount": 19680,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000187",
+    "payment_id": "PAY-001855",
+    "case_id": null,
+    "amount": 349947,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000188",
+    "payment_id": "PAY-001886",
+    "case_id": null,
+    "amount": 174866,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000189",
+    "payment_id": "PAY-001888",
+    "case_id": null,
+    "amount": -99742,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000190",
+    "payment_id": "PAY-001893",
+    "case_id": null,
+    "amount": 184611,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000191",
+    "payment_id": "PAY-001902",
+    "case_id": null,
+    "amount": 281544,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000192",
+    "payment_id": "PAY-001905",
+    "case_id": null,
+    "amount": 111053,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000193",
+    "payment_id": "PAY-001961",
+    "case_id": null,
+    "amount": -417308,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000194",
+    "payment_id": "PAY-001992",
+    "case_id": null,
+    "amount": 311002,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000195",
+    "payment_id": "PAY-001995",
+    "case_id": null,
+    "amount": -299341,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000196",
+    "payment_id": "PAY-001997",
+    "case_id": null,
+    "amount": -35598,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000197",
+    "payment_id": "PAY-002003",
+    "case_id": null,
+    "amount": 10543,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000198",
+    "payment_id": "PAY-002005",
+    "case_id": null,
+    "amount": 152955,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000199",
+    "payment_id": "PAY-002008",
+    "case_id": null,
+    "amount": 165078,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000200",
+    "payment_id": "PAY-002011",
+    "case_id": null,
+    "amount": -265458,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000201",
+    "payment_id": "PAY-002016",
+    "case_id": null,
+    "amount": -133412,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000202",
+    "payment_id": "PAY-002022",
+    "case_id": null,
+    "amount": 81205,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000203",
+    "payment_id": "PAY-002036",
+    "case_id": null,
+    "amount": 92095,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000204",
+    "payment_id": "PAY-002040",
+    "case_id": null,
+    "amount": 142995,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000205",
+    "payment_id": "PAY-002046",
+    "case_id": null,
+    "amount": -248587,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000206",
+    "payment_id": "PAY-002058",
+    "case_id": null,
+    "amount": -274100,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000207",
+    "payment_id": "PAY-002059",
+    "case_id": null,
+    "amount": 105431,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000208",
+    "payment_id": "PAY-002071",
+    "case_id": null,
+    "amount": 244950,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000209",
+    "payment_id": "PAY-002072",
+    "case_id": null,
+    "amount": 25949,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000210",
+    "payment_id": "PAY-002075",
+    "case_id": null,
+    "amount": 73868,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000211",
+    "payment_id": "PAY-002088",
+    "case_id": null,
+    "amount": 175056,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000212",
+    "payment_id": "PAY-002089",
+    "case_id": null,
+    "amount": 17344,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000213",
+    "payment_id": "PAY-002091",
+    "case_id": null,
+    "amount": 153269,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000214",
+    "payment_id": "PAY-002097",
+    "case_id": null,
+    "amount": 287988,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000215",
+    "payment_id": "PAY-002099",
+    "case_id": null,
+    "amount": 56732,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000216",
+    "payment_id": "PAY-002116",
+    "case_id": null,
+    "amount": 186089,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000217",
+    "payment_id": "PAY-002120",
+    "case_id": null,
+    "amount": 224082,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000218",
+    "payment_id": "PAY-002124",
+    "case_id": null,
+    "amount": -280945,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000219",
+    "payment_id": "PAY-002142",
+    "case_id": null,
+    "amount": 22904,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000220",
+    "payment_id": "PAY-002170",
+    "case_id": null,
+    "amount": 150228,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000221",
+    "payment_id": "PAY-002181",
+    "case_id": null,
+    "amount": -312670,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000222",
+    "payment_id": "PAY-002184",
+    "case_id": null,
+    "amount": 36116,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000223",
+    "payment_id": "PAY-002189",
+    "case_id": null,
+    "amount": 153596,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000224",
+    "payment_id": "PAY-002210",
+    "case_id": null,
+    "amount": 2901,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000225",
+    "payment_id": "PAY-002231",
+    "case_id": null,
+    "amount": 133169,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000226",
+    "payment_id": "PAY-002245",
+    "case_id": null,
+    "amount": -296359,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000227",
+    "payment_id": "PAY-002252",
+    "case_id": null,
+    "amount": -400741,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000228",
+    "payment_id": "PAY-002277",
+    "case_id": null,
+    "amount": 4098,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000229",
+    "payment_id": "PAY-002281",
+    "case_id": null,
+    "amount": 111078,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000230",
+    "payment_id": "PAY-002288",
+    "case_id": null,
+    "amount": -444868,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000231",
+    "payment_id": "PAY-002296",
+    "case_id": null,
+    "amount": 3210,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000232",
+    "payment_id": "PAY-002297",
+    "case_id": null,
+    "amount": -217563,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000233",
+    "payment_id": "PAY-002301",
+    "case_id": null,
+    "amount": 5462,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000234",
+    "payment_id": "PAY-002302",
+    "case_id": null,
+    "amount": 409849,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000235",
+    "payment_id": "PAY-002309",
+    "case_id": null,
+    "amount": -143832,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000236",
+    "payment_id": "PAY-002316",
+    "case_id": null,
+    "amount": 8220,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000237",
+    "payment_id": "PAY-002318",
+    "case_id": null,
+    "amount": 210465,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000238",
+    "payment_id": "PAY-002330",
+    "case_id": null,
+    "amount": 145810,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000239",
+    "payment_id": "PAY-002342",
+    "case_id": null,
+    "amount": 73208,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000240",
+    "payment_id": "PAY-002347",
+    "case_id": null,
+    "amount": -169225,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000241",
+    "payment_id": "PAY-002356",
+    "case_id": null,
+    "amount": 97342,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000242",
+    "payment_id": "PAY-002373",
+    "case_id": null,
+    "amount": 81154,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000243",
+    "payment_id": "PAY-002398",
+    "case_id": null,
+    "amount": 249716,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000244",
+    "payment_id": "PAY-002409",
+    "case_id": null,
+    "amount": 13336,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000245",
+    "payment_id": "PAY-002412",
+    "case_id": null,
+    "amount": -425476,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000246",
+    "payment_id": "PAY-002413",
+    "case_id": null,
+    "amount": 238401,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000247",
+    "payment_id": "PAY-002429",
+    "case_id": null,
+    "amount": -115245,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000248",
+    "payment_id": "PAY-002430",
+    "case_id": null,
+    "amount": -100295,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000249",
+    "payment_id": "PAY-002433",
+    "case_id": null,
+    "amount": 54301,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000250",
+    "payment_id": "PAY-002442",
+    "case_id": null,
+    "amount": 210418,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000251",
+    "payment_id": "PAY-002494",
+    "case_id": null,
+    "amount": 33900,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000252",
+    "payment_id": "PAY-002496",
+    "case_id": null,
+    "amount": 75010,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000253",
+    "payment_id": "PAY-002503",
+    "case_id": null,
+    "amount": 162940,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000254",
+    "payment_id": "PAY-002505",
+    "case_id": null,
+    "amount": 85244,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000255",
+    "payment_id": "PAY-002511",
+    "case_id": null,
+    "amount": -171973,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000256",
+    "payment_id": "PAY-002517",
+    "case_id": null,
+    "amount": 283126,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000257",
+    "payment_id": "PAY-002522",
+    "case_id": null,
+    "amount": 340978,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000258",
+    "payment_id": "PAY-002523",
+    "case_id": null,
+    "amount": -93546,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000259",
+    "payment_id": "PAY-002537",
+    "case_id": null,
+    "amount": 114861,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000260",
+    "payment_id": "PAY-002548",
+    "case_id": null,
+    "amount": -173109,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000261",
+    "payment_id": "PAY-002573",
+    "case_id": null,
+    "amount": 52847,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000262",
+    "payment_id": "PAY-002584",
+    "case_id": null,
+    "amount": 299179,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000263",
+    "payment_id": "PAY-002586",
+    "case_id": null,
+    "amount": 132165,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000264",
+    "payment_id": "PAY-002593",
+    "case_id": null,
+    "amount": 303980,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000265",
+    "payment_id": "PAY-002597",
+    "case_id": null,
+    "amount": -44683,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000266",
+    "payment_id": "PAY-002599",
+    "case_id": null,
+    "amount": 45578,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000267",
+    "payment_id": "PAY-002604",
+    "case_id": null,
+    "amount": -176469,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000268",
+    "payment_id": "PAY-002606",
+    "case_id": null,
+    "amount": 426667,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000269",
+    "payment_id": "PAY-002618",
+    "case_id": null,
+    "amount": 176512,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000270",
+    "payment_id": "PAY-002625",
+    "case_id": null,
+    "amount": -75633,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000271",
+    "payment_id": "PAY-002666",
+    "case_id": null,
+    "amount": 43412,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000272",
+    "payment_id": "PAY-002667",
+    "case_id": null,
+    "amount": 218122,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000273",
+    "payment_id": "PAY-002675",
+    "case_id": null,
+    "amount": 210904,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000274",
+    "payment_id": "PAY-002690",
+    "case_id": null,
+    "amount": 70162,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000275",
+    "payment_id": "PAY-002697",
+    "case_id": null,
+    "amount": -62547,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000276",
+    "payment_id": "PAY-002705",
+    "case_id": null,
+    "amount": 284662,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000277",
+    "payment_id": "PAY-002713",
+    "case_id": null,
+    "amount": 9029,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000278",
+    "payment_id": "PAY-002717",
+    "case_id": null,
+    "amount": 132126,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000279",
+    "payment_id": "PAY-002738",
+    "case_id": null,
+    "amount": 5798,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000280",
+    "payment_id": "PAY-002747",
+    "case_id": null,
+    "amount": 4431,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000281",
+    "payment_id": "PAY-002751",
+    "case_id": null,
+    "amount": 199531,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000282",
+    "payment_id": "PAY-002756",
+    "case_id": null,
+    "amount": 88246,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000283",
+    "payment_id": "PAY-002757",
+    "case_id": null,
+    "amount": 221674,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000284",
+    "payment_id": "PAY-002765",
+    "case_id": null,
+    "amount": 272702,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000285",
+    "payment_id": "PAY-002771",
+    "case_id": null,
+    "amount": 178440,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000286",
+    "payment_id": "PAY-002785",
+    "case_id": null,
+    "amount": 34010,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000287",
+    "payment_id": "PAY-002804",
+    "case_id": null,
+    "amount": 27894,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000288",
+    "payment_id": "PAY-002808",
+    "case_id": null,
+    "amount": 90939,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000289",
+    "payment_id": "PAY-002812",
+    "case_id": null,
+    "amount": -305221,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000290",
+    "payment_id": "PAY-002841",
+    "case_id": null,
+    "amount": 82115,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000291",
+    "payment_id": "PAY-002849",
+    "case_id": null,
+    "amount": 24003,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000292",
+    "payment_id": "PAY-002862",
+    "case_id": null,
+    "amount": 86952,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000293",
+    "payment_id": "PAY-002864",
+    "case_id": null,
+    "amount": 135175,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000294",
+    "payment_id": "PAY-002893",
+    "case_id": null,
+    "amount": 89948,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000295",
+    "payment_id": "PAY-002898",
+    "case_id": null,
+    "amount": -343031,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000296",
+    "payment_id": "PAY-002902",
+    "case_id": null,
+    "amount": 88427,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000297",
+    "payment_id": "PAY-002904",
+    "case_id": null,
+    "amount": 199264,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000298",
+    "payment_id": "PAY-002911",
+    "case_id": null,
+    "amount": -74507,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000299",
+    "payment_id": "PAY-002933",
+    "case_id": null,
+    "amount": 4077,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000300",
+    "payment_id": "PAY-002944",
+    "case_id": null,
+    "amount": 224989,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000301",
+    "payment_id": "PAY-002956",
+    "case_id": null,
+    "amount": -357325,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000302",
+    "payment_id": "PAY-002961",
+    "case_id": null,
+    "amount": 333174,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000303",
+    "payment_id": "PAY-002965",
+    "case_id": null,
+    "amount": 10139,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000304",
+    "payment_id": "PAY-002967",
+    "case_id": null,
+    "amount": 233432,
+    "adjustment_type": "CORRECTION"
+  },
+  {
+    "adjustment_id": "ADJ-000305",
+    "payment_id": "PAY-002971",
+    "case_id": null,
+    "amount": -103618,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000306",
+    "payment_id": "PAY-002982",
+    "case_id": null,
+    "amount": 334992,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000307",
+    "payment_id": "PAY-002985",
+    "case_id": null,
+    "amount": 114411,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000308",
+    "payment_id": "PAY-002996",
+    "case_id": null,
+    "amount": 142470,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000309",
+    "payment_id": "PAY-002999",
+    "case_id": null,
+    "amount": 80737,
+    "adjustment_type": "CORRECTION"
+  }
+]
