@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.pytest_cache/
+
+# Environment
+.env
+.env.local
+
+# Node/Next.js
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ML
+ml/models/
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+
+# Data
+data/generated/
+data/raw/*.csv
+data/raw/*.json
+data/raw/*.parquet
+
+# Logs
+*.log
+logs/
