@@ -94,6 +94,44 @@ from app.schemas.resolution_selection import (
     SelectionStatus,
 )
 from app.schemas.resolution_engine import ResolutionEngineResult
+from app.schemas.confidence_gate import (
+    ConfidenceGateConfig,
+    ConfidenceGateResult,
+    GateAction,
+    GateCheck,
+    RiskOverrideLevel,
+)
+from app.schemas.exposure_guard import (
+    ExposureAction,
+    ExposureBlockReason,
+    ExposureCheck,
+    ExposureGuardConfig,
+    ExposureGuardResult,
+)
+from app.schemas.evidence_guard import (
+    EvidenceAction,
+    EvidenceBlockReason,
+    EvidenceGuardCheck,
+    EvidenceGuardConfig,
+    EvidenceGuardResult,
+)
+from app.schemas.failure_fallback import (
+    DependencyFailure,
+    DependencyPolicy,
+    ErrorCategory,
+    FailureFallbackResult,
+    FailureSeverity,
+    FallbackAction,
+)
+from app.schemas.decision_matrix import (
+    AutomationDecision,
+    AutomationDecisionResult,
+    DecisionConfig,
+    GateResult,
+    GateStatus,
+    ReasonCode,
+)
+from app.schemas.guardrail_engine import GuardrailEngineResult
 
 __all__ = [
     # Enums
@@ -184,4 +222,38 @@ __all__ = [
     "ExplainabilityLevel",
     # Resolution Engine
     "ResolutionEngineResult",
+    # Confidence Gate
+    "ConfidenceGateConfig",
+    "ConfidenceGateResult",
+    "GateAction",
+    "GateCheck",
+    "RiskOverrideLevel",
+    # Exposure Guard
+    "ExposureGuardConfig",
+    "ExposureGuardResult",
+    "ExposureAction",
+    "ExposureBlockReason",
+    "ExposureCheck",
+    # Evidence Guard
+    "EvidenceGuardConfig",
+    "EvidenceGuardResult",
+    "EvidenceAction",
+    "EvidenceBlockReason",
+    "EvidenceGuardCheck",
+    # Failure Fallback
+    "DependencyPolicy",
+    "DependencyFailure",
+    "ErrorCategory",
+    "FailureSeverity",
+    "FallbackAction",
+    "FailureFallbackResult",
+    # Decision Matrix
+    "AutomationDecision",
+    "AutomationDecisionResult",
+    "DecisionConfig",
+    "GateResult",
+    "GateStatus",
+    "ReasonCode",
+    # Guardrail Engine
+    "GuardrailEngineResult",
 ]
