@@ -1,0 +1,15 @@
+{
+  "majority_class": {
+    "accuracy": 0.3728,
+    "macro_f1": 0.0543
+  },
+  "logistic_regression": {
+    "accuracy": 0.8528,
+    "macro_f1": 0.7359
+  },
+  "xgboost": {
+    "accuracy": 0.9952,
+    "macro_f1": 0.9908,
+    "weighted_f1": 0.9952
+  }
+}

@@ -48,6 +48,36 @@ from app.schemas.explanation import (
     ExplanationStatus,
 )
 from app.schemas.evidence_quality import EvidenceQualityResult, NoveltyLevel
+from app.schemas.ml_dataset import (
+    DatasetManifest,
+    DatasetSplit,
+    FeatureDefinition,
+    FeatureSchema,
+    FeatureVector,
+    LEAKED_FIELDS,
+    MLLabels,
+    MLSample,
+    SplitType,
+)
+from app.schemas.historical_case import (
+    FinancialContext,
+    HistoricalCase,
+    HistoricalEvidenceRef,
+    ResolutionOrigin,
+    ResolutionOutcome,
+)
+from app.schemas.similarity import (
+    SimilarCase,
+    SimilaritySearchResult,
+)
+from app.schemas.intelligence import (
+    ClassificationResult,
+    ExceptionIntelligence,
+    EvidenceIntelligence,
+    RecommendationStatus,
+    ResolutionCandidate,
+    SimilarCasesIntelligence,
+)
 
 __all__ = [
     # Enums
@@ -95,4 +125,30 @@ __all__ = [
     # Evidence Quality
     "EvidenceQualityResult",
     "NoveltyLevel",
+    # ML Dataset
+    "MLSample",
+    "MLLabels",
+    "FeatureVector",
+    "FeatureSchema",
+    "FeatureDefinition",
+    "DatasetSplit",
+    "DatasetManifest",
+    "SplitType",
+    "LEAKED_FIELDS",
+    # Historical Case
+    "HistoricalCase",
+    "HistoricalEvidenceRef",
+    "FinancialContext",
+    "ResolutionOutcome",
+    "ResolutionOrigin",
+    # Similarity
+    "SimilarCase",
+    "SimilaritySearchResult",
+    # Intelligence
+    "ExceptionIntelligence",
+    "ClassificationResult",
+    "EvidenceIntelligence",
+    "SimilarCasesIntelligence",
+    "ResolutionCandidate",
+    "RecommendationStatus",
 ]
