@@ -35,6 +35,19 @@ from app.schemas.reconciliation import (
     MatchingRule,
     ReconciliationResult,
 )
+from app.schemas.evidence import (
+    EvidencePackage,
+    EvidenceRecord,
+    MissingEvidence,
+    StructuralConflict,
+)
+from app.schemas.explanation import (
+    CandidateExplanation,
+    ExplainingEvent,
+    ExplanationResult,
+    ExplanationStatus,
+)
+from app.schemas.evidence_quality import EvidenceQualityResult, NoveltyLevel
 
 __all__ = [
     # Enums
@@ -69,4 +82,17 @@ __all__ = [
     # Config
     "GeneratorConfig",
     "ScenarioDistribution",
+    # Evidence
+    "EvidencePackage",
+    "EvidenceRecord",
+    "MissingEvidence",
+    "StructuralConflict",
+    # Explanation
+    "ExplanationResult",
+    "ExplanationStatus",
+    "CandidateExplanation",
+    "ExplainingEvent",
+    # Evidence Quality
+    "EvidenceQualityResult",
+    "NoveltyLevel",
 ]
