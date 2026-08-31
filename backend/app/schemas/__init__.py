@@ -132,6 +132,38 @@ from app.schemas.decision_matrix import (
     ReasonCode,
 )
 from app.schemas.guardrail_engine import GuardrailEngineResult
+from app.schemas.action_request import (
+    ActionRequest,
+    ActionRequestResult,
+    ActionStatus,
+    AuthorizationSource,
+)
+from app.schemas.outcome import (
+    HistoricalLearningRecord,
+    RewardSignal,
+    RewardType,
+    WorkflowOutcome,
+    WorkflowOutcomeRecord,
+)
+from app.schemas.verification import (
+    CheckStatus,
+    VerificationAction,
+    VerificationCheck,
+    VerificationConfig,
+    VerificationResult,
+)
+from app.schemas.agent_state import (
+    AgentState,
+    HumanApprovalStatus,
+    HumanReviewState,
+    NodeStatus,
+    RewardState,
+    RewardStatus,
+    VerificationState,
+    VerificationStatus,
+    WorkflowMetadata,
+    WorkflowStatus,
+)
 
 __all__ = [
     # Enums
@@ -256,4 +288,32 @@ __all__ = [
     "ReasonCode",
     # Guardrail Engine
     "GuardrailEngineResult",
+    # Action Request
+    "ActionRequest",
+    "ActionRequestResult",
+    "ActionStatus",
+    "AuthorizationSource",
+    # Outcome
+    "WorkflowOutcome",
+    "WorkflowOutcomeRecord",
+    "RewardSignal",
+    "RewardType",
+    "HistoricalLearningRecord",
+    # Verification
+    "VerificationAction",
+    "VerificationCheck",
+    "VerificationConfig",
+    "VerificationResult",
+    "CheckStatus",
+    # Agent State
+    "AgentState",
+    "WorkflowMetadata",
+    "WorkflowStatus",
+    "NodeStatus",
+    "HumanReviewState",
+    "HumanApprovalStatus",
+    "VerificationState",
+    "VerificationStatus",
+    "RewardState",
+    "RewardStatus",
 ]
