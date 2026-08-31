@@ -78,6 +78,22 @@ from app.schemas.intelligence import (
     ResolutionCandidate,
     SimilarCasesIntelligence,
 )
+from app.schemas.resolution_candidate import (
+    CandidateGenerationResult,
+    CandidateRanking,
+    CandidateSource,
+    FinancialAdjustment,
+    ResolutionProposal,
+)
+from app.schemas.candidate_scoring import CandidateScore, ScoringConfig
+from app.schemas.resolution_selection import (
+    ExplainabilityDetail,
+    ExplainabilityLevel,
+    SelectionConfig,
+    SelectionResult,
+    SelectionStatus,
+)
+from app.schemas.resolution_engine import ResolutionEngineResult
 
 __all__ = [
     # Enums
@@ -151,4 +167,21 @@ __all__ = [
     "SimilarCasesIntelligence",
     "ResolutionCandidate",
     "RecommendationStatus",
+    # Resolution Candidates
+    "ResolutionProposal",
+    "FinancialAdjustment",
+    "CandidateRanking",
+    "CandidateSource",
+    "CandidateGenerationResult",
+    # Candidate Scoring
+    "CandidateScore",
+    "ScoringConfig",
+    # Resolution Selection
+    "SelectionResult",
+    "SelectionStatus",
+    "SelectionConfig",
+    "ExplainabilityDetail",
+    "ExplainabilityLevel",
+    # Resolution Engine
+    "ResolutionEngineResult",
 ]
