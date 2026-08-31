@@ -135,12 +135,8 @@ def route_after_human_review(state: AgentState) -> str:
 def route_after_resolve(state: AgentState) -> str:
     """Route after resolve_action_boundary node.
 
-    The resolve node stores action_request in updates dict.
-    On success, current_node is set to 'resolve_action_boundary'.
-    On rejection, warnings contain 'ACTION_REJECTED'.
-
     Rules:
-    - Success (current_node == resolve_action_boundary, no rejection warning) → record_outcome
+    - Success → execute_resolution
     - Rejection (ACTION_REJECTED in warnings) → escalation
     """
     # Check for rejection warnings
@@ -150,7 +146,55 @@ def route_after_resolve(state: AgentState) -> str:
 
     # Check if resolve node succeeded
     if state.metadata.current_node == "resolve_action_boundary":
-        return ROUTE_OUTCOME
+        return "execute_resolution"
 
     # Default → escalation (fail closed)
+    return ROUTE_ESCALATION
+
+
+def route_after_execution(state: AgentState) -> str:
+    """Route after execute_resolution node.
+
+    Rules:
+    - Executed → verify_execution
+    - Failed → escalation
+    """
+    exec_status = state.execution_status
+    if exec_status == "EXECUTED":
+        return "verify_execution"
+    else:
+        return ROUTE_ESCALATION
+
+
+def route_after_execution_verification(state: AgentState) -> str:
+    """Route after verify_execution node.
+
+    Rules:
+    - VERIFIED → record_outcome (SUCCESS)
+    - FAILED → rollback_resolution
+    """
+    ver_state = state.verification
+    status = ver_state.verification_status.value if ver_state else "NOT_REQUIRED"
+
+    if status == "VERIFIED":
+        return ROUTE_OUTCOME
+    elif status == "FAILED":
+        return "rollback_resolution"
+    else:
+        return ROUTE_ESCALATION
+
+
+def route_after_rollback(state: AgentState) -> str:
+    """Route after rollback_resolution node.
+
+    Rules:
+    - ROLLED_BACK → record_outcome
+    - ROLLBACK_FAILED → escalation
+    """
+    rollback = state.rollback_result
+    if rollback:
+        rb_status = rollback.get("status")
+        if rb_status == "ROLLED_BACK":
+            return ROUTE_OUTCOME
+
     return ROUTE_ESCALATION

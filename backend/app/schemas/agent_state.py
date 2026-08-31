@@ -337,6 +337,36 @@ class AgentState(BaseModel):
         description="Resolution reward tracking state",
     )
 
+    # ── Phase 8: Execution / Verification / Rollback ──
+    execution_result: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Phase 8A execution result",
+    )
+    execution_status: Optional[str] = Field(
+        default=None,
+        description="Phase 8B execution status",
+    )
+    financial_diff: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Phase 8C before/after financial diff",
+    )
+    resolution_verification: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Phase 8D resolution verification result",
+    )
+    rollback_result: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Phase 8E rollback result",
+    )
+    audit_events: List[Dict[str, Any]] = Field(
+        default_factory=list,
+        description="Phase 8F audit events",
+    )
+    final_outcome: Optional[str] = Field(
+        default=None,
+        description="Final resolution outcome",
+    )
+
     # ── Error tracking ──
     errors: List[str] = Field(
         default_factory=list,

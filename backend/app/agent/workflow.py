@@ -1,15 +1,16 @@
 """
-LangGraph Workflow for Razorpay CloseLoop Phase 7K.
+LangGraph Workflow for Razorpay CloseLoop Phase 8G.
 
-Complete stateful graph with conditional routing.
+Complete stateful graph with execution integration.
 
 Structure:
   START → Load Exception → Gather Evidence → Build Graph → Classify
   → Retrieve Similar → Generate Candidates → Score → Select
   → Apply Guardrails → [Conditional Routing]
-      → AUTO: Verify → Resolve → Outcome → END
-      → HUMAN_REVIEW: Human Review → Verify → Resolve → Outcome → END
+      → AUTO: Verify → Resolve → Execute → Verify Execution → Outcome → END
+      → HUMAN: Human Review → Verify → Resolve → Execute → Verify Execution → Outcome → END
       → UNRESOLVED: Escalation → END
+      Verification Fail → Rollback → Outcome/Escalation → END
 """
 
 import uuid
@@ -18,6 +19,11 @@ from typing import Optional
 
 from langgraph.graph import END, START, StateGraph
 
+from app.agent.execution_nodes import (
+    execute_resolution,
+    rollback_resolution,
+    verify_execution,
+)
 from app.agent.guardrail_node import apply_guardrails
 from app.agent.investigation_nodes import (
     build_evidence_graph,
@@ -34,9 +40,12 @@ from app.agent.resolution_nodes import (
     select_best_candidate,
 )
 from app.agent.routing import (
+    route_after_execution,
+    route_after_execution_verification,
     route_after_guardrails,
     route_after_human_review,
     route_after_resolve,
+    route_after_rollback,
     route_after_verification,
 )
 from app.agent.terminal_nodes import (
@@ -57,19 +66,14 @@ from app.schemas.agent_state import (
 
 
 def create_workflow():
-    """Create the LangGraph workflow graph with complete conditional routing.
+    """Create the LangGraph workflow graph with execution integration.
 
     Complete flow:
         START → load_exception → ... → apply_guardrails
-            → AUTO: verify_resolution → resolve_action_boundary → record_outcome → END
-            → HUMAN_REVIEW: human_review → verify_resolution → resolve_action_boundary → record_outcome → END
+            → AUTO: verify → resolve → execute → verify_execution → outcome → END
+            → HUMAN: human_review → verify → resolve → execute → verify_execution → outcome → END
             → UNRESOLVED: escalation → END
-
-    Safety boundaries:
-        - Guardrails cannot be bypassed
-        - Verification must pass before resolve
-        - Resolve produces action request only (no execution)
-        - Outcome records everything
+            Verification Fail → rollback → outcome/escalation → END
 
     Returns:
         Compiled LangGraph workflow
@@ -98,6 +102,11 @@ def create_workflow():
 
     # ── Resolve / Action Boundary ──
     graph.add_node("resolve_action_boundary", resolve_action_boundary)
+
+    # ── Phase 8: Execution / Verification / Rollback ──
+    graph.add_node("execute_resolution", execute_resolution)
+    graph.add_node("verify_execution", verify_execution)
+    graph.add_node("rollback_resolution", rollback_resolution)
 
     # ── Outcome / Reward ──
     graph.add_node("record_outcome", record_outcome)
@@ -148,6 +157,36 @@ def create_workflow():
     graph.add_conditional_edges(
         "resolve_action_boundary",
         route_after_resolve,
+        {
+            "execute_resolution": "execute_resolution",
+            "escalation": "escalation",
+        },
+    )
+
+    # ── Conditional Routing after Execution ──
+    graph.add_conditional_edges(
+        "execute_resolution",
+        route_after_execution,
+        {
+            "verify_execution": "verify_execution",
+            "escalation": "escalation",
+        },
+    )
+
+    # ── Conditional Routing after Execution Verification ──
+    graph.add_conditional_edges(
+        "verify_execution",
+        route_after_execution_verification,
+        {
+            "record_outcome": "record_outcome",
+            "rollback_resolution": "rollback_resolution",
+        },
+    )
+
+    # ── Conditional Routing after Rollback ──
+    graph.add_conditional_edges(
+        "rollback_resolution",
+        route_after_rollback,
         {
             "record_outcome": "record_outcome",
             "escalation": "escalation",

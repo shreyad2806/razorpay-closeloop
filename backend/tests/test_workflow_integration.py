@@ -36,7 +36,7 @@ class TestGraphStructure:
         assert workflow is not None
 
     def test_all_nodes_present(self):
-        """All 14 nodes are in the graph."""
+        """All 17 nodes are in the graph."""
         workflow = create_workflow()
         graph = workflow.get_graph()
         node_names = set(graph.nodes.keys()) - {"__start__", "__end__"}
@@ -54,6 +54,9 @@ class TestGraphStructure:
             "human_review",
             "escalation",
             "resolve_action_boundary",
+            "execute_resolution",
+            "verify_execution",
+            "rollback_resolution",
             "record_outcome",
         }
         assert expected == node_names
@@ -242,11 +245,11 @@ class TestRoutingFunctions:
         state.human_review.approval_status = HumanApprovalStatus.PENDING
         assert route_after_human_review(state) == ROUTE_ESCALATION
 
-    def test_resolve_success_routes_to_outcome(self):
-        """Successful resolve routes to outcome."""
+    def test_resolve_success_routes_to_execution(self):
+        """Successful resolve routes to execution."""
         state = create_initial_state(exception_id="EXC-001")
         state.metadata.current_node = "resolve_action_boundary"
-        assert route_after_resolve(state) == ROUTE_OUTCOME
+        assert route_after_resolve(state) == "execute_resolution"
 
     def test_resolve_rejection_routes_to_escalation(self):
         """Rejected resolve routes to escalation."""

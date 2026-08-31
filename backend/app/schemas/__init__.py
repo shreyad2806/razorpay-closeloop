@@ -145,6 +145,49 @@ from app.schemas.outcome import (
     WorkflowOutcome,
     WorkflowOutcomeRecord,
 )
+from app.schemas.execution import (
+    AdjustmentRecord,
+    ExecutionResult,
+    ExecutionStatus,
+    ExecutionTransitionError,
+    FinancialStateSnapshot,
+    get_allowed_transitions,
+    is_terminal,
+    is_valid_transition,
+    VALID_TRANSITIONS,
+)
+from app.schemas.financial_diff import (
+    ChangeType,
+    FieldChange,
+    FinancialStateDiff,
+    RecordChange,
+)
+from app.schemas.resolution_verification import (
+    ActualFinancialResult,
+    CheckResult,
+    ExpectedFinancialResult,
+    ResolutionVerificationResult,
+    VerificationCheck,
+    VerificationCheckType,
+    VerificationStatus,
+)
+from app.schemas.rollback import (
+    RollbackAuditEntry,
+    RollbackReason,
+    RollbackResult,
+    RollbackStatus,
+)
+from app.schemas.audit import (
+    ActionMetadata,
+    AuditEvent,
+    AuditEventType,
+    ActorType,
+    FinalOutcome,
+    GuardrailMetadata,
+    ModelMetadata,
+    RollbackMetadata,
+    VerificationMetadata,
+)
 from app.schemas.verification import (
     CheckStatus,
     VerificationAction,
@@ -163,6 +206,13 @@ from app.schemas.agent_state import (
     VerificationStatus,
     WorkflowMetadata,
     WorkflowStatus,
+)
+from app.schemas.idempotency import (
+    ConcurrencyLock,
+    ExecutionDeduplicationResult,
+    IdempotencyRecord,
+    IdempotencyStatus,
+    LockResult,
 )
 
 __all__ = [
@@ -299,6 +349,44 @@ __all__ = [
     "RewardSignal",
     "RewardType",
     "HistoricalLearningRecord",
+    # Execution
+    "ExecutionStatus",
+    "ExecutionTransitionError",
+    "FinancialStateSnapshot",
+    "AdjustmentRecord",
+    "ExecutionResult",
+    "VALID_TRANSITIONS",
+    "is_valid_transition",
+    "get_allowed_transitions",
+    "is_terminal",
+    # Financial Diff
+    "ChangeType",
+    "FieldChange",
+    "FinancialStateDiff",
+    "RecordChange",
+    # Resolution Verification
+    "VerificationStatus",
+    "VerificationCheckType",
+    "CheckResult",
+    "VerificationCheck",
+    "ExpectedFinancialResult",
+    "ActualFinancialResult",
+    "ResolutionVerificationResult",
+    # Rollback
+    "RollbackStatus",
+    "RollbackReason",
+    "RollbackResult",
+    "RollbackAuditEntry",
+    # Audit
+    "AuditEvent",
+    "AuditEventType",
+    "ActorType",
+    "FinalOutcome",
+    "ModelMetadata",
+    "GuardrailMetadata",
+    "ActionMetadata",
+    "VerificationMetadata",
+    "RollbackMetadata",
     # Verification
     "VerificationAction",
     "VerificationCheck",
@@ -316,4 +404,10 @@ __all__ = [
     "VerificationStatus",
     "RewardState",
     "RewardStatus",
+    # Idempotency
+    "IdempotencyStatus",
+    "LockResult",
+    "IdempotencyRecord",
+    "ConcurrencyLock",
+    "ExecutionDeduplicationResult",
 ]
