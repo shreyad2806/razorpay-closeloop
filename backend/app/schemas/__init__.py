@@ -276,6 +276,42 @@ from app.schemas.model_promotion import (
     PromotionThresholds,
     RollbackRecord,
 )
+from app.schemas.batch_learning import (
+    BatchComparison,
+    BatchComparisonReport,
+    BatchConfig,
+    BatchMetrics,
+    BatchRecord,
+    BatchRecommendation,
+    BatchReportRow,
+    BatchStatus,
+    MetricChange,
+    SafetyAssessment,
+)
+from app.schemas.learning_metrics import (
+    AutomationMetrics,
+    CoreMetric,
+    FinancialImpactMetrics,
+    HumanReviewMetrics,
+    LearningMetrics,
+    LearningMetricsComparison,
+    MetricComparisonEntry,
+    MetricDimension,
+    MetricTrend,
+    MetricTrendAnalysis,
+    PrecisionMetrics,
+    RewardMetrics,
+    SafetyAssessmentResult,
+    SafetyMetricStatus,
+    SafetyVerdict,
+    VerificationMetrics,
+)
+from app.schemas.self_learning_loop import (
+    LearningCycleRecord,
+    LearningCycleStatus,
+    LearningSystemState,
+    PromotionAction,
+)
 
 __all__ = [
     # Enums
@@ -528,4 +564,37 @@ __all__ = [
     "PromotionDecision",
     "PromotionRecord",
     "RollbackRecord",
+    # Batch Learning
+    "BatchStatus",
+    "BatchRecommendation",
+    "BatchConfig",
+    "BatchMetrics",
+    "MetricChange",
+    "SafetyAssessment",
+    "BatchComparison",
+    "BatchRecord",
+    "BatchReportRow",
+    "BatchComparisonReport",
+    # Learning Metrics
+    "MetricTrend",
+    "SafetyVerdict",
+    "MetricDimension",
+    "CoreMetric",
+    "AutomationMetrics",
+    "PrecisionMetrics",
+    "HumanReviewMetrics",
+    "RewardMetrics",
+    "FinancialImpactMetrics",
+    "VerificationMetrics",
+    "SafetyMetricStatus",
+    "SafetyAssessmentResult",
+    "MetricTrendAnalysis",
+    "MetricComparisonEntry",
+    "LearningMetricsComparison",
+    "LearningMetrics",
+    # Self-Learning Loop
+    "LearningCycleStatus",
+    "PromotionAction",
+    "LearningCycleRecord",
+    "LearningSystemState",
 ]
