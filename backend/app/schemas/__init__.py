@@ -312,6 +312,68 @@ from app.schemas.self_learning_loop import (
     LearningSystemState,
     PromotionAction,
 )
+from app.schemas.mlflow_tracking import (
+    ArtifactLineage,
+    ArtifactMetadata,
+    ArtifactType,
+    EnvironmentMetadata,
+    ExperimentSummary,
+    ExperimentType,
+    MLflowConfig,
+    MLflowRunMetadata,
+    MetricsSnapshot,
+    RunStatus,
+)
+from app.schemas.model_version_metadata import (
+    ModelVersionMetadata,
+    ModelVersionStatus,
+    ModelVersionSummary,
+    PredictionLineage,
+)
+from app.schemas.unified_evaluation import (
+    EvaluationVerdict,
+    MetricComparison,
+    SafetyRegressionCheck,
+    SafetyRegressionSeverity,
+    UnifiedEvaluationReport,
+)
+from app.schemas.mlflow_model_registry import (
+    LifecycleTransition,
+    ModelLifecycleState,
+    PromotionGateConfig,
+    RegistryModelEntry,
+    RegistrySummary,
+    ValidationGateConfig,
+    is_valid_transition,
+)
+from app.schemas.result_lineage import (
+    AuditResponse,
+    ModelLineageChain,
+    ResultRecord,
+    ResultType,
+)
+from app.schemas.experiment_comparison import (
+    ComparisonDimension,
+    ComparisonRun,
+    DimensionScore,
+    ExperimentComparison,
+    MetricDiff,
+    PairwiseComparison,
+    RankingStrategy,
+    RunPosition,
+    RunRanking,
+)
+from app.schemas.mlflow_integration import (
+    IntegrationPhase,
+    IntegrationStatus,
+    MLflowIntegrationSummary,
+    MLflowLifecycleRecord,
+    MLflowLifecycleStep,
+    PredictAndTrackRequest,
+    PredictAndTrackResult,
+    TrainAndTrackRequest,
+    TrainAndTrackResult,
+)
 
 __all__ = [
     # Enums
@@ -597,4 +659,59 @@ __all__ = [
     "PromotionAction",
     "LearningCycleRecord",
     "LearningSystemState",
+    # MLflow Tracking
+    "MLflowConfig",
+    "EnvironmentMetadata",
+    "ExperimentType",
+    "MLflowRunMetadata",
+    "MetricsSnapshot",
+    "RunStatus",
+    "ExperimentSummary",
+    "ArtifactType",
+    "ArtifactMetadata",
+    "ArtifactLineage",
+    # Model Version Metadata
+    "ModelVersionStatus",
+    "ModelVersionMetadata",
+    "PredictionLineage",
+    "ModelVersionSummary",
+    # Unified Evaluation
+    "EvaluationVerdict",
+    "MetricComparison",
+    "SafetyRegressionCheck",
+    "SafetyRegressionSeverity",
+    "UnifiedEvaluationReport",
+    # MLflow Model Registry
+    "ModelLifecycleState",
+    "RegistryModelEntry",
+    "LifecycleTransition",
+    "ValidationGateConfig",
+    "PromotionGateConfig",
+    "RegistrySummary",
+    "is_valid_transition",
+    # Result Lineage
+    "ResultType",
+    "ResultRecord",
+    "ModelLineageChain",
+    "AuditResponse",
+    # Experiment Comparison
+    "ComparisonDimension",
+    "ComparisonRun",
+    "DimensionScore",
+    "ExperimentComparison",
+    "MetricDiff",
+    "PairwiseComparison",
+    "RankingStrategy",
+    "RunPosition",
+    "RunRanking",
+    # MLflow Integration
+    "IntegrationPhase",
+    "IntegrationStatus",
+    "MLflowLifecycleStep",
+    "MLflowLifecycleRecord",
+    "MLflowIntegrationSummary",
+    "TrainAndTrackRequest",
+    "TrainAndTrackResult",
+    "PredictAndTrackRequest",
+    "PredictAndTrackResult",
 ]
