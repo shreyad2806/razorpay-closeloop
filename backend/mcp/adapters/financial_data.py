@@ -38,8 +38,9 @@ class FinancialDataAdapter:
 
     def __init__(self, data_dir: Optional[str] = None) -> None:
         if data_dir is None:
-            # Default to the project's data directory
-            data_dir = str(Path(__file__).parent.parent.parent.parent / "data")
+            # Default to the backend's data directory
+            # Path: backend/mcp/adapters/financial_data.py -> backend/data
+            data_dir = str(Path(__file__).parent.parent.parent / "data")
         self._data_dir = data_dir
         self._loaded = False
         self._payments: List[Dict[str, Any]] = []
