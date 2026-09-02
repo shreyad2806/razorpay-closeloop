@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Solutions",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-03-05T11:41:25"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Elite Services",
+    "reference": "MER-ELI-002",
+    "currency": "INR",
+    "created_at": "2025-02-08T03:17:48"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Star Market",
+    "reference": "MER-STA-003",
+    "currency": "INR",
+    "created_at": "2025-03-20T04:37:17"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Elite Solutions",
+    "reference": "MER-ELI-004",
+    "currency": "INR",
+    "created_at": "2025-05-24T01:18:55"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Labs",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-06-25T15:46:19"
+  }
+]

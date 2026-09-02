@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Tech Solutions",
+    "reference": "MER-TEC-001",
+    "currency": "INR",
+    "created_at": "2025-04-15T14:04:39"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Royal Hub",
+    "reference": "MER-ROY-002",
+    "currency": "INR",
+    "created_at": "2025-03-24T06:38:54"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Silver Trading",
+    "reference": "MER-SIL-003",
+    "currency": "INR",
+    "created_at": "2025-04-09T15:34:25"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Shop",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-05-12T18:56:48"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Crystal Co",
+    "reference": "MER-CRY-005",
+    "currency": "INR",
+    "created_at": "2025-01-19T13:12:29"
+  }
+]

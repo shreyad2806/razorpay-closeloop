@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Market",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-05-11T12:14:45"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Silver Labs",
+    "reference": "MER-SIL-002",
+    "currency": "INR",
+    "created_at": "2025-03-04T19:08:48"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Labs",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-03-29T23:42:22"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Prime Services",
+    "reference": "MER-PRI-004",
+    "currency": "INR",
+    "created_at": "2025-01-16T12:18:16"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Enterprises",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-03-27T08:42:00"
+  }
+]

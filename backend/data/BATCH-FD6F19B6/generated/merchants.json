@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Crystal Solutions",
+    "reference": "MER-CRY-001",
+    "currency": "INR",
+    "created_at": "2025-04-19T13:11:48"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Smart Solutions",
+    "reference": "MER-SMA-002",
+    "currency": "INR",
+    "created_at": "2025-01-13T16:12:06"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Goods",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-03-09T07:32:57"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Crystal Store",
+    "reference": "MER-CRY-004",
+    "currency": "INR",
+    "created_at": "2025-01-04T21:19:51"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Labs",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-02-01T19:49:30"
+  }
+]

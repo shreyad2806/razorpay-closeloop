@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Enterprises",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-02-15T06:50:35"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Enterprises",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-06-16T02:24:21"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Mart",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-02-01T02:48:11"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Crystal Trading",
+    "reference": "MER-CRY-004",
+    "currency": "INR",
+    "created_at": "2025-04-08T03:06:03"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Shop",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-02-22T11:33:49"
+  }
+]

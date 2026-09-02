@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Co",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-05-10T14:07:13"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Royal Enterprises",
+    "reference": "MER-ROY-002",
+    "currency": "INR",
+    "created_at": "2025-04-20T09:57:58"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Solutions",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-02-22T09:56:10"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Silver Shop",
+    "reference": "MER-SIL-004",
+    "currency": "INR",
+    "created_at": "2025-02-14T11:41:53"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Global Store",
+    "reference": "MER-GLO-005",
+    "currency": "INR",
+    "created_at": "2025-06-26T17:31:30"
+  }
+]

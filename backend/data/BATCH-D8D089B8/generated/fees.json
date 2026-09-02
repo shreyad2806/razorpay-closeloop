@@ -1,0 +1,184 @@
+[
+  {
+    "fee_id": "FEE-000001",
+    "payment_id": "PAY-000001",
+    "case_id": null,
+    "amount": 122664,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000002",
+    "payment_id": "PAY-000002",
+    "case_id": null,
+    "amount": 61708,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000003",
+    "payment_id": "PAY-000003",
+    "case_id": null,
+    "amount": 20488,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000004",
+    "payment_id": "PAY-000004",
+    "case_id": null,
+    "amount": 38548,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000005",
+    "payment_id": "PAY-000005",
+    "case_id": null,
+    "amount": 143863,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000006",
+    "payment_id": "PAY-000006",
+    "case_id": null,
+    "amount": 31014,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000007",
+    "payment_id": "PAY-000007",
+    "case_id": null,
+    "amount": 48589,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000008",
+    "payment_id": "PAY-000007",
+    "case_id": null,
+    "amount": 12147,
+    "fee_type": "PLATFORM"
+  },
+  {
+    "fee_id": "FEE-000009",
+    "payment_id": "PAY-000008",
+    "case_id": null,
+    "amount": 148579,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000010",
+    "payment_id": "PAY-000009",
+    "case_id": null,
+    "amount": 54478,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000011",
+    "payment_id": "PAY-000009",
+    "case_id": null,
+    "amount": 13619,
+    "fee_type": "PLATFORM"
+  },
+  {
+    "fee_id": "FEE-000012",
+    "payment_id": "PAY-000010",
+    "case_id": null,
+    "amount": 58366,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000013",
+    "payment_id": "PAY-000011",
+    "case_id": null,
+    "amount": 107207,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000014",
+    "payment_id": "PAY-000011",
+    "case_id": null,
+    "amount": 26801,
+    "fee_type": "PLATFORM"
+  },
+  {
+    "fee_id": "FEE-000015",
+    "payment_id": "PAY-000012",
+    "case_id": null,
+    "amount": 40657,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000016",
+    "payment_id": "PAY-000012",
+    "case_id": null,
+    "amount": 10164,
+    "fee_type": "PLATFORM"
+  },
+  {
+    "fee_id": "FEE-000017",
+    "payment_id": "PAY-000013",
+    "case_id": null,
+    "amount": 175123,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000018",
+    "payment_id": "PAY-000014",
+    "case_id": null,
+    "amount": 187061,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000019",
+    "payment_id": "PAY-000015",
+    "case_id": null,
+    "amount": 17442,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000020",
+    "payment_id": "PAY-000016",
+    "case_id": null,
+    "amount": 76595,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000021",
+    "payment_id": "PAY-000017",
+    "case_id": null,
+    "amount": 198584,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000022",
+    "payment_id": "PAY-000017",
+    "case_id": null,
+    "amount": 49646,
+    "fee_type": "PLATFORM"
+  },
+  {
+    "fee_id": "FEE-000023",
+    "payment_id": "PAY-000018",
+    "case_id": null,
+    "amount": 41477,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000024",
+    "payment_id": "PAY-000018",
+    "case_id": null,
+    "amount": 10369,
+    "fee_type": "PLATFORM"
+  },
+  {
+    "fee_id": "FEE-000025",
+    "payment_id": "PAY-000019",
+    "case_id": null,
+    "amount": 16838,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-000026",
+    "payment_id": "PAY-000020",
+    "case_id": null,
+    "amount": 192523,
+    "fee_type": "TRANSACTION"
+  }
+]

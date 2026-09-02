@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Mart",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-02-12T17:30:23"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Shop",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-04-14T08:15:55"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Shop",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-05-21T03:53:08"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Labs",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-05-06T20:08:23"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Gold Hub",
+    "reference": "MER-GOL-005",
+    "currency": "INR",
+    "created_at": "2025-02-02T11:35:20"
+  }
+]

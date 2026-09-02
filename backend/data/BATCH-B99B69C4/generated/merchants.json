@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Silver Enterprises",
+    "reference": "MER-SIL-001",
+    "currency": "INR",
+    "created_at": "2025-03-25T12:48:47"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Services",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-03-08T16:41:06"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Goods",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-03-17T01:29:11"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Gold Services",
+    "reference": "MER-GOL-004",
+    "currency": "INR",
+    "created_at": "2025-01-08T22:38:54"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Crystal Co",
+    "reference": "MER-CRY-005",
+    "currency": "INR",
+    "created_at": "2025-01-05T14:15:46"
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Solutions",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-01-04T02:02:55"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Trading",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-02-17T11:32:41"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Quick Labs",
+    "reference": "MER-QUI-003",
+    "currency": "INR",
+    "created_at": "2025-03-21T11:35:07"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Trading",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-04-22T01:52:45"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Global Digital",
+    "reference": "MER-GLO-005",
+    "currency": "INR",
+    "created_at": "2025-01-18T07:52:51"
+  }
+]

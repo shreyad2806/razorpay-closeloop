@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Hub",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-04-05T18:22:34"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Enterprises",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-02-28T20:58:39"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Red Solutions",
+    "reference": "MER-RED-003",
+    "currency": "INR",
+    "created_at": "2025-01-15T01:05:56"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Solutions",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-01-23T07:11:04"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Green Digital",
+    "reference": "MER-GRE-005",
+    "currency": "INR",
+    "created_at": "2025-01-23T20:33:05"
+  }
+]

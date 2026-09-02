@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Co",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-03-13T18:06:16"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Market",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-06-08T01:12:31"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Star Labs",
+    "reference": "MER-STA-003",
+    "currency": "INR",
+    "created_at": "2025-03-22T14:59:08"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Crystal Solutions",
+    "reference": "MER-CRY-004",
+    "currency": "INR",
+    "created_at": "2025-05-27T16:10:49"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Mart",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-02-06T03:47:29"
+  }
+]

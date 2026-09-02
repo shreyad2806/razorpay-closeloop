@@ -1,0 +1,23 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Silver Store",
+    "reference": "MER-SIL-001",
+    "currency": "INR",
+    "created_at": "2025-03-11T06:06:41"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Services",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-04-27T15:46:26"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Quick Co",
+    "reference": "MER-QUI-003",
+    "currency": "INR",
+    "created_at": "2025-06-15T14:26:09"
+  }
+]

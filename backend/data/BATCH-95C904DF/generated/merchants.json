@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Labs",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-04-25T03:44:22"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Smart Trading",
+    "reference": "MER-SMA-002",
+    "currency": "INR",
+    "created_at": "2025-02-13T22:37:03"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Store",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-01-22T09:01:06"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Crystal Trading",
+    "reference": "MER-CRY-004",
+    "currency": "INR",
+    "created_at": "2025-02-10T15:05:29"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Goods",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-05-18T15:05:36"
+  }
+]

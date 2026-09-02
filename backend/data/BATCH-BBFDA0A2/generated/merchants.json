@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Global Goods",
+    "reference": "MER-GLO-001",
+    "currency": "INR",
+    "created_at": "2025-04-23T09:03:17"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Royal Labs",
+    "reference": "MER-ROY-002",
+    "currency": "INR",
+    "created_at": "2025-03-09T23:07:54"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Quick Enterprises",
+    "reference": "MER-QUI-003",
+    "currency": "INR",
+    "created_at": "2025-06-27T12:09:53"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Elite Solutions",
+    "reference": "MER-ELI-004",
+    "currency": "INR",
+    "created_at": "2025-03-06T18:20:26"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Mart",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-06-25T15:50:48"
+  }
+]

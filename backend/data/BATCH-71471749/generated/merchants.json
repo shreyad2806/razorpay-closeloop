@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Co",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-04-28T03:19:59"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Crystal Hub",
+    "reference": "MER-CRY-002",
+    "currency": "INR",
+    "created_at": "2025-01-03T08:48:43"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Red Solutions",
+    "reference": "MER-RED-003",
+    "currency": "INR",
+    "created_at": "2025-04-05T15:07:46"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Silver Mart",
+    "reference": "MER-SIL-004",
+    "currency": "INR",
+    "created_at": "2025-05-12T11:55:50"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Elite Trading",
+    "reference": "MER-ELI-005",
+    "currency": "INR",
+    "created_at": "2025-05-23T19:03:39"
+  }
+]

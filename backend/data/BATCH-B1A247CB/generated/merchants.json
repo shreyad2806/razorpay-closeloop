@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Mart",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-05-06T21:08:53"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Goods",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-06-20T20:22:38"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Global Services",
+    "reference": "MER-GLO-003",
+    "currency": "INR",
+    "created_at": "2025-02-15T00:48:44"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Trading",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-05-10T07:16:03"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Market",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-02-03T10:21:11"
+  }
+]

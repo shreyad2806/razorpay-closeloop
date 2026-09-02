@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Diamond Shop",
+    "reference": "MER-DIA-001",
+    "currency": "INR",
+    "created_at": "2025-02-15T07:57:31"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Shop",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-03-09T16:44:29"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Green Enterprises",
+    "reference": "MER-GRE-003",
+    "currency": "INR",
+    "created_at": "2025-06-02T08:31:15"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Blue Solutions",
+    "reference": "MER-BLU-004",
+    "currency": "INR",
+    "created_at": "2025-05-03T00:43:41"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Labs",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-02-23T11:34:42"
+  }
+]

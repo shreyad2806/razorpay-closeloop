@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Quick Labs",
+    "reference": "MER-QUI-001",
+    "currency": "INR",
+    "created_at": "2025-03-05T05:24:14"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Crystal Solutions",
+    "reference": "MER-CRY-002",
+    "currency": "INR",
+    "created_at": "2025-06-01T10:17:35"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Green Shop",
+    "reference": "MER-GRE-003",
+    "currency": "INR",
+    "created_at": "2025-05-27T03:48:19"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Services",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-05-27T08:27:25"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Market",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-04-04T15:11:21"
+  }
+]

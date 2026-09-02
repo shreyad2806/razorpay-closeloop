@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Silver Services",
+    "reference": "MER-SIL-001",
+    "currency": "INR",
+    "created_at": "2025-05-20T19:17:34"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Elite Solutions",
+    "reference": "MER-ELI-002",
+    "currency": "INR",
+    "created_at": "2025-03-30T19:21:41"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Green Shop",
+    "reference": "MER-GRE-003",
+    "currency": "INR",
+    "created_at": "2025-04-26T12:47:08"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Goods",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-01-17T18:42:07"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Royal Shop",
+    "reference": "MER-ROY-005",
+    "currency": "INR",
+    "created_at": "2025-05-09T12:27:08"
+  }
+]

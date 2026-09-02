@@ -1,0 +1,23 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Co",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-04-26T00:17:22"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Shop",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-04-26T14:07:29"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Silver Digital",
+    "reference": "MER-SIL-003",
+    "currency": "INR",
+    "created_at": "2025-06-20T03:44:54"
+  }
+]

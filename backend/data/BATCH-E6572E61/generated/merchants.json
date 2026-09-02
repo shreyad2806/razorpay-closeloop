@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Green Labs",
+    "reference": "MER-GRE-001",
+    "currency": "INR",
+    "created_at": "2025-05-29T03:23:56"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Global Mart",
+    "reference": "MER-GLO-002",
+    "currency": "INR",
+    "created_at": "2025-04-29T05:13:07"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Elite Goods",
+    "reference": "MER-ELI-003",
+    "currency": "INR",
+    "created_at": "2025-03-17T06:05:04"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Gold Co",
+    "reference": "MER-GOL-004",
+    "currency": "INR",
+    "created_at": "2025-04-18T07:40:08"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Prime Solutions",
+    "reference": "MER-PRI-005",
+    "currency": "INR",
+    "created_at": "2025-02-09T04:43:00"
+  }
+]

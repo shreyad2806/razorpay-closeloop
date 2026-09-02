@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Red Shop",
+    "reference": "MER-RED-001",
+    "currency": "INR",
+    "created_at": "2025-03-08T21:31:57"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Co",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-04-05T18:24:58"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Gold Labs",
+    "reference": "MER-GOL-003",
+    "currency": "INR",
+    "created_at": "2025-05-09T21:58:24"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Crystal Services",
+    "reference": "MER-CRY-004",
+    "currency": "INR",
+    "created_at": "2025-01-01T23:38:25"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Prime Trading",
+    "reference": "MER-PRI-005",
+    "currency": "INR",
+    "created_at": "2025-03-15T00:28:15"
+  }
+]

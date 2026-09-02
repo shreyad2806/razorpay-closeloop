@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Enterprises",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-02-19T11:02:04"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Prime Trading",
+    "reference": "MER-PRI-002",
+    "currency": "INR",
+    "created_at": "2025-06-19T10:45:03"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Green Shop",
+    "reference": "MER-GRE-003",
+    "currency": "INR",
+    "created_at": "2025-04-21T23:32:21"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Hub",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-01-28T00:20:58"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Prime Solutions",
+    "reference": "MER-PRI-005",
+    "currency": "INR",
+    "created_at": "2025-06-05T05:18:10"
+  }
+]

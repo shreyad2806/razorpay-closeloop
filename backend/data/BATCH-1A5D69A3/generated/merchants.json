@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Tech Digital",
+    "reference": "MER-TEC-001",
+    "currency": "INR",
+    "created_at": "2025-06-17T04:15:58"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Digital",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-03-03T19:50:18"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Store",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-02-18T12:42:13"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Digital",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-01-03T02:02:21"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Goods",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-01-13T08:57:38"
+  }
+]
