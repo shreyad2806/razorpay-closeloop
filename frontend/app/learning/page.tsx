@@ -14,6 +14,31 @@ import type { LearningMetrics, SafetyMetrics } from "@/app/types";
 
 const COLORS = ["#059669", "#dc2626", "#d97706", "#2563eb"];
 
+/** Show \"—\" when the backend has no learning data to compute a derived metric from. */
+function rateOrDash(
+  numerator: number | null | undefined,
+  denominator: number | null | undefined
+): string {
+  if (!denominator || denominator === 0) return "—";
+  return formatPct(numerator);
+}
+
+/** Whether the backend has executed at least some automation decisions. */
+function hasAutomationData(m: LearningMetrics | null): boolean {
+  return (m?.automation?.total_exceptions ?? 0) > 0;
+}
+
+/** Whether the backend has executed verification. */
+function hasVerificationData(m: LearningMetrics | null): boolean {
+  return (m?.verification?.total_executed ?? 0) > 0;
+}
+
+/** Whether the backend has run any safety checks. */
+function hasSafetyCheckData(m: LearningMetrics | null): boolean {
+  const checks = m?.safety?.checks ?? [];
+  return checks.length > 0;
+}
+
 export default function LearningPage() {
   const [metrics, setMetrics] = useState<LearningMetrics | null>(null);
   const [safety, setSafety] = useState<SafetyMetrics | null>(null);
@@ -21,37 +46,54 @@ export default function LearningPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [feedbackResult, setFeedbackResult] = useState<string | null>(null);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
+
+  async function loadAll() {
+    const [mRes, sRes, dRes] = await Promise.all([
+      getLearningMetrics(),
+      getSafetyMetrics(),
+      getLearningDatasets(),
+    ]);
+    if (mRes.ok && mRes.data?.data) setMetrics(mRes.data.data as LearningMetrics);
+    if (sRes.ok && sRes.data?.data) setSafety(sRes.data.data as SafetyMetrics);
+    if (dRes.ok && dRes.data?.data) setDatasets(dRes.data.data as { total_examples: number });
+    return mRes.ok;
+  }
 
   useEffect(() => {
     let mounted = true;
-    async function load() {
+    async function init() {
       setLoading(true);
-      const [mRes, sRes, dRes] = await Promise.all([
-        getLearningMetrics(),
-        getSafetyMetrics(),
-        getLearningDatasets(),
-      ]);
+      const ok = await loadAll();
       if (!mounted) return;
-      if (mRes.ok && mRes.data?.data) setMetrics(mRes.data.data as LearningMetrics);
-      if (sRes.ok && sRes.data?.data) setSafety(sRes.data.data as SafetyMetrics);
-      if (dRes.ok && dRes.data?.data) setDatasets(dRes.data.data as { total_examples: number });
-      if (!mRes.ok) setError("Cannot load learning data");
+      if (!ok) setError("Cannot load learning data");
       setLoading(false);
     }
-    load();
+    init();
     return () => { mounted = false; };
   }, []);
 
   async function handleSubmitFeedback(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setFeedbackLoading(true);
+    setFeedbackError(null);
+    setFeedbackResult(null);
     const form = new FormData(e.currentTarget);
-    const { ok } = await recordFeedback({
+    const { ok, error } = await recordFeedback({
       feedback_type: form.get("type") as "APPROVE" | "REJECT" | "CORRECT" | "ESCALATE",
       workflow_id: form.get("workflow_id") as string,
       reviewer: form.get("reviewer") as string,
     });
-    setFeedbackResult(ok ? "Feedback recorded" : "Failed to record feedback");
-    setTimeout(() => setFeedbackResult(null), 3000);
+    if (ok) {
+      setFeedbackResult("Feedback recorded");
+      // Refresh learning metrics after feedback submission
+      await loadAll();
+    } else {
+      setFeedbackError(error || "Failed to record feedback");
+    }
+    setFeedbackLoading(false);
+    setTimeout(() => { setFeedbackResult(null); setFeedbackError(null); }, 5000);
   }
 
   if (loading) return <LoadingState message="Loading learning metrics…" />;
@@ -62,6 +104,10 @@ export default function LearningPage() {
   const h = metrics?.human_review || {};
   const r = metrics?.reward || {};
   const v = metrics?.verification || {};
+  const s = metrics?.safety || {};
+  const hasData = hasAutomationData(metrics);
+  const hasVerif = hasVerificationData(metrics);
+  const hasChecks = hasSafetyCheckData(metrics);
 
   const rewardData = [
     { name: "Positive", value: r.positive_rewards || 0 },
@@ -88,13 +134,13 @@ export default function LearningPage() {
       <div className="stat-grid mb-6">
         <StatCard
           label="Automation Rate"
-          value={formatPct(a.automation_rate)}
-          sub={`${formatNum(a.successful_auto)} / ${formatNum(a.total_exceptions)} resolved`}
+          value={hasData ? rateOrDash(a.automation_rate, a.total_exceptions) : "—"}
+          sub={hasData ? `${formatNum(a.successful_auto)} / ${formatNum(a.total_exceptions)} resolved` : "No exceptions processed yet"}
         />
         <StatCard
           label="Precision"
           value={p.precision != null ? formatPct(p.precision) : "—"}
-          sub="Correct auto-resolutions"
+          sub={hasData ? "Correct auto-resolutions" : "No auto-resolutions to measure"}
         />
         <StatCard
           label="False Automation"
@@ -109,12 +155,12 @@ export default function LearningPage() {
         <StatCard
           label="Average Reward"
           value={r.avg_reward != null ? r.avg_reward.toFixed(2) : "—"}
-          sub={`${formatNum(r.total_rewards)} total`}
+          sub={(r.total_rewards ?? 0) > 0 ? `${formatNum(r.total_rewards)} total` : "No reward data yet"}
         />
         <StatCard
           label="Verification Pass"
-          value={v.total_verified != null ? formatNum(v.total_verified) : "—"}
-          sub={`${formatNum(v.total_executed)} executed`}
+          value={hasVerif ? formatNum(v.total_verified) : "—"}
+          sub={hasVerif ? `${formatNum(v.total_executed)} executed` : "No verifications run yet"}
         />
       </div>
 
@@ -196,27 +242,42 @@ export default function LearningPage() {
         </div>
         <div className="card-body">
           <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-            <StatCard label="Pass Rate" value={formatPct(safety?.guardrail_pass_rate)} />
-            <StatCard label="False Auto" value={formatNum(safety?.false_automation_count)} />
-            <StatCard label="High Value" value={formatNum(safety?.high_value_blocks)} />
-            <StatCard label="Conflict" value={formatNum(safety?.conflict_blocks)} />
-            <StatCard label="Novelty" value={formatNum(safety?.novelty_blocks)} />
-            <StatCard label="Verify Fail" value={formatNum(safety?.verification_failures)} />
+            <StatCard label="Guardrail Pass Rate" value={hasData ? formatPct(safety?.guardrail_pass_rate) : "—"} sub={hasData ? undefined : "No guardrail decisions yet"} />
+            <StatCard label="Auto Decisions" value={formatNum(safety?.auto_decisions)} />
+            <StatCard label="High Value Blocks" value={formatNum(safety?.high_value_blocks)} />
+            <StatCard label="Conflict Blocks" value={formatNum(safety?.conflict_blocks)} />
+            <StatCard label="Novelty Blocks" value={formatNum(safety?.novelty_blocks)} />
+            <StatCard label="Verify Failures" value={formatNum(safety?.verification_failures)} />
           </div>
         </div>
       </div>
 
-      {/* ─── Dataset ─────────────────────────────────────────────────────────── */}
+      {/* ─── Dataset & Safety Verdict ─────────────────────────────────────────── */}
       <div className="card mb-6">
         <div className="card-header">
-          <SectionHeader title="Learning Dataset" />
+          <SectionHeader title="Learning Dataset & Safety Verdict" />
         </div>
         <div className="card-body">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard label="Total Examples" value={formatNum(datasets?.total_examples)} />
-            <StatCard label="Safety Verdict" value={metrics?.safety?.verdict || "—"} />
-            <StatCard label="Checks Passed" value={formatNum(metrics?.safety?.checks_passed)} />
-            <StatCard label="Critical Failures" value={formatNum(metrics?.safety?.critical_failures?.length)} />
+            <StatCard
+              label="Total Examples"
+              value={formatNum(datasets?.total_examples)}
+              sub={datasets?.total_examples === 0 ? "No training data yet" : undefined}
+            />
+            <StatCard
+              label="Safety Verdict"
+              value={s?.verdict || "—"}
+              sub={s?.verdict ? "From backend safety checks" : "No safety evaluation yet"}
+            />
+            <StatCard
+              label="Checks Passed"
+              value={hasChecks ? formatNum(s.checks_passed) : "—"}
+              sub={hasChecks ? `${s.checks_passed} / ${(s.checks ?? []).length}` : "No checks executed yet"}
+            />
+            <StatCard
+              label="Critical Failures"
+              value={formatNum(s?.critical_failures?.length)}
+            />
           </div>
         </div>
       </div>
@@ -229,7 +290,12 @@ export default function LearningPage() {
         <div className="card-body">
           {feedbackResult && (
             <div className="mb-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg px-3 py-2 text-sm">
-              {feedbackResult}
+              ✓ {feedbackResult}
+            </div>
+          )}
+          {feedbackError && (
+            <div className="mb-3 bg-red-50 text-red-700 border border-red-200 rounded-lg px-3 py-2 text-sm">
+              ✗ {feedbackError}
             </div>
           )}
           <form onSubmit={handleSubmitFeedback} className="flex flex-wrap gap-3 items-end">
@@ -259,8 +325,8 @@ export default function LearningPage() {
                 className="px-3 py-2 text-sm border border-slate-200 rounded-lg"
               />
             </div>
-            <button type="submit" className="btn btn-primary">
-              Submit Feedback
+            <button type="submit" className="btn btn-primary" disabled={feedbackLoading}>
+              {feedbackLoading ? "Submitting…" : "Submit Feedback"}
             </button>
           </form>
         </div>

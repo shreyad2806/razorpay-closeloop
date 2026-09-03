@@ -373,6 +373,7 @@ export interface LearningMetrics {
   };
   safety: {
     verdict?: string;
+    checks?: unknown[];
     checks_passed?: number;
     checks_failed?: number;
     critical_failures?: string[];

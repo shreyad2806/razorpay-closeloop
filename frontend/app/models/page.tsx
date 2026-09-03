@@ -9,13 +9,21 @@ import type { ModelItem } from "@/app/types";
 export default function ModelsPage() {
   const [models, setModels] = useState<ModelItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
     async function load() {
-      const { ok, data } = await listModels();
+      const res = await listModels();
       if (!mounted) return;
-      if (ok && data?.data) setModels(data.data as ModelItem[]);
+      if (res.ok && res.data?.data) {
+        setModels(res.data.data as ModelItem[]);
+        setError(null);
+      } else if (!res.ok) {
+        setError(res.error || "Failed to load models");
+      } else {
+        setModels([]);
+      }
       setLoading(false);
     }
     load();
@@ -23,6 +31,26 @@ export default function ModelsPage() {
   }, []);
 
   if (loading) return <LoadingState message="Loading models…" />;
+
+  if (error) {
+    return (
+      <div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Models</h2>
+          <p className="text-sm text-slate-400 mt-1">
+            MLflow model registry — Phase 10 model lineage and versioning
+          </p>
+        </div>
+        <div className="card">
+          <div className="card-body text-center py-12">
+            <div className="text-red-500 text-4xl mb-3">⚠️</div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-1">Unable to load models</h3>
+            <p className="text-sm text-slate-500">{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -56,22 +84,32 @@ export default function ModelsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                  <MetricItem label="Version" value={model.model_version} />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                  <MetricItem label="Version" value={model.model_version || "—"} />
                   <MetricItem
                     label="Precision"
                     value={model.precision != null ? formatPct(model.precision) : "—"}
                   />
                   <MetricItem
+                    label="Recall"
+                    value={model.recall != null ? formatPct(model.recall) : "—"}
+                  />
+                  <MetricItem
                     label="F1 Score"
                     value={model.f1 != null ? model.f1.toFixed(3) : "—"}
                   />
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <MetricItem label="Dataset" value={model.dataset_version || "—"} />
                   <MetricItem label="Features" value={model.feature_version || "—"} />
                   <MetricItem
                     label="MLflow Run"
                     value={model.mlflow_run_id || "—"}
                     mono
+                  />
+                  <MetricItem
+                    label="Created"
+                    value={model.created_at || "—"}
                   />
                 </div>
               </div>

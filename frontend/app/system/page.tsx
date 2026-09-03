@@ -6,6 +6,8 @@ import {
   getMetrics,
   getSafetyMetrics,
   getThroughputMetrics,
+  listModels,
+  getLearningMetrics,
 } from "@/app/lib/api";
 import { StatCard, LoadingState, ErrorState, SectionHeader } from "@/components/ui";
 import { formatPct, formatNum } from "@/app/lib/utils";
@@ -14,6 +16,7 @@ import type {
   SystemMetrics,
   SafetyMetrics,
   ThroughputMetrics,
+  ModelItem,
 } from "@/app/types";
 
 const PHASES = [
@@ -34,24 +37,87 @@ const PHASES = [
   { num: 15, name: "Production Frontend" },
 ];
 
-const SYSTEMS = [
-  { name: "Backend API", status: true },
-  { name: "Database", status: true },
-  { name: "ML Engine", status: true },
-  { name: "Evidence Layer", status: true },
-  { name: "LangGraph Agent", status: true },
-  { name: "Guardrails", status: true },
-  { name: "Verification", status: true },
-  { name: "Learning", status: true },
-  { name: "MCP", status: true },
-  { name: "LLM", status: false },
-];
+/** Component health status — derived from real backend API responses. */
+type ComponentStatus = {
+  name: string;
+  label: "healthy" | "degraded" | "unavailable" | "unknown";
+  source: string;
+};
+
+function deriveComponentStatuses(
+  healthOk: boolean,
+  modelsCount: number,
+  hasMetrics: boolean,
+  hasSafety: boolean,
+  hasLearning: boolean,
+  hasThroughput: boolean,
+): ComponentStatus[] {
+  return [
+    {
+      name: "Backend API",
+      label: healthOk ? "healthy" : "unavailable",
+      source: "GET /health",
+    },
+    {
+      name: "Database",
+      // If the API responds with data, the DB is reachable
+      label: healthOk ? "healthy" : "unavailable",
+      source: healthOk ? "inferred from API" : "no response",
+    },
+    {
+      name: "ML Engine",
+      // Models endpoint returning data means ML models are registered
+      label: modelsCount > 0 ? "healthy" : healthOk ? "unknown" : "unavailable",
+      source: modelsCount > 0 ? `GET /models (${modelsCount} models)` : "no model data",
+    },
+    {
+      name: "Evidence Layer",
+      // No dedicated health endpoint — only inferable from exceptions API working
+      label: healthOk ? "unknown" : "unavailable",
+      source: "no dedicated health endpoint",
+    },
+    {
+      name: "LangGraph Agent",
+      label: healthOk ? "unknown" : "unavailable",
+      source: "no dedicated health endpoint",
+    },
+    {
+      name: "Guardrails",
+      // Safety metrics exist → guardrail system is available
+      label: hasSafety ? "healthy" : healthOk ? "unknown" : "unavailable",
+      source: hasSafety ? "GET /metrics/safety" : "no safety data",
+    },
+    {
+      name: "Verification",
+      // Metrics exist with verification data
+      label: hasMetrics ? "healthy" : healthOk ? "unknown" : "unavailable",
+      source: hasMetrics ? "GET /metrics" : "no metrics data",
+    },
+    {
+      name: "Learning",
+      label: hasLearning ? "healthy" : healthOk ? "unknown" : "unavailable",
+      source: hasLearning ? "GET /learning/metrics" : "no learning data",
+    },
+    {
+      name: "MCP",
+      label: healthOk ? "unknown" : "unavailable",
+      source: "no dedicated health endpoint",
+    },
+    {
+      name: "LLM",
+      label: healthOk ? "unknown" : "unavailable",
+      source: "no dedicated health endpoint",
+    },
+  ];
+}
 
 export default function SystemPage() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
   const [safety, setSafety] = useState<SafetyMetrics | null>(null);
   const [throughput, setThroughput] = useState<ThroughputMetrics | null>(null);
+  const [modelsCount, setModelsCount] = useState(0);
+  const [learningOk, setLearningOk] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,17 +125,23 @@ export default function SystemPage() {
     let mounted = true;
     async function load() {
       setLoading(true);
-      const [hRes, mRes, sRes, tRes] = await Promise.all([
+      const [
+        hRes, mRes, sRes, tRes, mlRes, lRes,
+      ] = await Promise.all([
         getHealth(),
         getMetrics(),
         getSafetyMetrics(),
         getThroughputMetrics(),
+        listModels(),
+        getLearningMetrics(),
       ]);
       if (!mounted) return;
       if (hRes.ok && hRes.data) setHealth(hRes.data);
       if (mRes.ok && mRes.data?.data) setMetrics(mRes.data.data as SystemMetrics);
       if (sRes.ok && sRes.data?.data) setSafety(sRes.data.data as SafetyMetrics);
       if (tRes.ok && tRes.data?.data) setThroughput(tRes.data.data as ThroughputMetrics);
+      if (mlRes.ok && mlRes.data?.data) setModelsCount((mlRes.data.data as ModelItem[]).length);
+      if (lRes.ok) setLearningOk(true);
       if (!hRes.ok) setError("Cannot connect to backend");
       setLoading(false);
     }
@@ -128,7 +200,12 @@ export default function SystemPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard
               label="Guardrail Pass"
-              value={formatPct(safety?.guardrail_pass_rate)}
+              value={
+                (safety?.auto_decisions ?? 0) > 0
+                  ? formatPct(safety?.guardrail_pass_rate)
+                  : "—"
+              }
+              sub={(safety?.auto_decisions ?? 0) > 0 ? undefined : "No guardrail decisions yet"}
             />
             <StatCard
               label="Verify Failures"
@@ -149,23 +226,42 @@ export default function SystemPage() {
       {/* ─── System Components ────────────────────────────────────────────────── */}
       <div className="card mb-6">
         <div className="card-header">
-          <SectionHeader title="System Components" />
+          <SectionHeader title="System Components" subtitle="Derived from real API responses" />
         </div>
         <div className="card-body">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {SYSTEMS.map((s) => (
+            {deriveComponentStatuses(
+              health?.status === "ok",
+              modelsCount,
+              !!metrics,
+              !!safety,
+              learningOk,
+              !!throughput,
+            ).map((c) => (
               <div
-                key={s.name}
+                key={c.name}
                 className="flex items-center gap-2 p-2 rounded-lg border border-slate-100"
+                title={c.source}
               >
                 <span
                   className={`w-2.5 h-2.5 rounded-full ${
-                    s.status ? "bg-emerald-500" : "bg-slate-300"
+                    c.label === "healthy"
+                      ? "bg-emerald-500"
+                      : c.label === "degraded"
+                      ? "bg-amber-500"
+                      : c.label === "unavailable"
+                      ? "bg-red-500"
+                      : "bg-slate-300"
                   }`}
                 />
-                <span className="text-xs font-medium text-slate-600">
-                  {s.name}
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-slate-600">
+                    {c.name}
+                  </span>
+                  <span className="text-[10px] text-slate-400">
+                    {c.label}
+                  </span>
+                </div>
               </div>
             ))}
           </div>

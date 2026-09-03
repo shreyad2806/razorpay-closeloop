@@ -72,7 +72,8 @@ export default function ExceptionsPage() {
           e.exception_id.toLowerCase().includes(q) ||
           e.payment_id.toLowerCase().includes(q) ||
           e.merchant_id.toLowerCase().includes(q) ||
-          e.exception_type.toLowerCase().includes(q)
+          e.exception_type.toLowerCase().includes(q) ||
+          (e.batch_id || "").toLowerCase().includes(q)
       );
     }
     result.sort((a, b) => {
@@ -177,6 +178,7 @@ export default function ExceptionsPage() {
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Batch</th>
                   <th>Payment</th>
                   <th>Type</th>
                   <th
@@ -210,15 +212,24 @@ export default function ExceptionsPage() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((exc, idx) => (
-                  <tr key={`${exc.exception_id}-${exc.batch_id || ''}-${idx}`}>
+                {filtered.map((exc) => (
+                  <tr key={`${exc.exception_id}::${exc.batch_id || ''}`}>
                     <td>
                       <Link
-                        href={`/exceptions/${exc.exception_id}`}
+                        href={`/exceptions/${exc.exception_id}?batch=${exc.batch_id || ''}`}
                         className="text-brand font-mono text-xs font-semibold hover:underline"
                       >
                         {exc.exception_id}
                       </Link>
+                    </td>
+                    <td className="text-xs text-slate-400 font-mono">
+                      {exc.batch_id ? (
+                        <span title={exc.batch_id}>
+                          {exc.batch_id.length > 12 ? exc.batch_id.slice(0, 12) + "…" : exc.batch_id}
+                        </span>
+                      ) : (
+                        <span className="text-slate-300">—</span>
+                      )}
                     </td>
                     <td className="text-xs text-slate-500 font-mono">
                       {exc.payment_id}

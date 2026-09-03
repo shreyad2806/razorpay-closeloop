@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   getException,
@@ -63,6 +64,8 @@ export default function ExceptionDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const searchParams = useSearchParams();
+  const batchId = searchParams.get("batch") || undefined;
   const [tab, setTab] = useState<Tab>("summary");
   const [exc, setExc] = useState<ExceptionDetail | null>(null);
   const [evidence, setEvidence] = useState<EvidenceResponse | null>(null);
@@ -184,16 +187,27 @@ export default function ExceptionDetailPage({
           </Link>
           <span>›</span>
           <span className="text-slate-700">{exc.exception_id}</span>
+          {batchId && (
+            <>
+              <span>›</span>
+              <span className="text-slate-500 font-mono">{batchId}</span>
+            </>
+          )}
         </div>
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-2xl font-bold text-slate-900">
               Exception Investigation
             </h2>
-            <div className="flex items-center gap-3 mt-2 text-sm text-slate-500">
+            <div className="flex items-center gap-3 mt-2 text-sm text-slate-500 flex-wrap">
               <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded">
                 {exc.exception_id}
               </span>
+              {batchId && (
+                <span className="font-mono text-xs bg-blue-50 text-blue-600 border border-blue-200 px-2 py-0.5 rounded">
+                  Batch: {batchId}
+                </span>
+              )}
               <span>{formatExceptionType(exc.exception_type)}</span>
               <Badge text={exc.risk_category} variant="risk" />
               <Badge text={exc.status} variant="status" />
@@ -229,7 +243,7 @@ export default function ExceptionDetailPage({
 
       {/* ─── Tab Content ─────────────────────────────────────────────────────── */}
       {tab === "summary" && (
-        <SummaryTab exc={exc} explanation={explanation} />
+        <SummaryTab exc={exc} explanation={explanation} batchId={batchId} />
       )}
       {tab === "financials" && (
         <FinancialsTab exc={exc} evidence={evidence} />
@@ -261,9 +275,11 @@ export default function ExceptionDetailPage({
 function SummaryTab({
   exc,
   explanation,
+  batchId,
 }: {
   exc: ExceptionDetail;
   explanation: ExplanationResult | null;
+  batchId?: string;
 }) {
   return (
     <div className="space-y-6">
@@ -275,6 +291,7 @@ function SummaryTab({
         <div className="card-body">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <InfoItem label="Exception ID" value={exc.exception_id} mono />
+            <InfoItem label="Batch ID" value={batchId || exc.batch_id || "—"} mono />
             <InfoItem label="Payment ID" value={exc.payment_id} mono />
             <InfoItem label="Merchant" value={exc.merchant_id} mono />
             <InfoItem label="Status" value={exc.status} badge="status" />
