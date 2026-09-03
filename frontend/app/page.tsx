@@ -41,6 +41,38 @@ import type {
 
 const COLORS = ["#059669", "#2563eb", "#d97706", "#dc2626", "#7c3aed"];
 
+/**
+ * Check if a /metrics or /metrics/safety response has meaningful data
+ * (not just the default all-zeros from an empty batch registry).
+ */
+function metricsHaveData(m: SystemMetrics | null): boolean {
+  if (!m) return false;
+  return (
+    m.total_records > 0 ||
+    m.exceptions > 0 ||
+    m.auto_resolved > 0 ||
+    m.human_review > 0 ||
+    m.unresolved > 0 ||
+    m.verification_passed > 0 ||
+    m.verification_failed > 0 ||
+    m.financial_impact_paise > 0
+  );
+}
+
+function safetyHaveData(s: SafetyMetrics | null): boolean {
+  if (!s) return false;
+  return (
+    s.auto_decisions > 0 ||
+    s.human_review_decisions > 0 ||
+    s.unresolved_decisions > 0 ||
+    s.guardrail_blocks > 0 ||
+    s.high_value_blocks > 0 ||
+    s.conflict_blocks > 0 ||
+    s.novelty_blocks > 0 ||
+    s.verification_failures > 0
+  );
+}
+
 export default function DashboardPage() {
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
   const [safety, setSafety] = useState<SafetyMetrics | null>(null);
@@ -56,7 +88,7 @@ export default function DashboardPage() {
       const [mRes, sRes, eRes, hRes] = await Promise.all([
         getMetrics(),
         getSafetyMetrics(),
-        listExceptions({ limit: 10 }),
+        listExceptions({ limit: 500 }),
         getHealth(),
       ]);
       if (!mounted) return;
@@ -77,7 +109,32 @@ export default function DashboardPage() {
   if (loading) return <LoadingState message="Loading Control Center…" />;
   if (error) return <ErrorState title="Backend Unavailable" message={error} />;
 
-  // Prepare chart data
+  // ─── Derive metrics from exception list ─────────────────────────────────
+  // The /metrics endpoint reads from the batch registry which may be empty.
+  // The /exceptions endpoint has the authoritative list of exceptions.
+  // We derive status counts directly from the exception list.
+  const hasMetricsData = metricsHaveData(metrics);
+  const hasSafetyData = safetyHaveData(safety);
+
+  const totalExceptions = exceptions.length;
+
+  // Status-based counts derived from the exception list
+  const resolvedCount = exceptions.filter((e) => e.status === "APPROVED").length;
+  const escalatedCount = exceptions.filter((e) => e.status === "ESCALATED").length;
+  const rejectedCount = exceptions.filter((e) => e.status === "REJECTED").length;
+  const pendingCount = exceptions.filter((e) => e.status === "PENDING").length;
+
+  // "Human review" = pending exceptions awaiting action
+  const humanReviewCount = pendingCount;
+
+  // Auto-resolved: use /metrics if it has real batch-processed data,
+  // otherwise 0 (no AUTO status exists in the exception list).
+  const autoResolved = hasMetricsData ? (metrics?.auto_resolved ?? 0) : 0;
+
+  // Automation rate: from /metrics only when available
+  const automationRate = hasMetricsData ? metrics?.automation_rate : null;
+
+  // Prepare chart data from the same exception list
   const riskData = [
     {
       name: "Low",
@@ -115,47 +172,50 @@ export default function DashboardPage() {
       <div className="stat-grid mb-6">
         <StatCard
           label="Total Exceptions"
-          value={formatNum(metrics?.exceptions ?? exceptions.length)}
+          value={formatNum(totalExceptions)}
           sub="Across all batches"
         />
         <StatCard
+          label="Resolved"
+          value={formatNum(resolvedCount)}
+          sub="Approved by reviewer"
+        />
+        <StatCard
+          label="Pending Review"
+          value={formatNum(humanReviewCount)}
+          sub="Awaiting action"
+        />
+        <StatCard
+          label="Escalated"
+          value={formatNum(escalatedCount)}
+          sub="Routed to human review"
+        />
+        <StatCard
+          label="Rejected"
+          value={formatNum(rejectedCount)}
+          sub="Marked incorrect"
+        />
+        <StatCard
           label="Auto-Resolved"
-          value={formatNum(metrics?.auto_resolved)}
-          sub={formatPct(metrics?.automation_rate) + " automation rate"}
-        />
-        <StatCard
-          label="Human Review"
-          value={formatNum(metrics?.human_review)}
-          sub="Pending reviewer action"
-        />
-        <StatCard
-          label="Unresolved"
-          value={formatNum(metrics?.unresolved)}
-          sub="Need investigation"
+          value={hasMetricsData ? formatNum(autoResolved) : "—"}
+          sub={automationRate != null ? formatPct(automationRate) + " rate" : "No batch data"}
         />
         <StatCard
           label="Guardrail Pass"
-          value={formatPct(safety?.guardrail_pass_rate)}
+          value={hasSafetyData ? formatPct(safety?.guardrail_pass_rate) : "—"}
+          sub={hasSafetyData ? undefined : "No safety data"}
         />
         <StatCard
           label="Verification Failures"
-          value={formatNum(safety?.verification_failures)}
+          value={hasSafetyData ? formatNum(safety?.verification_failures) : "—"}
         />
         <StatCard
           label="High Value Blocks"
-          value={formatNum(safety?.high_value_blocks)}
+          value={hasSafetyData ? formatNum(safety?.high_value_blocks) : "—"}
         />
         <StatCard
           label="Conflict Blocks"
-          value={formatNum(safety?.conflict_blocks)}
-        />
-        <StatCard
-          label="Financial Impact"
-          value={formatPaise(metrics?.financial_impact_paise)}
-        />
-        <StatCard
-          label="Match Rate"
-          value={formatPct(metrics?.match_rate)}
+          value={hasSafetyData ? formatNum(safety?.conflict_blocks) : "—"}
         />
       </div>
 
