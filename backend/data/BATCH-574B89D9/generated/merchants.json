@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Trading",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-04-27T06:13:07"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Silver Goods",
+    "reference": "MER-SIL-002",
+    "currency": "INR",
+    "created_at": "2025-05-26T13:36:17"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Labs",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-03-21T15:32:27"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Enterprises",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-05-31T09:17:28"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Market",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-06-16T13:12:36"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Green Labs",
+    "reference": "MER-GRE-001",
+    "currency": "INR",
+    "created_at": "2025-03-20T03:33:53"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Hub",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-01-10T11:40:40"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Digital",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-06-24T14:47:29"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Digital",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-03-04T20:42:30"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Gold Digital",
+    "reference": "MER-GOL-002",
+    "currency": "INR",
+    "created_at": "2025-05-10T20:46:36"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Hub",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-03-03T14:44:40"
+  }
+]

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 13 REST API Security Audit</title>
+<style>
+  :root {
+    --pass: #10b981;
+    --warn: #f59e0b;
+    --fail: #ef4444;
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #3b82f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.6; padding: 2rem; max-width: 1100px; margin: 0 auto;
+  }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; margin: 2rem 0 1rem; color: var(--accent); }
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+
+  /* Status Banner */
+  .status-banner {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.2rem 1.5rem; border-radius: 12px;
+    margin-bottom: 2rem; font-size: 1.2rem; font-weight: 700;
+  }
+  .status-banner.warn { background: rgba(245,158,11,0.12); border: 2px solid var(--warn); color: var(--warn); }
+  .status-banner.pass { background: rgba(16,185,129,0.12); border: 2px solid var(--pass); color: var(--pass); }
+  .status-banner .icon { font-size: 2rem; }
+
+  /* Cards */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem; margin-bottom: 1.2rem;
+  }
+  .card-header {
+    display: flex; align-items: center; gap: 0.7rem;
+    margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600;
+  }
+  .badge {
+    display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px;
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  }
+  .badge.pass { background: rgba(16,185,129,0.15); color: var(--pass); }
+  .badge.warn { background: rgba(245,158,11,0.15); color: var(--warn); }
+  .badge.fail { background: rgba(239,68,68,0.15); color: var(--fail); }
+  .badge.info { background: rgba(59,130,246,0.15); color: var(--accent); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; }
+  th, td { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  th { color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  tr:last-child td { border-bottom: none; }
+
+  /* Flow Diagram */
+  .flow {
+    display: flex; flex-direction: column; gap: 0;
+    padding: 1rem 0;
+  }
+  .flow-step {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.5rem 0;
+  }
+  .flow-dot {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+  }
+  .flow-dot.ok { background: rgba(16,185,129,0.15); color: var(--pass); border: 2px solid var(--pass); }
+  .flow-dot.block { background: rgba(239,68,68,0.15); color: var(--fail); border: 2px solid var(--fail); }
+  .flow-line {
+    width: 2px; height: 16px; background: var(--border);
+    margin-left: 15px;
+  }
+  .flow-label { font-size: 0.9rem; }
+  .flow-label small { color: var(--muted); }
+
+  /* Code block */
+  .code {
+    background: #0f172a; border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.82rem;
+    overflow-x: auto; margin: 0.5rem 0; color: #94a3b8;
+  }
+  .code .highlight { color: var(--pass); }
+  .code .danger { color: var(--fail); }
+  .code .warn-text { color: var(--warn); }
+  .code .info-text { color: var(--accent); }
+
+  /* Summary grid */
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin: 1rem 0;
+  }
+  .summary-item {
+    background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 8px; padding: 1rem; text-align: center;
+  }
+  .summary-item .num { font-size: 2rem; font-weight: 700; color: var(--accent); }
+  .summary-item .label { color: var(--muted); font-size: 0.85rem; }
+
+  /* Critical callout */
+  .callout {
+    border-left: 4px solid; padding: 1rem 1.2rem; border-radius: 0 8px 8px 0;
+    margin: 1rem 0; font-size: 0.9rem;
+  }
+  .callout.critical { border-color: var(--fail); background: rgba(239,68,68,0.08); }
+  .callout.warning { border-color: var(--warn); background: rgba(245,158,11,0.08); }
+  .callout.info { border-color: var(--accent); background: rgba(59,130,246,0.08); }
+  .callout strong { display: block; margin-bottom: 0.3rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Phase 13 — REST API Security Audit</h1>
+<p class="subtitle">READ-ONLY audit of all Phase 13 REST API endpoints · Razorpay CloseLoop · September 2026</p>
+
+<!-- Status Banner -->
+<div class="status-banner warn">
+  <span class="icon">⚠️</span>
+  <div>
+    <div>Overall Status: PASS WITH WARNINGS</div>
+    <div style="font-size:0.85rem; font-weight:400; color:var(--muted)">
+      1 critical finding · 0 data leaks · 28 endpoints audited
+    </div>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="summary-grid">
+  <div class="summary-item">
+    <div class="num">28</div>
+    <div class="label">Endpoints Audited</div>
+  </div>
+  <div class="summary-item">
+    <div class="num" style="color:var(--pass)">6/7</div>
+    <div class="label">Audit Areas PASS</div>
+  </div>
+  <div class="summary-item">
+    <div class="num" style="color:var(--warn)">1</div>
+    <div class="label">Critical Finding</div>
+  </div>
+  <div class="summary-item">
+    <div class="num">3562</div>
+    <div class="label">Tests Passing</div>
+  </div>
+</div>
+
+<!-- ━━━ 1. INPUT SECURITY ━━━ -->
+<div class="card">
+  <div class="card-header">
+    🔒 1. Input Security <span class="badge pass">PASS</span>
+  </div>
+  <table>
+    <tr><th>Check</th><th>Result</th><th>Evidence</th></tr>
+    <tr>
+      <td>Pydantic validation</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>All request bodies use typed Pydantic schemas. 45 schemas defined in <code>api/schemas.py</code>.</td>
+    </tr>
+    <tr>
+      <td>Bounded pagination</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>
+        <code>batches</code>: limit ≤ 200<br>
+        <code>exceptions</code>: limit ≤ 500<br>
+        <code>similar</code>: limit ≤ 20
+      </td>
+    </tr>
+    <tr>
+      <td>Amount validation</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><code>ResolveRequest.adjustment_paise</code>: ≤ ₹100,000 via <code>field_validator</code>. Amounts ≥ 0 enforced by <code>Field(ge=0)</code>.</td>
+    </tr>
+    <tr>
+      <td>Enum validation</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>All enums (<code>ExceptionType</code>, <code>ResolutionType</code>, <code>RiskCategory</code>, <code>FeedbackType</code>, etc.) enforced by Pydantic. Invalid values → 422.</td>
+    </tr>
+    <tr>
+      <td>ID validation</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><code>validate_id()</code> in errors.py: rejects empty, special chars, SQL injection, >200 length.</td>
+    </tr>
+    <tr>
+      <td>Confidence bounds</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>All confidence fields: <code>Field(ge=0.0, le=1.0)</code>.</td>
+    </tr>
+    <tr>
+      <td>String length bounds</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><code>name</code>: 1-200, <code>reason</code>: 1-2000, <code>description</code>: ≤1000.</td>
+    </tr>
+    <tr>
+      <td>Unknown field handling</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>Pydantic v2 strict mode rejects unknown fields by default.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ━━━ 2. FINANCIAL SAFETY ━━━ -->
+<div class="card">
+  <div class="card-header">
+    💰 2. Financial Safety <span class="badge warn">WARNING</span>
+  </div>
+  
+  <table>
+    <tr><th>Check</th><th>Result</th><th>Evidence</th></tr>
+    <tr>
+      <td>Direct payment modification</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>No <code>session.add</code>/<code>commit</code>/<code>delete</code> in any API route or service. 0 matches.</td>
+    </tr>
+    <tr>
+      <td>Direct settlement modification</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>No SQL, no DB sessions in API layer. Routes delegate to read-only services.</td>
+    </tr>
+    <tr>
+      <td>Direct refund/fee/tax/adjustment modification</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>No database write operations in <code>app/api/</code>. 0 matches for UPDATE/INSERT/DELETE.</td>
+    </tr>
+    <tr>
+      <td>No SQL execution</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>No <code>execute()</code>, <code>text()</code>, <code>raw_sql</code> in API layer.</td>
+    </tr>
+    <tr>
+      <td>Route → Service delegation</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>All routes delegate to <code>BatchService</code>, <code>ExceptionService</code>, <code>IntelligenceService</code>, etc.</td>
+    </tr>
+    <tr>
+      <td>Phase 6 bypass via resolve</td>
+      <td><span class="badge fail">CRITICAL</span></td>
+      <td>
+        <code>ExceptionService.resolve_exception()</code> sets <code>guardrail_decision: "AUTO"</code> directly
+        without invoking <code>GuardrailEngine</code> from <code>app.services.guardrail_engine</code>.
+        This bypasses the Phase 6 hard safety boundary.
+      </td>
+    </tr>
+  </table>
+
+  <div class="callout critical">
+    <strong>🔴 Critical Finding: Guardrail Bypass in Resolve Endpoint</strong>
+    <code>POST /exceptions/{id}/resolve</code> → <code>ExceptionService.resolve_exception()</code><br><br>
+    The resolve endpoint records an outcome and sets <code>guardrail_decision: "AUTO"</code>
+    without calling <code>GuardrailEngine.evaluate()</code> from <code>app/services/guardrail_engine.py</code>.
+    The real guardrail engine exists and is used by the LangGraph agent
+    (<code>app/agent/guardrail_node.py</code>), but the REST API resolve path bypasses it.<br><br>
+    <strong>Impact</strong>: Any client can resolve an exception with an arbitrary amount
+    (up to ₹100,000) without guardrail validation.<br>
+    <strong>Fix required</strong>: The <code>resolve_exception()</code> method must invoke
+    <code>GuardrailEngine</code> before recording the outcome.
+  </div>
+
+  <div class="code">
+<span class="info-text"># Current (UNSAFE) flow:</span>
+POST /exceptions/{id}/resolve
+  → ExceptionService.resolve_exception()
+  → <span class="danger">guardrail_decision = "AUTO"  ← hardcoded, no engine call</span>
+  → OutcomeService.record_outcome()
+  → Response
+
+<span class="info-text"># Required (SAFE) flow:</span>
+POST /exceptions/{id}/resolve
+  → ExceptionService.resolve_exception()
+  → <span class="highlight">GuardrailEngine.evaluate(exception, resolution)</span>
+  → if REJECTED → return 403 + reasons
+  → if AUTO → OutcomeService.record_outcome()
+  → Response
+  </div>
+</div>
+
+<!-- ━━━ 3. BUSINESS LOGIC SEPARATION ━━━ -->
+<div class="card">
+  <div class="card-header">
+    🏗️ 3. Business Logic Separation <span class="badge pass">PASS</span>
+  </div>
+  <table>
+    <tr><th>Check</th><th>Result</th><th>Evidence</th></tr>
+    <tr>
+      <td>Routes delegate to services</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>All 28 routes call service methods, never inline business logic.</td>
+    </tr>
+    <tr>
+      <td>No duplicated financial logic</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>Routes validate input → call service → return result. No calculation in routes.</td>
+    </tr>
+    <tr>
+      <td>No direct DB operations in routes</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>0 database imports in <code>app/api/routes/</code>. 0 SQL operations.</td>
+    </tr>
+    <tr>
+      <td>Services use existing infrastructure</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>
+        <code>BatchService</code> → <code>reconcile_batch()</code><br>
+        <code>ExceptionService</code> → <code>FeedbackService</code>, <code>OutcomeService</code><br>
+        <code>IntelligenceService</code> → <code>AnalyzeService</code>, <code>ExplainService</code>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- ━━━ 4. ERROR SECURITY ━━━ -->
+<div class="card">
+  <div class="card-header">
+    🛡️ 4. Error Security <span class="badge pass">PASS</span>
+  </div>
+  <table>
+    <tr><th>Check</th><th>Result</th><th>Evidence</th></tr>
+    <tr>
+      <td>No stack traces in responses</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><code>generic_error_handler</code> returns <code>"Internal server error"</code> with <code>error_type</code> only. No traceback.</td>
+    </tr>
+    <tr>
+      <td>No secrets/API keys in responses</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><code>mask_sensitive_dict()</code> masks <code>api_key</code>, <code>secret</code>, <code>password</code>, <code>token</code>. Regex masks <code>sk_live_*</code>, <code>AKIA*</code>, <code>ghp_*</code>.</td>
+    </tr>
+    <tr>
+      <td>No database credentials in responses</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>0 matches for <code>postgresql://</code>, <code>mysql://</code>, <code>redis://</code> in error output.</td>
+    </tr>
+    <tr>
+      <td>No internal filesystem paths</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><code>sanitize_error_message()</code> strips <code>File "..."</code> and <code>line N</code> patterns.</td>
+    </tr>
+    <tr>
+      <td>Error message sanitization</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>10 test cases verify sanitization. Max length 500 chars.</td>
+    </tr>
+    <tr>
+      <td>Request ID correlation</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>Every error includes <code>request_id</code> in body + <code>X-Request-ID</code> header.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ━━━ 5. LLM SECURITY ━━━ -->
+<div class="card">
+  <div class="card-header">
+    🤖 5. LLM Security <span class="badge pass">PASS</span>
+  </div>
+  <table>
+    <tr><th>Check</th><th>Result</th><th>Evidence</th></tr>
+    <tr>
+      <td>/explain cannot make decisions</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><code>ExplainService</code> returns text only. No decision, amount, or resolution fields in output schema.</td>
+    </tr>
+    <tr>
+      <td>/analyze cannot make decisions</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><code>AnalyzeService</code> returns <code>ai_explanation: str</code>. Guardrail/financial calculations are deterministic.</td>
+    </tr>
+    <tr>
+      <td>LLM output cannot trigger unsafe action</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>LLM outputs are <code>str</code> fields only. No code path converts LLM text to financial action.</td>
+    </tr>
+    <tr>
+      <td>LLM cannot bypass guardrails</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>System prompts explicitly state: "Do NOT override guardrail decisions". Phase 12I audit confirmed.</td>
+    </tr>
+    <tr>
+      <td>No DB access in LLM code</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td><code>app/llm/</code> has 0 database imports, 0 SQL operations.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ━━━ 6. MCP SAFETY ━━━ -->
+<div class="card">
+  <div class="card-header">
+    🔌 6. MCP Safety <span class="badge pass">PASS</span>
+  </div>
+  <table>
+    <tr><th>Check</th><th>Result</th><th>Evidence</th></tr>
+    <tr>
+      <td>API cannot bypass MCP architecture</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>API routes delegate to services. MCP is a separate tool-access layer for LangGraph. No route imports MCP code.</td>
+    </tr>
+    <tr>
+      <td>No direct financial table modification</td>
+      <td><span class="badge pass">PASS</span></td>
+      <td>API routes, MCP tools, and LLM all use the same underlying service layer.</td>
+    </tr>
+    <tr>
+      <td>Guardrails are mandatory (Phase 6)</td>
+      <td><span class="badge warn">PARTIAL</span></td>
+      <td>MCP <code>create_resolution</code> delegates to Phase 8 (which has guardrails). API resolve endpoint bypasses guardrails (see Finding #1).</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ━━━ ARCHITECTURE ━━━ -->
+<div class="card">
+  <div class="card-header">
+    🏛️ Security Architecture Overview
+  </div>
+  
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <div>
+      <h3>API Layer (Phase 13)</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-dot ok">✓</div>
+          <div class="flow-label">Client Request<small> — Pydantic validated</small></div>
+        </div>
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-dot ok">✓</div>
+          <div class="flow-label">Route<small> — Delegates to service</small></div>
+        </div>
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-dot ok">✓</div>
+          <div class="flow-label">Service<small> — Business logic</small></div>
+        </div>
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-dot block">✗</div>
+          <div class="flow-label"><strong style="color:var(--fail)">Resolve bypasses guardrails</strong><small> — Sets AUTO directly</small></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>LangGraph Agent (Phase 7)</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-dot ok">✓</div>
+          <div class="flow-label">Agent State<small> — Exception + evidence</small></div>
+        </div>
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-dot ok">✓</div>
+          <div class="flow-label">Candidate Selection<small> — Resolution proposed</small></div>
+        </div>
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-dot ok">✓</div>
+          <div class="flow-label"><strong style="color:var(--pass)">GuardrailEngine.evaluate()</strong><small> — Phase 6 HARD boundary</small></div>
+        </div>
+        <div class="flow-line"></div>
+        <div class="flow-step">
+          <div class="flow-dot ok">✓</div>
+          <div class="flow-label">Execution + Verification<small> — Phase 8</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ CRITICAL FINDING DETAIL ━━━ -->
+<div class="card" style="border-color: var(--fail);">
+  <div class="card-header" style="color: var(--fail);">
+    🔴 Critical Finding Detail
+  </div>
+  
+  <h3>Vulnerability: Guardrail Bypass in POST /exceptions/{id}/resolve</h3>
+  
+  <table>
+    <tr><th>Attribute</th><th>Value</th></tr>
+    <tr><td>Severity</td><td><span class="badge fail">CRITICAL</span></td></tr>
+    <tr><td>Endpoint</td><td><code>POST /exceptions/{exception_id}/resolve</code></td></tr>
+    <tr><td>Code Path</td><td><code>ExceptionService.resolve_exception()</code> → line ~155</td></tr>
+    <tr><td>Root Cause</td><td>Hardcoded <code>"guardrail_decision": "AUTO"</code> instead of calling <code>GuardrailEngine</code></td></tr>
+    <tr><td>Impact</td><td>Client can resolve any exception with arbitrary amount (≤₹100K) without guardrail validation</td></tr>
+    <tr><td>Mitigation</td><td>Pydantic amount cap (₹100K) limits damage, but guardrails are still bypassed</td></tr>
+    <tr><td>Fix</td><td>Import and call <code>GuardrailEngine.evaluate()</code> before recording outcome</td></tr>
+  </table>
+
+  <div class="code" style="margin-top: 1rem;">
+<span class="info-text"># File: app/api/services/exception_service.py, line ~155</span>
+
+<span class="danger"># CURRENT — UNSAFE:</span>
+result = {
+    "exception_id": exception_id,
+    "resolution_type": resolution_type,
+    "status": "RESOLVED",
+    "adjustment_paise": adjustment_paise,
+    <span class="danger">"guardrail_decision": "AUTO",   # ← hardcoded, no engine call</span>
+    "execution_result": "PENDING",
+    "verification_result": "PENDING",
+    "workflow_id": workflow_id,
+}
+
+<span class="highlight"># REQUIRED — SAFE:</span>
+<span class="info-text"># from app.services.guardrail_engine import GuardrailEngine</span>
+<span class="info-text"># engine = GuardrailEngine()</span>
+<span class="info-text"># guardrail_result = engine.evaluate(exception_data, resolution)</span>
+<span class="info-text"># if guardrail_result.decision == "REJECTED":</span>
+<span class="info-text">#     raise GuardrailRejectionException(</span>
+<span class="info-text">#         message="Resolution rejected by guardrails",</span>
+<span class="info-text">#         guardrail_reasons=guardrail_result.reasons,</span>
+<span class="info-text">#     )</span>
+  </div>
+</div>
+
+<!-- ━━━ TEST COVERAGE ━━━ -->
+<div class="card">
+  <div class="card-header">
+    🧪 Test Coverage
+  </div>
+  <table>
+    <tr><th>Audit Area</th><th>Tests</th><th>Status</th></tr>
+    <tr><td>Error Response Schema</td><td>7</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Status Code Mapping</td><td>9</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Request ID Correlation</td><td>7</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Exception Classes</td><td>15</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Sanitization</td><td>10</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Validation Helpers</td><td>16</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Security No-Leaks</td><td>5</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Error Categories</td><td>4</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>API Foundation</td><td>74</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>API Schemas</td><td>96</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Batch API</td><td>32</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Exception API</td><td>37</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td>Intelligence API</td><td>35</td><td><span class="badge pass">PASS</span></td></tr>
+    <tr><td><strong>Total</strong></td><td><strong>3562</strong></td><td><span class="badge pass">ALL PASS</span></td></tr>
+  </table>
+</div>
+
+<!-- ━━━ RECOMMENDATIONS ━━━ -->
+<div class="card">
+  <div class="card-header">
+    📋 Recommendations
+  </div>
+  <table>
+    <tr><th>#</th><th>Priority</th><th>Recommendation</th></tr>
+    <tr>
+      <td>1</td>
+      <td><span class="badge fail">P0</span></td>
+      <td>
+        <strong>Fix guardrail bypass in resolve endpoint</strong><br>
+        <code>ExceptionService.resolve_exception()</code> must call <code>GuardrailEngine.evaluate()</code>
+        before recording the outcome. Reject with 403 if guardrails fail.
+      </td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><span class="badge info">P1</span></td>
+      <td>
+        <strong>Add guardrail integration test</strong><br>
+        Test that <code>POST /exceptions/{id}/resolve</code> with a high-risk resolution
+        returns 403 when guardrails reject it.
+      </td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><span class="badge info">P2</span></td>
+      <td>
+        <strong>Add rate limiting middleware</strong><br>
+        Prevent abuse of write endpoints (resolve, approve, reject, escalate).
+      </td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><span class="badge info">P2</span></td>
+      <td>
+        <strong>Add authentication/authorization middleware</strong><br>
+        Current endpoints are unauthenticated. Production deployment requires auth.
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- ━━━ VERDICT ━━━ -->
+<div class="card" style="border-color: var(--accent);">
+  <div class="card-header" style="color: var(--accent);">
+    📊 Audit Verdict
+  </div>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <div>
+      <h3 style="color: var(--pass);">✅ PASS (6/7 areas)</h3>
+      <ul style="list-style: none; padding: 0;">
+        <li>✅ Input Security — All validation complete</li>
+        <li>✅ Business Logic — Properly separated</li>
+        <li>✅ Error Security — No leaks, sanitized</li>
+        <li>✅ LLM Security — Explanation-only, no decisions</li>
+        <li>✅ MCP Safety — Architecture intact</li>
+        <li>✅ Test Coverage — 3562 tests, 0 regressions</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color: var(--warn);">⚠️ WARNING (1/7 areas)</h3>
+      <ul style="list-style: none; padding: 0;">
+        <li>⚠️ Financial Safety — Guardrail bypass in resolve endpoint</li>
+      </ul>
+      <div class="callout warning" style="margin-top: 1rem;">
+        <strong>PHASE 13 READINESS</strong>
+        READY with required fix: Resolve endpoint must integrate GuardrailEngine before recording outcomes.
+      </div>
+    </div>
+  </div>
+</div>
+
+<p style="color: var(--muted); font-size: 0.8rem; text-align: center; margin-top: 2rem;">
+  Phase 13 REST API Security Audit · Generated September 2026 · Razorpay CloseLoop
+</p>
+
+</body>
+</html>

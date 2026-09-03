@@ -1,0 +1,23 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Co",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-04-21T03:31:49"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Fresh Enterprises",
+    "reference": "MER-FRE-002",
+    "currency": "INR",
+    "created_at": "2025-04-01T14:55:08"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Gold Market",
+    "reference": "MER-GOL-003",
+    "currency": "INR",
+    "created_at": "2025-01-02T03:01:59"
+  }
+]

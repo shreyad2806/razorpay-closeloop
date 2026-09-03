@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Global Hub",
+    "reference": "MER-GLO-001",
+    "currency": "INR",
+    "created_at": "2025-02-04T22:43:42"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Fresh Services",
+    "reference": "MER-FRE-002",
+    "currency": "INR",
+    "created_at": "2025-02-09T00:04:48"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Market",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-06-14T03:56:45"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Elite Digital",
+    "reference": "MER-ELI-004",
+    "currency": "INR",
+    "created_at": "2025-03-17T08:54:36"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Hub",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-05-06T05:00:46"
+  }
+]

@@ -282,13 +282,14 @@ class AutomationDecisionMatrix:
             ))
 
         # Conflict check (independent of evidence guard)
-        if has_conflict:
+        # HIGH #8 FIX: None=unknown blocks AUTO (fail closed)
+        if has_conflict is None or has_conflict:
             human_reasons.append(ReasonCode.CONFLICTING_EVIDENCE)
             failed_gates.append(GateResult(
                 gate_name="conflict_check",
                 status=GateStatus.FAILED,
                 reason_code=ReasonCode.CONFLICTING_EVIDENCE,
-                description="Conflicting evidence detected",
+                description="Conflicting evidence detected" if has_conflict else "Conflict status unknown — cannot confirm safe",
             ))
         else:
             passed_gates.append(GateResult(
@@ -298,13 +299,14 @@ class AutomationDecisionMatrix:
             ))
 
         # Novelty check (independent of evidence guard)
-        if is_novel:
+        # HIGH #8 FIX: None=unknown blocks AUTO (fail closed)
+        if is_novel is None or is_novel:
             human_reasons.append(ReasonCode.NOVEL_PATTERN)
             failed_gates.append(GateResult(
                 gate_name="novelty_check",
                 status=GateStatus.FAILED,
                 reason_code=ReasonCode.NOVEL_PATTERN,
-                description="Novel pattern detected",
+                description="Novel pattern detected" if is_novel else "Novelty status unknown — cannot confirm known pattern",
             ))
         else:
             passed_gates.append(GateResult(

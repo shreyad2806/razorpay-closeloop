@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Red Trading",
+    "reference": "MER-RED-001",
+    "currency": "INR",
+    "created_at": "2025-01-23T08:10:49"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Mart",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-03-17T21:40:00"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Red Enterprises",
+    "reference": "MER-RED-003",
+    "currency": "INR",
+    "created_at": "2025-04-20T17:41:02"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Silver Mart",
+    "reference": "MER-SIL-004",
+    "currency": "INR",
+    "created_at": "2025-06-20T05:15:28"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Red Goods",
+    "reference": "MER-RED-005",
+    "currency": "INR",
+    "created_at": "2025-06-05T02:14:23"
+  }
+]

@@ -1,0 +1,163 @@
+[
+  {
+    "tax_id": "TAX-000001",
+    "payment_id": "PAY-000001",
+    "case_id": null,
+    "amount": 563850,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000002",
+    "payment_id": "PAY-000002",
+    "case_id": null,
+    "amount": 1223151,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000003",
+    "payment_id": "PAY-000003",
+    "case_id": null,
+    "amount": 9541,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000004",
+    "payment_id": "PAY-000004",
+    "case_id": null,
+    "amount": 1097884,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000005",
+    "payment_id": "PAY-000004",
+    "case_id": null,
+    "amount": 60993,
+    "tax_type": "TDS"
+  },
+  {
+    "tax_id": "TAX-000006",
+    "payment_id": "PAY-000005",
+    "case_id": null,
+    "amount": 1613779,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000007",
+    "payment_id": "PAY-000005",
+    "case_id": null,
+    "amount": 89654,
+    "tax_type": "TDS"
+  },
+  {
+    "tax_id": "TAX-000008",
+    "payment_id": "PAY-000006",
+    "case_id": null,
+    "amount": 689798,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000009",
+    "payment_id": "PAY-000007",
+    "case_id": null,
+    "amount": 624345,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000010",
+    "payment_id": "PAY-000008",
+    "case_id": null,
+    "amount": 99247,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000011",
+    "payment_id": "PAY-000009",
+    "case_id": null,
+    "amount": 7708,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000012",
+    "payment_id": "PAY-000010",
+    "case_id": null,
+    "amount": 1307599,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000013",
+    "payment_id": "PAY-000011",
+    "case_id": null,
+    "amount": 1270586,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000014",
+    "payment_id": "PAY-000012",
+    "case_id": null,
+    "amount": 601025,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000015",
+    "payment_id": "PAY-000013",
+    "case_id": null,
+    "amount": 298370,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000016",
+    "payment_id": "PAY-000014",
+    "case_id": null,
+    "amount": 1329354,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000017",
+    "payment_id": "PAY-000015",
+    "case_id": null,
+    "amount": 1676833,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000018",
+    "payment_id": "PAY-000016",
+    "case_id": null,
+    "amount": 1395916,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000019",
+    "payment_id": "PAY-000017",
+    "case_id": null,
+    "amount": 1070034,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000020",
+    "payment_id": "PAY-000018",
+    "case_id": null,
+    "amount": 1338428,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000021",
+    "payment_id": "PAY-000018",
+    "case_id": null,
+    "amount": 74357,
+    "tax_type": "TDS"
+  },
+  {
+    "tax_id": "TAX-000022",
+    "payment_id": "PAY-000019",
+    "case_id": null,
+    "amount": 497106,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000023",
+    "payment_id": "PAY-000020",
+    "case_id": null,
+    "amount": 1044098,
+    "tax_type": "GST"
+  }
+]

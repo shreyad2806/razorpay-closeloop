@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Silver Co",
+    "reference": "MER-SIL-001",
+    "currency": "INR",
+    "created_at": "2025-01-14T14:13:52"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Gold Hub",
+    "reference": "MER-GOL-002",
+    "currency": "INR",
+    "created_at": "2025-05-28T02:54:23"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Red Enterprises",
+    "reference": "MER-RED-003",
+    "currency": "INR",
+    "created_at": "2025-03-28T05:21:38"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Store",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-02-26T09:44:23"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Star Store",
+    "reference": "MER-STA-005",
+    "currency": "INR",
+    "created_at": "2025-02-20T07:14:43"
+  }
+]

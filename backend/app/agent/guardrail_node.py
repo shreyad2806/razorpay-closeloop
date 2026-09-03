@@ -15,6 +15,8 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 from app.schemas.agent_state import AgentState, WorkflowStatus
+from app.schemas.resolution_engine import ResolutionEngineResult
+from app.services.guardrail_engine import GuardrailEngine
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -83,12 +85,29 @@ def apply_guardrails(state: AgentState) -> Dict[str, Any]:
         return _fail_node(state, node_name, "No selected candidate for guardrails", start_time)
 
     try:
-        # Build a minimal ResolutionEngineResult for the guardrail engine
+        # Build a ResolutionEngineResult for the guardrail engine
         engine_result = _build_engine_result_for_guardrails(state)
 
-        # Delegate to Phase 6 GuardrailEngine
-        # In production: GuardrailEngine().evaluate(engine_result)
-        guardrail_result = _simulate_guardrail_evaluation(state, engine_result)
+        # Delegate to Phase 6 GuardrailEngine - REAL implementation
+        guardrail_engine = GuardrailEngine()
+        guardrail_result_obj = guardrail_engine.evaluate(engine_result)
+
+        # Convert to dict for state storage
+        guardrail_result = {
+            "decision": guardrail_result_obj.decision.value,
+            "confidence": guardrail_result_obj.confidence,
+            "risk_category": guardrail_result_obj.risk_category,
+            "reason_codes": guardrail_result_obj.reason_codes,
+            "primary_reason": guardrail_result_obj.primary_reason,
+            "passed_gates": guardrail_result_obj.passed_gates,
+            "failed_gates": guardrail_result_obj.failed_gates,
+            "financial_exposure_paise": guardrail_result_obj.financial_exposure_paise,
+            "evidence_coverage": guardrail_result_obj.evidence_coverage,
+            "evidence_consistency": guardrail_result_obj.evidence_consistency,
+            "is_novel": guardrail_result_obj.is_novel,
+            "has_conflict": guardrail_result_obj.has_conflict,
+            "system_healthy": guardrail_result_obj.system_healthy,
+        }
 
         updates = _record_node(state, node_name, success=True, start_time=start_time)
 
@@ -118,109 +137,53 @@ def apply_guardrails(state: AgentState) -> Dict[str, Any]:
         return updates
 
 
-def _build_engine_result_for_guardrails(state: AgentState) -> Dict[str, Any]:
-    """Build a ResolutionEngineResult-compatible dict for the guardrail engine."""
+def _build_engine_result_for_guardrails(state: AgentState) -> ResolutionEngineResult:
+    """Build a ResolutionEngineResult for the guardrail engine from agent state."""
     candidate = state.selected_candidate or {}
     scores = state.candidate_scores or {}
     best_score = scores.get("best_score", 0.0) if scores else 0.0
+    evidence_pkg = state.evidence_package or {}
+    classification = state.classification or {}
 
-    return {
-        "exception_id": state.metadata.exception_id,
-        "case_id": state.metadata.case_id,
-        "expected_amount": 100000,
-        "actual_amount": 97000,
-        "difference": 3000,
-        "status": "RECOMMENDED",
-        "selected_resolution": candidate.get("resolution_type"),
-        "confidence": best_score,
-        "risk_category": state.risk or "LOW",
-        "deterministic_exception_type": (state.classification or {}).get("exception_type", "UNKNOWN"),
-        "evidence_coverage": (state.evidence_package or {}).get("evidence_coverage", 0.0),
-        "evidence_consistency": (state.evidence_package or {}).get("evidence_consistency", 0.0),
-    }
-
-
-def _simulate_guardrail_evaluation(state: AgentState, engine_result: Dict) -> Dict[str, Any]:
-    """Simulate guardrail evaluation.
-
-    In production, this would call GuardrailEngine().evaluate()
-    """
-    exc_type = engine_result.get("deterministic_exception_type", "UNKNOWN")
-    confidence = engine_result.get("confidence", 0.0)
-    coverage = engine_result.get("evidence_coverage", 0.0)
-    consistency = engine_result.get("evidence_consistency", 0.0)
-    risk = engine_result.get("risk_category", "LOW")
-
-    # Blocked exception types → UNRESOLVED
-    blocked_types = ["UNKNOWN", "COMPLEX_MULTI_ADJUSTMENT", "MISSING_RECORD"]
-    if exc_type in blocked_types:
-        return {
-            "decision": "UNRESOLVED",
-            "confidence": confidence,
-            "risk_category": risk,
-            "reason_codes": ["BLOCKED_EXCEPTION_TYPE"],
-            "primary_reason": f"Exception type {exc_type} is blocked",
-            "passed_gates": [],
-            "failed_gates": ["blocked_exception_type"],
-        }
-
-    # Low confidence → HUMAN_REVIEW
-    if confidence < 0.40:
-        return {
-            "decision": "UNRESOLVED",
-            "confidence": confidence,
-            "risk_category": risk,
-            "reason_codes": ["VERY_LOW_CONFIDENCE"],
-            "primary_reason": f"Confidence {confidence:.1%} too low",
-            "passed_gates": [],
-            "failed_gates": ["confidence_gate"],
-        }
-
-    if confidence < 0.70:
-        return {
-            "decision": "HUMAN_REVIEW",
-            "confidence": confidence,
-            "risk_category": risk,
-            "reason_codes": ["MEDIUM_CONFIDENCE"],
-            "primary_reason": f"Confidence {confidence:.1%} below auto threshold",
-            "passed_gates": [],
-            "failed_gates": ["confidence_gate"],
-        }
-
-    # High risk → HUMAN_REVIEW
-    if risk == "HIGH":
-        return {
-            "decision": "HUMAN_REVIEW",
-            "confidence": confidence,
-            "risk_category": risk,
-            "reason_codes": ["ELEVATED_RISK"],
-            "primary_reason": "High risk level",
-            "passed_gates": [],
-            "failed_gates": ["risk_check"],
-        }
-
-    # Low coverage → HUMAN_REVIEW
-    if coverage < 0.50:
-        return {
-            "decision": "HUMAN_REVIEW",
-            "confidence": confidence,
-            "risk_category": risk,
-            "reason_codes": ["LOW_COVERAGE"],
-            "primary_reason": f"Evidence coverage {coverage:.1%} too low",
-            "passed_gates": [],
-            "failed_gates": ["evidence_guard"],
-        }
-
-    # All checks pass → AUTO
-    return {
-        "decision": "AUTO",
-        "confidence": confidence,
-        "risk_category": risk,
-        "reason_codes": ["ALL_GATES_PASSED"],
-        "primary_reason": "All mandatory gates passed",
-        "passed_gates": ["confidence", "exposure", "evidence", "fallback"],
-        "failed_gates": [],
-    }
+    reconciliation = state.reconciliation_result or {}
+    return ResolutionEngineResult(
+        exception_id=state.metadata.exception_id or "",
+        case_id=state.metadata.case_id or "",
+        payment_id=reconciliation.get("payment_id"),
+        merchant_id=reconciliation.get("merchant_id"),
+        expected_amount=evidence_pkg.get("expected_amount", 0),
+        actual_amount=evidence_pkg.get("actual_amount", 0),
+        difference=evidence_pkg.get("difference", 0),
+        status="RECOMMENDED",  # Candidate selected, so recommended
+        selected_resolution=candidate.get("resolution_type"),
+        # HIGH #3 FIX: The exposure guard reads adjustment from selected_candidate.
+        # Since we have a candidate dict (not ResolutionProposal), we store the
+        # adjustment amount in evidence so the guardrail engine can compute exposure.
+        selected_candidate=None,  # Not a ResolutionProposal — keep None
+        selected_score=None,  # Not needed for guardrails — exposure uses proposed_adjustment_paise
+        ranked_candidates=[],
+        candidate_scores=[],
+        confidence=best_score,
+        confidence_factors={},
+        risk_category=state.risk or "LOW",
+        risk_factors=[],
+        explainability=None,
+        rejection_reasons=[],
+        deterministic_exception_type=classification.get("exception_type", "UNKNOWN"),
+        ml_exception_type=classification.get("ml_exception_type"),
+        classification_agreement=classification.get("agreement", True),
+        evidence_explanation_status=evidence_pkg.get("explanation_status", ""),
+        evidence_coverage=evidence_pkg.get("evidence_coverage", 0.0),
+        evidence_consistency=evidence_pkg.get("evidence_consistency", 0.0),
+        # HIGH #8 FIX: Use None as sentinel for unknown state.
+        # False means verified-safe; None means insufficient information.
+        # The decision matrix must treat None/unknown as HUMAN_REVIEW.
+        has_conflict=evidence_pkg.get("has_conflict", None),
+        is_novel=evidence_pkg.get("is_novel", None),
+        missing_evidence=evidence_pkg.get("missing_evidence", []),
+        # HIGH #3 FIX: Pass adjustment amount so exposure guard evaluates real exposure.
+        proposed_adjustment_paise=abs(candidate.get("amount_paise", 0)),
+    )
 
 
 def _fail_node(
@@ -234,3 +197,4 @@ def _fail_node(
     # FAIL-CLOSED: error → UNRESOLVED
     updates["decision"] = "UNRESOLVED"
     return updates
+

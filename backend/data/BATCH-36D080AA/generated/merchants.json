@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Silver Hub",
+    "reference": "MER-SIL-001",
+    "currency": "INR",
+    "created_at": "2025-02-28T02:17:30"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Store",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-03-21T10:30:04"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Fresh Mart",
+    "reference": "MER-FRE-003",
+    "currency": "INR",
+    "created_at": "2025-02-10T11:19:22"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Star Enterprises",
+    "reference": "MER-STA-004",
+    "currency": "INR",
+    "created_at": "2025-05-12T14:56:18"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Prime Mart",
+    "reference": "MER-PRI-005",
+    "currency": "INR",
+    "created_at": "2025-05-08T09:19:34"
+  }
+]

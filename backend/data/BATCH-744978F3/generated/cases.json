@@ -1,0 +1,10 @@
+[
+  {
+    "case_id": "CASE-001",
+    "payment_id": "PAY-001",
+    "merchant_id": "M-001",
+    "expected_amount": 95000,
+    "actual_amount": 95000,
+    "difference": 0
+  }
+]

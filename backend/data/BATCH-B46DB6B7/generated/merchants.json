@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Shop",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-05-03T18:57:01"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Trading",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-04-28T03:00:12"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Hub",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-03-20T06:09:01"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Hub",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-06-27T06:01:15"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Labs",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-01-14T17:44:37"
+  }
+]

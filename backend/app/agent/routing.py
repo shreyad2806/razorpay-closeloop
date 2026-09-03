@@ -87,7 +87,10 @@ def route_after_verification(state: AgentState) -> str:
     Rules:
     - VERIFIED → resolve_action_boundary
     - FAILED → escalation
-    - NOT_REQUIRED → resolve_action_boundary (shouldn't happen, but fail open to resolve)
+    - NOT_REQUIRED / PENDING / UNKNOWN → fail closed (escalation)
+
+    HIGH #5 FIX: Never treat PENDING, NOT_REQUIRED, or UNKNOWN
+    as equivalent to VERIFIED. Fail closed.
     """
     verification = state.verification
     status = verification.verification_status.value if verification else "NOT_REQUIRED"
@@ -97,8 +100,8 @@ def route_after_verification(state: AgentState) -> str:
     elif status == "FAILED":
         return ROUTE_ESCALATION
     else:
-        # NOT_REQUIRED or PENDING → resolve (defensive)
-        return ROUTE_RESOLVE
+        # HIGH #5: NOT_REQUIRED, PENDING, UNKNOWN → fail closed
+        return ROUTE_ESCALATION
 
 
 # ─────────────────────────────────────────────────────────────────────────────

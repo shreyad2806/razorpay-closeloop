@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Mart",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-01-02T04:50:31"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Goods",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-04-28T04:38:07"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Quick Services",
+    "reference": "MER-QUI-003",
+    "currency": "INR",
+    "created_at": "2025-02-08T01:40:53"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Green Solutions",
+    "reference": "MER-GRE-004",
+    "currency": "INR",
+    "created_at": "2025-03-31T22:32:40"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Digital",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-06-27T15:44:32"
+  }
+]

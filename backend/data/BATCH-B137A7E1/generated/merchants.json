@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Enterprises",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-05-17T13:43:41"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Shop",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-06-01T13:35:44"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Store",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-03-24T04:43:34"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Silver Goods",
+    "reference": "MER-SIL-004",
+    "currency": "INR",
+    "created_at": "2025-02-11T16:00:07"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Mart",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-01-14T04:14:36"
+  }
+]

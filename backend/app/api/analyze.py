@@ -304,28 +304,16 @@ class AnalyzeService:
 
         reasons: List[str] = []
 
-        if difference == 0:
-            decision = "AUTO"
-            confidence = 1.0
-            reasons.append("No discrepancy detected")
-        elif abs(difference) <= 10000:
-            decision = "AUTO"
-            confidence = 0.8
-            reasons.append("Small discrepancy within auto-resolution threshold")
-        elif abs(difference) <= 100000:
-            decision = "HUMAN_REVIEW"
-            confidence = 0.5
-            reasons.append("Medium discrepancy requires human review")
-        else:
-            decision = "HUMAN_REVIEW"
-            confidence = 0.3
-            reasons.append("Large discrepancy requires human review")
+        # This endpoint returns an analysis summary and does not execute the
+        # Phase 6 GuardrailEngine. It must never present a recommendation as
+        # an automatic authorization.
+        decision = "HUMAN_REVIEW"
+        confidence = 0.0
+        reasons.append(
+            "GuardrailEngine evaluation is required before any automatic decision"
+        )
+        if difference and abs(difference) > 100000:
             reasons.append(f"Exposure: {abs(difference)} paise")
-
-        if scenario == "EXACT_MATCH":
-            decision = "AUTO"
-            confidence = 1.0
-            reasons = ["Exact match — no discrepancy"]
 
         return GuardrailSummary(
             decision=decision,

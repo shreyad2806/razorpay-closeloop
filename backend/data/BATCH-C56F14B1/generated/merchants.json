@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Diamond Market",
+    "reference": "MER-DIA-001",
+    "currency": "INR",
+    "created_at": "2025-02-28T05:42:26"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Trading",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-03-11T22:46:36"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Elite Shop",
+    "reference": "MER-ELI-003",
+    "currency": "INR",
+    "created_at": "2025-02-08T08:55:24"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Enterprises",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-05-28T06:05:31"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Royal Hub",
+    "reference": "MER-ROY-005",
+    "currency": "INR",
+    "created_at": "2025-01-03T08:29:14"
+  }
+]

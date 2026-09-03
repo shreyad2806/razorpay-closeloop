@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Quick Hub",
+    "reference": "MER-QUI-001",
+    "currency": "INR",
+    "created_at": "2025-06-22T22:52:07"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Goods",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-01-19T03:32:55"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Shop",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-01-27T00:16:50"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Gold Enterprises",
+    "reference": "MER-GOL-004",
+    "currency": "INR",
+    "created_at": "2025-01-05T03:27:07"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Royal Enterprises",
+    "reference": "MER-ROY-005",
+    "currency": "INR",
+    "created_at": "2025-04-14T07:29:29"
+  }
+]

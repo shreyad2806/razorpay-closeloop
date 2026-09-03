@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Co",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-01-29T09:15:17"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Gold Store",
+    "reference": "MER-GOL-002",
+    "currency": "INR",
+    "created_at": "2025-06-05T00:42:54"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Quick Services",
+    "reference": "MER-QUI-003",
+    "currency": "INR",
+    "created_at": "2025-01-04T08:35:47"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Smart Co",
+    "reference": "MER-SMA-004",
+    "currency": "INR",
+    "created_at": "2025-01-23T09:22:24"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Tech Shop",
+    "reference": "MER-TEC-005",
+    "currency": "INR",
+    "created_at": "2025-05-28T13:08:22"
+  }
+]

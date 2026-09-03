@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Store",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-05-24T18:47:37"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Elite Enterprises",
+    "reference": "MER-ELI-002",
+    "currency": "INR",
+    "created_at": "2025-04-20T22:40:43"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Services",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-04-11T05:58:33"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Gold Trading",
+    "reference": "MER-GOL-004",
+    "currency": "INR",
+    "created_at": "2025-03-21T13:22:58"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Royal Digital",
+    "reference": "MER-ROY-005",
+    "currency": "INR",
+    "created_at": "2025-04-24T03:38:33"
+  }
+]

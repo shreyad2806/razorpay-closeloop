@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Market",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-06-06T07:04:13"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Prime Co",
+    "reference": "MER-PRI-002",
+    "currency": "INR",
+    "created_at": "2025-02-05T23:48:01"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Trading",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-04-29T10:05:31"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Blue Market",
+    "reference": "MER-BLU-004",
+    "currency": "INR",
+    "created_at": "2025-06-09T15:49:05"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Co",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-02-11T00:57:43"
+  }
+]

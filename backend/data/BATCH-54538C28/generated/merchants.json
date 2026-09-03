@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Crystal Trading",
+    "reference": "MER-CRY-001",
+    "currency": "INR",
+    "created_at": "2025-01-16T17:54:31"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Solutions",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-05-19T08:26:30"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Store",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-01-08T09:53:53"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Global Goods",
+    "reference": "MER-GLO-004",
+    "currency": "INR",
+    "created_at": "2025-04-06T15:25:39"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Quick Mart",
+    "reference": "MER-QUI-005",
+    "currency": "INR",
+    "created_at": "2025-04-19T04:51:07"
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Solutions",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-05-24T23:52:32"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Store",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-02-13T08:14:14"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Global Labs",
+    "reference": "MER-GLO-003",
+    "currency": "INR",
+    "created_at": "2025-01-20T21:39:43"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Services",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-03-23T22:17:53"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Solutions",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-01-19T04:39:05"
+  }
+]

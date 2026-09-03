@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Tech Co",
+    "reference": "MER-TEC-001",
+    "currency": "INR",
+    "created_at": "2025-05-05T09:52:50"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Gold Mart",
+    "reference": "MER-GOL-002",
+    "currency": "INR",
+    "created_at": "2025-06-15T22:31:21"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Quick Trading",
+    "reference": "MER-QUI-003",
+    "currency": "INR",
+    "created_at": "2025-06-10T04:57:15"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Global Co",
+    "reference": "MER-GLO-004",
+    "currency": "INR",
+    "created_at": "2025-01-22T07:48:47"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Hub",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-01-06T02:26:22"
+  }
+]

@@ -119,9 +119,11 @@ async def get_exception(exception_id: str):
     "/{exception_id}/resolve",
     summary="Resolve an exception",
     description=(
-        "Submit a proposed resolution for an exception. The resolution includes "
+        "Submit a resolution PROPOSAL for an exception. The resolution includes "
         "a resolution type, financial adjustment amount, and supporting reason. "
-        "Resolution goes through Phase 6 guardrails before being accepted."
+        "CRITICAL: This records a proposal that must go through Phase 6 guardrails, "
+        "execution, and verification before being considered a final resolution. "
+        "The server-computed decision and verification are authoritative."
     ),
     response_model=ApiResponse,
     responses={
@@ -132,13 +134,13 @@ async def get_exception(exception_id: str):
     },
 )
 async def resolve_exception(exception_id: str, request: ResolveRequest):
-    """Resolve an exception with a proposed resolution.
+    """Submit a resolution proposal (does NOT bypass guardrails).
 
     **Resolution types**: REFUND_ADJUSTMENT, FEE_REVERSAL, SETTLEMENT_CORRECTION, etc.
 
-    **Guardrails**: The resolution is validated against Phase 6 hard safety constraints
-    including financial exposure limits, evidence requirements, and conflict detection.
-    If guardrails reject the resolution, a 403 is returned with rejection reasons.
+    **CRITICAL SAFETY**: This endpoint records a PROPOSAL only. The server does NOT
+    declare the resolution safe. Guardrail evaluation, execution, and verification
+    must run before the resolution is considered successful.
 
     **Amount limit**: Adjustments are capped at ₹100,000 (10,000,000 paise).
     """
@@ -148,9 +150,11 @@ async def resolve_exception(exception_id: str, request: ResolveRequest):
     if exc is None:
         raise NotFoundException("Exception", exception_id)
 
-    # Check if already resolved
+    # CRITICAL #1 FIX: Block re-proposal only for already-RESOLVED exceptions.
+    # PENDING proposals can be replaced (overwrite previous proposal).
     if exc.get("status") == "RESOLVED":
         raise ConflictException(f"Exception '{exception_id}' is already resolved")
+    # Note: Existing PENDING proposals are replaced with the new proposal.
 
     result = svc.resolve_exception(exception_id, request.model_dump())
     if "error" in result:

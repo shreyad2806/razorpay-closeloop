@@ -304,6 +304,9 @@ class ResolutionEngine:
             evidence_explanation_status=intelligence.evidence.explanation_status,
             evidence_coverage=intelligence.evidence.evidence_coverage,
             evidence_consistency=intelligence.evidence.consistency_score,
+            has_conflict=intelligence.evidence.has_conflict,
+            is_novel=selection_result.selected_score.novelty_penalty > 0 if selection_result.selected_score else False,
+            missing_evidence=intelligence.evidence.missing_evidence,
             pipeline_version=ENGINE_VERSION,
             processing_time_ms=processing_time_ms,
         )

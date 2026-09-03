@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Hub",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-06-18T02:27:32"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Global Co",
+    "reference": "MER-GLO-002",
+    "currency": "INR",
+    "created_at": "2025-05-08T08:45:58"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Star Enterprises",
+    "reference": "MER-STA-003",
+    "currency": "INR",
+    "created_at": "2025-06-18T06:21:26"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Enterprises",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-01-29T02:30:23"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Market",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-03-05T01:39:44"
+  }
+]

@@ -83,12 +83,15 @@ class ExposureGuard:
         primary_reason = ""
 
         # ── Determine adjustment amount ──
-
+        # HIGH #3 FIX: Use selected_candidate if available (ResolutionProposal).
+        # Otherwise fall back to proposed_adjustment_paise from the engine result.
         adjustment_paise = 0
         if engine_result.selected_candidate:
             adjustment_paise = abs(
                 engine_result.selected_candidate.financial_adjustment.amount_paise
             )
+        elif hasattr(engine_result, 'proposed_adjustment_paise') and engine_result.proposed_adjustment_paise:
+            adjustment_paise = abs(engine_result.proposed_adjustment_paise)
 
         # Calculate cumulative exposure from all candidates
         cumulative_paise = sum(

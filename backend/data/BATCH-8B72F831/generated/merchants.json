@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Shop",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-04-18T04:35:58"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Market",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-05-24T02:39:46"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Red Solutions",
+    "reference": "MER-RED-003",
+    "currency": "INR",
+    "created_at": "2025-02-01T23:03:44"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Prime Labs",
+    "reference": "MER-PRI-004",
+    "currency": "INR",
+    "created_at": "2025-06-09T18:14:25"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Elite Goods",
+    "reference": "MER-ELI-005",
+    "currency": "INR",
+    "created_at": "2025-06-08T23:27:50"
+  }
+]

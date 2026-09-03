@@ -1,0 +1,30 @@
+[
+  {
+    "adjustment_id": "ADJ-000001",
+    "payment_id": "PAY-000001",
+    "case_id": null,
+    "amount": -140939,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000002",
+    "payment_id": "PAY-000012",
+    "case_id": null,
+    "amount": -839,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000003",
+    "payment_id": "PAY-000015",
+    "case_id": null,
+    "amount": -188143,
+    "adjustment_type": "DEBIT"
+  },
+  {
+    "adjustment_id": "ADJ-000004",
+    "payment_id": "PAY-000018",
+    "case_id": null,
+    "amount": 93675,
+    "adjustment_type": "CREDIT"
+  }
+]

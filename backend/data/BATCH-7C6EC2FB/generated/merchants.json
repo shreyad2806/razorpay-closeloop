@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Global Services",
+    "reference": "MER-GLO-001",
+    "currency": "INR",
+    "created_at": "2025-01-24T14:27:13"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Trading",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-03-11T00:40:49"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Star Store",
+    "reference": "MER-STA-003",
+    "currency": "INR",
+    "created_at": "2025-02-16T15:40:34"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Smart Co",
+    "reference": "MER-SMA-004",
+    "currency": "INR",
+    "created_at": "2025-04-30T00:33:38"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Tech Enterprises",
+    "reference": "MER-TEC-005",
+    "currency": "INR",
+    "created_at": "2025-06-28T16:46:51"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "case_id": "CASE-000001",
+    "payment_id": "PAY-000001",
+    "merchant_id": "MER-0001",
+    "expected_amount": 4667810,
+    "actual_amount": 2382730,
+    "difference": -2285080,
+    "scenario": "TIMING_DIFFERENCE",
+    "observation_timestamp": "2025-01-17T06:10:53",
+    "resolvable": true,
+    "risk_category": "HIGH"
+  },
+  {
+    "case_id": "CASE-000002",
+    "payment_id": "PAY-000002",
+    "merchant_id": "MER-0002",
+    "expected_amount": 592849,
+    "actual_amount": 595222,
+    "difference": 2373,
+    "scenario": "FEE_DIFFERENCE",
+    "observation_timestamp": "2025-04-20T02:00:58",
+    "resolvable": true,
+    "risk_category": "LOW"
+  },
+  {
+    "case_id": "CASE-000003",
+    "payment_id": "PAY-000003",
+    "merchant_id": "MER-0003",
+    "expected_amount": 5502806,
+    "actual_amount": 5664901,
+    "difference": 162095,
+    "scenario": "TAX_ADJUSTMENT",
+    "observation_timestamp": "2025-01-06T19:22:26",
+    "resolvable": true,
+    "risk_category": "HIGH"
+  },
+  {
+    "case_id": "CASE-000004",
+    "payment_id": "PAY-000004",
+    "merchant_id": "MER-0001",
+    "expected_amount": 1543803,
+    "actual_amount": 1543803,
+    "difference": 0,
+    "scenario": "EXACT_MATCH",
+    "observation_timestamp": "2025-01-01T16:39:36",
+    "resolvable": true,
+    "risk_category": "LOW"
+  },
+  {
+    "case_id": "CASE-000005",
+    "payment_id": "PAY-000005",
+    "merchant_id": "MER-0002",
+    "expected_amount": 2353516,
+    "actual_amount": 2362039,
+    "difference": 8523,
+    "scenario": "FEE_DIFFERENCE",
+    "observation_timestamp": "2025-06-02T06:55:00",
+    "resolvable": true,
+    "risk_category": "LOW"
+  }
+]

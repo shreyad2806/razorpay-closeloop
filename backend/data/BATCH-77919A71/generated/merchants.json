@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Diamond Mart",
+    "reference": "MER-DIA-001",
+    "currency": "INR",
+    "created_at": "2025-05-01T00:00:08"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Silver Labs",
+    "reference": "MER-SIL-002",
+    "currency": "INR",
+    "created_at": "2025-01-20T19:52:51"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Store",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-04-19T06:25:08"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Prime Shop",
+    "reference": "MER-PRI-004",
+    "currency": "INR",
+    "created_at": "2025-06-01T06:05:18"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Gold Store",
+    "reference": "MER-GOL-005",
+    "currency": "INR",
+    "created_at": "2025-02-05T15:26:10"
+  }
+]

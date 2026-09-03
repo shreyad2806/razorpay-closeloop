@@ -193,6 +193,13 @@ class ResolutionExecutionService:
         auth_source = action_request.get("authorization_source")
         if not auth_source or auth_source == "NONE":
             errors.append("No authorization source")
+        normalized_auth_source = str(auth_source).upper()
+        auto_sources = {"AUTO_GUARDRAIL", "GUARDRAIL_AUTO"}
+        human_sources = {"HUMAN_APPROVAL", "HUMAN_APPROVED"}
+        if guardrail_decision == "AUTO" and normalized_auth_source not in auto_sources:
+            errors.append("AUTO execution requires AUTO_GUARDRAIL authorization")
+        elif guardrail_decision == "HUMAN_REVIEW" and normalized_auth_source not in human_sources:
+            errors.append("HUMAN_REVIEW execution requires HUMAN_APPROVAL authorization")
 
         # Verification must have passed
         if not action_request.get("verification_passed"):

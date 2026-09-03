@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Store",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-05-23T15:02:18"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Trading",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-04-30T22:44:24"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Solutions",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-05-15T08:13:39"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Labs",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-02-02T11:15:25"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Tech Market",
+    "reference": "MER-TEC-005",
+    "currency": "INR",
+    "created_at": "2025-02-24T00:12:39"
+  }
+]

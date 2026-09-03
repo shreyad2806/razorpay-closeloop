@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Red Services",
+    "reference": "MER-RED-001",
+    "currency": "INR",
+    "created_at": "2025-05-02T02:43:19"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Silver Digital",
+    "reference": "MER-SIL-002",
+    "currency": "INR",
+    "created_at": "2025-06-19T04:17:32"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Silver Hub",
+    "reference": "MER-SIL-003",
+    "currency": "INR",
+    "created_at": "2025-06-16T17:38:27"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Green Co",
+    "reference": "MER-GRE-004",
+    "currency": "INR",
+    "created_at": "2025-02-05T17:06:44"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Royal Market",
+    "reference": "MER-ROY-005",
+    "currency": "INR",
+    "created_at": "2025-06-04T09:48:34"
+  }
+]

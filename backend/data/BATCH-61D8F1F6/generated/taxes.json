@@ -1,0 +1,44 @@
+[
+  {
+    "tax_id": "TAX-000001",
+    "payment_id": "PAY-000001",
+    "case_id": null,
+    "amount": 1562075,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000002",
+    "payment_id": "PAY-000001",
+    "case_id": null,
+    "amount": 86781,
+    "tax_type": "TDS"
+  },
+  {
+    "tax_id": "TAX-000003",
+    "payment_id": "PAY-000002",
+    "case_id": null,
+    "amount": 1342243,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000004",
+    "payment_id": "PAY-000002",
+    "case_id": null,
+    "amount": 74569,
+    "tax_type": "TDS"
+  },
+  {
+    "tax_id": "TAX-000005",
+    "payment_id": "PAY-000003",
+    "case_id": null,
+    "amount": 146800,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-000006",
+    "payment_id": "PAY-000003",
+    "case_id": null,
+    "amount": 8155,
+    "tax_type": "TDS"
+  }
+]

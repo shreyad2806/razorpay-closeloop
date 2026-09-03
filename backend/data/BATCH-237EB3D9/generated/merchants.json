@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Mart",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-02-15T14:47:37"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Prime Enterprises",
+    "reference": "MER-PRI-002",
+    "currency": "INR",
+    "created_at": "2025-05-19T20:01:43"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Digital",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-06-12T07:35:25"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Star Store",
+    "reference": "MER-STA-004",
+    "currency": "INR",
+    "created_at": "2025-02-28T14:24:34"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Prime Goods",
+    "reference": "MER-PRI-005",
+    "currency": "INR",
+    "created_at": "2025-05-24T02:58:43"
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Hub",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-06-17T11:01:44"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Elite Store",
+    "reference": "MER-ELI-002",
+    "currency": "INR",
+    "created_at": "2025-02-25T15:43:58"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Green Trading",
+    "reference": "MER-GRE-003",
+    "currency": "INR",
+    "created_at": "2025-04-07T17:20:51"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Blue Market",
+    "reference": "MER-BLU-004",
+    "currency": "INR",
+    "created_at": "2025-06-11T11:59:10"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Elite Services",
+    "reference": "MER-ELI-005",
+    "currency": "INR",
+    "created_at": "2025-05-01T02:08:29"
+  }
+]

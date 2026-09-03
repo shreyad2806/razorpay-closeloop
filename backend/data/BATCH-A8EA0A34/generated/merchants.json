@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Star Market",
+    "reference": "MER-STA-001",
+    "currency": "INR",
+    "created_at": "2025-03-28T10:00:30"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Fresh Shop",
+    "reference": "MER-FRE-002",
+    "currency": "INR",
+    "created_at": "2025-02-26T05:14:20"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Red Hub",
+    "reference": "MER-RED-003",
+    "currency": "INR",
+    "created_at": "2025-02-14T12:59:29"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Store",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-06-04T12:21:59"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Royal Co",
+    "reference": "MER-ROY-005",
+    "currency": "INR",
+    "created_at": "2025-03-17T11:41:37"
+  }
+]

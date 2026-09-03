@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Digital",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-06-20T08:46:21"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Fresh Mart",
+    "reference": "MER-FRE-002",
+    "currency": "INR",
+    "created_at": "2025-02-08T00:00:45"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Global Enterprises",
+    "reference": "MER-GLO-003",
+    "currency": "INR",
+    "created_at": "2025-04-19T11:57:39"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Trading",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-04-10T14:48:33"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Prime Digital",
+    "reference": "MER-PRI-005",
+    "currency": "INR",
+    "created_at": "2025-05-11T05:13:50"
+  }
+]

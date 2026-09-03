@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Star Services",
+    "reference": "MER-STA-001",
+    "currency": "INR",
+    "created_at": "2025-01-20T00:11:15"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Co",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-02-17T06:40:18"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Fresh Trading",
+    "reference": "MER-FRE-003",
+    "currency": "INR",
+    "created_at": "2025-04-11T17:08:59"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Green Services",
+    "reference": "MER-GRE-004",
+    "currency": "INR",
+    "created_at": "2025-01-13T08:37:24"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Silver Shop",
+    "reference": "MER-SIL-005",
+    "currency": "INR",
+    "created_at": "2025-05-18T02:00:11"
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "adjustment_id": "ADJ-000001",
+    "payment_id": "PAY-000001",
+    "case_id": null,
+    "amount": 450918,
+    "adjustment_type": "CREDIT"
+  },
+  {
+    "adjustment_id": "ADJ-000002",
+    "payment_id": "PAY-000005",
+    "case_id": null,
+    "amount": -10801,
+    "adjustment_type": "DEBIT"
+  }
+]

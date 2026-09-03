@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Goods",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-03-06T02:11:45"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Fresh Store",
+    "reference": "MER-FRE-002",
+    "currency": "INR",
+    "created_at": "2025-01-29T10:01:08"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Red Market",
+    "reference": "MER-RED-003",
+    "currency": "INR",
+    "created_at": "2025-02-23T06:11:38"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Trading",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-01-17T19:38:24"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Red Mart",
+    "reference": "MER-RED-005",
+    "currency": "INR",
+    "created_at": "2025-05-13T22:24:35"
+  }
+]

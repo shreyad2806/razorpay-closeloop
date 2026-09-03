@@ -1,0 +1,23 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Shop",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-04-06T00:37:24"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Services",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-02-26T06:33:38"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Goods",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-04-01T14:40:25"
+  }
+]

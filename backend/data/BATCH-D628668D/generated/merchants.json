@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Digital",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-03-14T22:02:46"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Royal Store",
+    "reference": "MER-ROY-002",
+    "currency": "INR",
+    "created_at": "2025-03-28T03:54:19"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Market",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-02-20T10:30:12"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Gold Hub",
+    "reference": "MER-GOL-004",
+    "currency": "INR",
+    "created_at": "2025-05-07T10:57:01"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Labs",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-05-29T08:09:04"
+  }
+]

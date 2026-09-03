@@ -1,0 +1,23 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Trading",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-03-10T17:32:41"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Elite Hub",
+    "reference": "MER-ELI-002",
+    "currency": "INR",
+    "created_at": "2025-03-02T09:03:11"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Global Co",
+    "reference": "MER-GLO-003",
+    "currency": "INR",
+    "created_at": "2025-01-04T15:44:41"
+  }
+]

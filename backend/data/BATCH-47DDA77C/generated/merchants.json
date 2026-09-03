@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Market",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-03-20T07:04:35"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Solutions",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-03-24T02:07:10"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Goods",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-06-20T08:05:11"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Green Mart",
+    "reference": "MER-GRE-004",
+    "currency": "INR",
+    "created_at": "2025-03-22T02:13:30"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Co",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-02-05T13:35:09"
+  }
+]

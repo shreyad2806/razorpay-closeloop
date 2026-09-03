@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Digital",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-04-21T05:10:15"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Green Enterprises",
+    "reference": "MER-GRE-002",
+    "currency": "INR",
+    "created_at": "2025-06-19T10:33:56"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Market",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-05-19T02:44:09"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Prime Labs",
+    "reference": "MER-PRI-004",
+    "currency": "INR",
+    "created_at": "2025-04-22T13:12:56"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Star Trading",
+    "reference": "MER-STA-005",
+    "currency": "INR",
+    "created_at": "2025-04-30T10:55:43"
+  }
+]

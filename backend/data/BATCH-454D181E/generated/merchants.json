@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Star Services",
+    "reference": "MER-STA-001",
+    "currency": "INR",
+    "created_at": "2025-02-13T21:25:13"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Market",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-04-21T00:16:33"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Diamond Digital",
+    "reference": "MER-DIA-003",
+    "currency": "INR",
+    "created_at": "2025-06-20T06:37:17"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Global Digital",
+    "reference": "MER-GLO-004",
+    "currency": "INR",
+    "created_at": "2025-01-16T02:18:29"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Global Digital",
+    "reference": "MER-GLO-005",
+    "currency": "INR",
+    "created_at": "2025-03-01T12:26:00"
+  }
+]

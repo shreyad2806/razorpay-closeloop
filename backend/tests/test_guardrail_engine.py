@@ -74,6 +74,9 @@ def _make_engine_result(
         evidence_explanation_status="FULLY_EXPLAINED",
         evidence_coverage=evidence_coverage,
         evidence_consistency=evidence_consistency,
+        # HIGH #8: Explicitly set to False (verified safe), not None (unknown)
+        has_conflict=False,
+        is_novel=False,
     )
 
 

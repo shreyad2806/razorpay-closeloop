@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Enterprises",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-06-10T03:10:50"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Solutions",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-06-28T12:48:18"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Green Market",
+    "reference": "MER-GRE-003",
+    "currency": "INR",
+    "created_at": "2025-06-20T07:14:07"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Services",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-06-07T04:41:37"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Store",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-06-14T20:50:44"
+  }
+]

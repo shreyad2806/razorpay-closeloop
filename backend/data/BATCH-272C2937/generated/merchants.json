@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Diamond Store",
+    "reference": "MER-DIA-001",
+    "currency": "INR",
+    "created_at": "2025-01-01T11:02:44"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Enterprises",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-06-23T17:04:28"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Trading",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-03-05T19:46:45"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Silver Trading",
+    "reference": "MER-SIL-004",
+    "currency": "INR",
+    "created_at": "2025-04-27T16:16:21"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Global Co",
+    "reference": "MER-GLO-005",
+    "currency": "INR",
+    "created_at": "2025-03-09T13:06:29"
+  }
+]

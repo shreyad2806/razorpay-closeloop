@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Shop",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-01-24T10:06:24"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Green Trading",
+    "reference": "MER-GRE-002",
+    "currency": "INR",
+    "created_at": "2025-06-19T23:43:06"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Elite Shop",
+    "reference": "MER-ELI-003",
+    "currency": "INR",
+    "created_at": "2025-01-24T07:42:57"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Digital",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-03-30T16:27:19"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Market",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-02-03T04:16:12"
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Tech Mart",
+    "reference": "MER-TEC-001",
+    "currency": "INR",
+    "created_at": "2025-01-08T13:40:05"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Green Shop",
+    "reference": "MER-GRE-002",
+    "currency": "INR",
+    "created_at": "2025-04-03T03:25:48"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Goods",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-04-20T21:21:29"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Co",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-05-19T06:04:11"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Elite Store",
+    "reference": "MER-ELI-005",
+    "currency": "INR",
+    "created_at": "2025-06-01T03:18:09"
+  }
+]

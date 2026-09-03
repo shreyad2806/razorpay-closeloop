@@ -1,0 +1,23 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Trading",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-04-17T08:56:36"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Store",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-06-02T14:47:09"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Goods",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-02-02T00:42:34"
+  }
+]

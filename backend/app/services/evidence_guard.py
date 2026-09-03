@@ -82,10 +82,10 @@ class EvidenceGuard:
         evidence_coverage = engine_result.evidence_coverage
         evidence_consistency = engine_result.evidence_consistency
 
-        # Extract conflict/missing from intelligence (if available via engine)
-        has_conflict = False
-        missing_evidence: List[str] = []
-        is_novel = False
+        # Extract safety fields from engine result
+        has_conflict = engine_result.has_conflict
+        missing_evidence = engine_result.missing_evidence
+        is_novel = engine_result.is_novel
         explanation_status = engine_result.evidence_explanation_status
 
         # ── If engine returned UNRESOLVED/HUMAN_REVIEW, evaluate but don't block ──

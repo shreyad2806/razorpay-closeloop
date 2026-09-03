@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Tech Co",
+    "reference": "MER-TEC-001",
+    "currency": "INR",
+    "created_at": "2025-02-26T16:39:06"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Global Digital",
+    "reference": "MER-GLO-002",
+    "currency": "INR",
+    "created_at": "2025-02-07T17:32:10"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Red Mart",
+    "reference": "MER-RED-003",
+    "currency": "INR",
+    "created_at": "2025-03-30T11:21:58"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Mart",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-01-04T10:56:12"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Digital",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-04-26T20:36:32"
+  }
+]

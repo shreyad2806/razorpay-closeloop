@@ -232,13 +232,14 @@ class AutomationDecisionResult(BaseModel):
     )
 
     # Novelty and conflict
-    is_novel: bool = Field(
-        default=False,
-        description="Whether the case is novel",
+    # HIGH #8 FIX: None = unknown. False = verified safe. True = unsafe.
+    is_novel: Optional[bool] = Field(
+        default=None,
+        description="Whether the case is novel (None=unknown)",
     )
-    has_conflict: bool = Field(
-        default=False,
-        description="Whether evidence conflicts exist",
+    has_conflict: Optional[bool] = Field(
+        default=None,
+        description="Whether evidence conflicts exist (None=unknown)",
     )
 
     # Verification

@@ -165,9 +165,12 @@ class TestResolveException:
             data = response.json()
             assert data["success"] is True
             result = data["data"]
-            assert result["status"] == "RESOLVED"
+            # CRITICAL #1 FIX: Status is PENDING (proposal), not RESOLVED.
+            # Guardrails must evaluate before resolution is confirmed.
+            assert result["status"] == "PENDING"
             assert result["resolution_type"] == "FEE_ADJUSTMENT"
             assert result["adjustment_paise"] == 5000
+            assert result["guardrail_decision"] is None
 
     def test_resolve_not_found(self, client):
         """Resolve unknown exception returns 404."""
@@ -178,17 +181,15 @@ class TestResolveException:
         assert response.status_code == 404
 
     def test_resolve_already_resolved(self, client):
-        """Resolve already resolved exception returns 409."""
+        """Resolve already-resolved exception returns 409."""
+        from app.api.services.exception_service import _exception_registry
         list_resp = client.get("/exceptions?limit=1")
         cases = list_resp.json()["data"]
         if cases:
             exc_id = cases[0]["exception_id"]
-            # First resolve
-            client.post(
-                f"/exceptions/{exc_id}/resolve",
-                json={"resolution_type": "FEE_ADJUSTMENT", "adjustment_paise": 1000},
-            )
-            # Second resolve should conflict
+            # Manually set status to RESOLVED to test the guard
+            _exception_registry[exc_id] = {"status": "RESOLVED", "case_id": exc_id}
+            # Resolve should conflict
             response = client.post(
                 f"/exceptions/{exc_id}/resolve",
                 json={"resolution_type": "REFUND_ADJUSTMENT", "adjustment_paise": 2000},

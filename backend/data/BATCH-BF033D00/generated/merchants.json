@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Labs",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-04-30T10:21:10"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Smart Shop",
+    "reference": "MER-SMA-002",
+    "currency": "INR",
+    "created_at": "2025-06-25T18:26:04"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Elite Store",
+    "reference": "MER-ELI-003",
+    "currency": "INR",
+    "created_at": "2025-03-31T13:26:46"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Silver Services",
+    "reference": "MER-SIL-004",
+    "currency": "INR",
+    "created_at": "2025-02-13T04:51:41"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Gold Goods",
+    "reference": "MER-GOL-005",
+    "currency": "INR",
+    "created_at": "2025-06-14T22:30:25"
+  }
+]

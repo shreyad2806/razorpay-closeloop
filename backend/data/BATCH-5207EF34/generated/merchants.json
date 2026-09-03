@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Global Hub",
+    "reference": "MER-GLO-001",
+    "currency": "INR",
+    "created_at": "2025-02-12T19:35:41"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Green Solutions",
+    "reference": "MER-GRE-002",
+    "currency": "INR",
+    "created_at": "2025-02-06T16:16:05"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Goods",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-04-10T04:19:06"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Green Trading",
+    "reference": "MER-GRE-004",
+    "currency": "INR",
+    "created_at": "2025-03-09T10:56:07"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Crystal Goods",
+    "reference": "MER-CRY-005",
+    "currency": "INR",
+    "created_at": "2025-06-26T08:56:25"
+  }
+]

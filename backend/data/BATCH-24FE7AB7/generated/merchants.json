@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Store",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-01-01T09:14:45"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Hub",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-04-13T14:28:31"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Quick Store",
+    "reference": "MER-QUI-003",
+    "currency": "INR",
+    "created_at": "2025-06-19T04:35:36"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Blue Co",
+    "reference": "MER-BLU-004",
+    "currency": "INR",
+    "created_at": "2025-05-10T23:28:10"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Co",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-05-12T21:34:26"
+  }
+]

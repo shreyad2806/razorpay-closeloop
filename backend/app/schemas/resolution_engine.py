@@ -122,6 +122,25 @@ class ResolutionEngineResult(BaseModel):
     evidence_consistency: float = Field(
         default=0.0, description="Overall evidence consistency"
     )
+    # HIGH #3 FIX: Proposed adjustment amount in paise.
+    # Used by the exposure guard when selected_candidate is not a ResolutionProposal.
+    proposed_adjustment_paise: int = Field(
+        default=0, description="Proposed financial adjustment in paise"
+    )
+    
+    # Safety fields required by guardrails
+    # HIGH #8 FIX: None = unknown (insufficient info).
+    # False = verified safe. True = unsafe.
+    # Unknown must NOT be treated as safe.
+    has_conflict: Optional[bool] = Field(
+        default=None, description="Whether conflicting evidence exists (None=unknown)"
+    )
+    is_novel: Optional[bool] = Field(
+        default=None, description="Whether this is a novel pattern (None=unknown)"
+    )
+    missing_evidence: List[str] = Field(
+        default_factory=list, description="Types of missing evidence"
+    )
 
     # Pipeline metadata
     processing_timestamp: datetime = Field(

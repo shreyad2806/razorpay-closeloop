@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Quick Digital",
+    "reference": "MER-QUI-001",
+    "currency": "INR",
+    "created_at": "2025-01-28T05:17:04"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Green Labs",
+    "reference": "MER-GRE-002",
+    "currency": "INR",
+    "created_at": "2025-02-24T03:19:53"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Labs",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-05-10T09:14:13"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Labs",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-01-21T03:25:06"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Prime Digital",
+    "reference": "MER-PRI-005",
+    "currency": "INR",
+    "created_at": "2025-02-06T10:44:50"
+  }
+]

@@ -207,9 +207,10 @@ class EvidenceGuardResult(BaseModel):
     )
 
     # Conflict and missing
-    has_conflict: bool = Field(
-        default=False,
-        description="Whether evidence conflicts were detected",
+    # HIGH #8 FIX: None = unknown. False = verified safe. True = unsafe.
+    has_conflict: Optional[bool] = Field(
+        default=None,
+        description="Whether evidence conflicts were detected (None=unknown)",
     )
     missing_evidence_count: int = Field(
         default=0,
@@ -217,9 +218,9 @@ class EvidenceGuardResult(BaseModel):
     )
 
     # Novelty
-    is_novel: bool = Field(
-        default=False,
-        description="Whether this is a novel pattern",
+    is_novel: Optional[bool] = Field(
+        default=None,
+        description="Whether this is a novel pattern (None=unknown)",
     )
 
     # Explanation

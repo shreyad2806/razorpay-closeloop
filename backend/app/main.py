@@ -92,7 +92,9 @@ _analyze_service = AnalyzeService()
 # Register API Routers
 # ─────────────────────────────────────────────────────────────────────────────
 for router in all_routers:
-    app.include_router(router)
+    # Register concrete routes so the application exposes the same route table
+    # across FastAPI versions with and without lazy included-router support.
+    app.router.routes.extend(router.routes)
 
 
 @app.get(

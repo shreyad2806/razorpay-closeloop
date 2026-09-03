@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Diamond Digital",
+    "reference": "MER-DIA-001",
+    "currency": "INR",
+    "created_at": "2025-04-28T06:59:05"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Crystal Enterprises",
+    "reference": "MER-CRY-002",
+    "currency": "INR",
+    "created_at": "2025-04-02T21:11:18"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Services",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-04-30T21:23:56"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Labs",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-03-24T13:25:40"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Tech Services",
+    "reference": "MER-TEC-005",
+    "currency": "INR",
+    "created_at": "2025-02-15T09:02:36"
+  }
+]

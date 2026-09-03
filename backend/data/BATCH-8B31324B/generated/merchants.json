@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Enterprises",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-05-26T03:19:49"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Shop",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-02-28T15:06:58"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Star Enterprises",
+    "reference": "MER-STA-003",
+    "currency": "INR",
+    "created_at": "2025-04-11T20:33:20"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Solutions",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-05-06T08:10:50"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Enterprises",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-03-25T05:28:18"
+  }
+]

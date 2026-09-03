@@ -157,7 +157,7 @@ def resolve_action_boundary(state: AgentState) -> Dict[str, Any]:
             authorization_source=auth_source,
             authorized_by=authorized_by,
             authorization_timestamp=datetime.utcnow(),
-            verification_passed=True,
+            verification_passed=(verification_status == "VERIFIED"),
             verification_action=verification_status,
             guardrail_decision=decision,
             guardrail_confidence=state.confidence,

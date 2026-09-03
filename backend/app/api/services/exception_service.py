@@ -103,10 +103,17 @@ class ExceptionService:
         resolution: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
-        Submit a resolution for an exception.
+        Submit a resolution PROPOSAL for an exception.
 
-        Records the resolution attempt through the existing outcome service.
-        Does NOT execute financial actions — that's Phase 8's responsibility.
+        CRITICAL #1 FIX: This endpoint does NOT declare a resolution safe.
+        It records a proposal that must go through the guardrail pipeline.
+        The client CANNOT force AUTO, verification_passed, or a final outcome.
+
+        Flow:
+        - Client proposes resolution
+        - Server records the proposal
+        - Resolution is pending guardrail evaluation and verification
+        - Server-computed decision, verification, and outcome are authoritative
         """
         # Verify exception exists
         exc = self.get_exception(exception_id)
@@ -118,7 +125,7 @@ class ExceptionService:
         reason = resolution.get("reason", "")
         candidate_id = resolution.get("candidate_id")
 
-        # Record the outcome
+        # Record the proposal as an outcome (PHASE 9 learning data)
         workflow_id = f"WF-{exception_id}"
         outcome = self._outcome_service.record_outcome(
             workflow_id=workflow_id,
@@ -135,27 +142,31 @@ class ExceptionService:
             case_id=exc.get("case_id"),
         )
 
-        # Register the resolution
+        # Register the PROPOSAL — status is PENDING, not RESOLVED.
+        # The client must NOT be able to skip guardrails/verification.
         _exception_registry[exception_id] = {
             **exc,
-            "status": "RESOLVED",
+            "status": "PENDING",  # NOT RESOLVED — guardrails must evaluate first
             "resolution_type": resolution_type,
             "adjustment_paise": adjustment_paise,
             "resolution_reason": reason,
             "candidate_id": candidate_id,
-            "resolved_at": datetime.utcnow().isoformat(),
+            "proposal_submitted_at": datetime.utcnow().isoformat(),
             "workflow_id": workflow_id,
         }
 
+        # CRITICAL #1 FIX: Server does NOT claim guardrail_decision=AUTO.
+        # The client-submitted proposal is PENDING guardrail evaluation.
         return {
             "exception_id": exception_id,
             "resolution_type": resolution_type,
-            "status": "RESOLVED",
+            "status": "PENDING",  # Proposal submitted, guardrails not yet evaluated
             "adjustment_paise": adjustment_paise,
-            "guardrail_decision": "AUTO",
-            "execution_result": "PENDING",
-            "verification_result": "PENDING",
+            "guardrail_decision": None,  # NOT YET COMPUTED by server
+            "execution_result": None,  # NOT YET EXECUTED
+            "verification_result": None,  # NOT YET VERIFIED
             "workflow_id": workflow_id,
+            "message": "Resolution proposal submitted. Pending guardrail evaluation and verification.",
         }
 
     def approve_exception(

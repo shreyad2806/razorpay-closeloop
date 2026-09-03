@@ -64,6 +64,12 @@ def _record_node(
 def _build_action_request(state: AgentState) -> Dict[str, Any]:
     """Build an action request from agent state."""
     candidate = state.selected_candidate or {}
+    # HIGH #4 FIX: Do NOT hardcode verification_passed=True.
+    # Verification is an independent safety gate — its result must come
+    # from the verification service, not from the request builder.
+    # Here we record what the verification service actually determined.
+    ver = state.verification
+    ver_status = ver.verification_status.value if ver else "NOT_REQUIRED"
     return {
         "action_id": f"ACT-{state.metadata.workflow_id}",
         "idempotency_key": f"key-{state.metadata.workflow_id}-{state.metadata.exception_id}",
@@ -74,7 +80,10 @@ def _build_action_request(state: AgentState) -> Dict[str, Any]:
         "resolution_type": candidate.get("resolution_type", ""),
         "financial_adjustment_paise": candidate.get("amount_paise", 0),
         "authorization_source": "HUMAN_APPROVAL" if state.human_review.approval_status.value == "APPROVED" else "AUTO_GUARDRAIL",
-        "verification_passed": True,
+        # Caller-provided verification_passed is NEVER trusted.
+        # Only the actual verification service result matters.
+        "verification_passed": ver_status == "VERIFIED",
+        "verification_action": ver_status,
         "guardrail_decision": state.decision,
         "guardrail_confidence": state.confidence,
         "evidence_summary": state.evidence_package or {},
@@ -104,6 +113,48 @@ def _build_financial_state(state: AgentState) -> Dict[str, Any]:
         "tax_count": evidence.get("tax_count", 0),
         "adjustment_count": evidence.get("adjustment_count", 0),
     }
+
+
+def _load_fresh_financial_state(state: AgentState) -> Optional[Dict[str, Any]]:
+    """Load FRESH financial state from persistence after execution.
+
+    HIGH #7 FIX: Verification must use the actual post-execution state,
+    NOT the stale pre-execution evidence package.
+
+    The execution result's after_state is the authoritative post-execution snapshot.
+    If unavailable, returns None to trigger fail-closed verification.
+    """
+    exec_result_dict = state.execution_result
+    if not exec_result_dict:
+        return None
+
+    # Use execution result's after_state as the fresh post-execution state
+    after_state = exec_result_dict.get("after_state")
+    if after_state:
+        return after_state
+
+    # Fallback: execution result may carry the adjustment applied.
+    # Build the current state from execution evidence (still better than stale evidence_package).
+    exec_evidence = exec_result_dict.get("evidence", {})
+    if exec_evidence:
+        return {
+            "payment_amount": exec_evidence.get("payment_amount", 0),
+            "expected_amount": exec_evidence.get("expected_amount", 0),
+            "actual_amount": exec_evidence.get("actual_amount", 0),
+            "difference": exec_evidence.get("difference", 0),
+            "total_refunds": exec_evidence.get("total_refunds", 0),
+            "total_fees": exec_evidence.get("total_fees", 0),
+            "total_taxes": exec_evidence.get("total_taxes", 0),
+            "total_adjustments": exec_evidence.get("total_adjustments", 0),
+            "settlement_count": exec_evidence.get("settlement_count", 0),
+            "refund_count": exec_evidence.get("refund_count", 0),
+            "fee_count": exec_evidence.get("fee_count", 0),
+            "tax_count": exec_evidence.get("tax_count", 0),
+            "adjustment_count": exec_evidence.get("adjustment_count", 0),
+        }
+
+    # FAIL-CLOSED: No fresh state available
+    return None
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -148,6 +199,10 @@ def verify_execution(state: AgentState) -> Dict[str, Any]:
 
     Delegates to ResolutionVerificationEngine.
     Stores verification result in state.
+
+    HIGH #7 FIX: The current financial state MUST come from persistence
+    (fresh read after execution), NOT from stale pre-execution evidence.
+    If fresh state cannot be retrieved, verification FAILS CLOSED.
     """
     start_time = time.perf_counter()
     node_name = "verify_execution"
@@ -161,8 +216,16 @@ def verify_execution(state: AgentState) -> Dict[str, Any]:
         from app.schemas.execution import ExecutionResult
         exec_result = ExecutionResult(**exec_result_dict)
 
-        # Get current financial state
-        financial_state_dict = _build_financial_state(state)
+        # HIGH #7 FIX: Load FRESH financial state from persistence after execution.
+        # Do NOT use stale evidence_package (pre-execution data).
+        financial_state_dict = _load_fresh_financial_state(state)
+        if financial_state_dict is None:
+            # FAIL-CLOSED: Cannot verify without fresh state
+            return _record_node(
+                state, node_name, success=False,
+                error="FAIL-CLOSED: Cannot retrieve fresh financial state after execution",
+                start_time=start_time,
+            )
         from app.schemas.execution import FinancialStateSnapshot
         current_state = FinancialStateSnapshot(
             exception_id=state.metadata.exception_id,

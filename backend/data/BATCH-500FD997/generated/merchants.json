@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Global Hub",
+    "reference": "MER-GLO-001",
+    "currency": "INR",
+    "created_at": "2025-03-27T08:12:19"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Trading",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-05-02T14:12:09"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Green Hub",
+    "reference": "MER-GRE-003",
+    "currency": "INR",
+    "created_at": "2025-06-13T19:36:49"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Labs",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-01-21T02:17:33"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Shop",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-01-14T08:44:20"
+  }
+]

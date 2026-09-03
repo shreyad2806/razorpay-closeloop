@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Shop",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-03-18T12:29:23"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Goods",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-05-15T17:13:28"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Global Mart",
+    "reference": "MER-GLO-003",
+    "currency": "INR",
+    "created_at": "2025-02-07T21:18:25"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Solutions",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-03-30T05:06:50"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Trading",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-04-03T01:02:44"
+  }
+]

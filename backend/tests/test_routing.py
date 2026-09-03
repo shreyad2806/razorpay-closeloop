@@ -101,14 +101,16 @@ class TestRouteAfterVerification:
         state.verification.verification_status = VerificationStatus.FAILED
         assert route_after_verification(state) == ROUTE_ESCALATION
 
-    def test_not_required_routes_to_resolve(self):
+    def test_not_required_routes_to_escalation(self):
+        """HIGH #5: NOT_REQUIRED must fail closed, not resolve."""
         state = create_initial_state(exception_id="EXC-001")
-        assert route_after_verification(state) == ROUTE_RESOLVE
+        assert route_after_verification(state) == ROUTE_ESCALATION
 
-    def test_pending_routes_to_resolve(self):
+    def test_pending_routes_to_escalation(self):
+        """HIGH #5: PENDING must fail closed, not resolve."""
         state = create_initial_state(exception_id="EXC-001")
         state.verification.verification_status = VerificationStatus.PENDING
-        assert route_after_verification(state) == ROUTE_RESOLVE
+        assert route_after_verification(state) == ROUTE_ESCALATION
 
 
 # ─────────────────────────────────────────────────────────────────────────────

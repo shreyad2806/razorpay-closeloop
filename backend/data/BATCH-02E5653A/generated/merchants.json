@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Mart",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-05-31T09:34:10"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Fresh Store",
+    "reference": "MER-FRE-002",
+    "currency": "INR",
+    "created_at": "2025-06-20T06:39:33"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Mart",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-02-26T13:00:03"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Global Solutions",
+    "reference": "MER-GLO-004",
+    "currency": "INR",
+    "created_at": "2025-03-05T15:57:53"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Crystal Enterprises",
+    "reference": "MER-CRY-005",
+    "currency": "INR",
+    "created_at": "2025-02-22T05:46:46"
+  }
+]

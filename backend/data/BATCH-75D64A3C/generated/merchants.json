@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Store",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-03-20T02:40:25"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Global Shop",
+    "reference": "MER-GLO-002",
+    "currency": "INR",
+    "created_at": "2025-04-04T09:46:26"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Quick Mart",
+    "reference": "MER-QUI-003",
+    "currency": "INR",
+    "created_at": "2025-01-22T03:08:56"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Gold Store",
+    "reference": "MER-GOL-004",
+    "currency": "INR",
+    "created_at": "2025-03-26T20:37:28"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Services",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-05-04T18:06:04"
+  }
+]

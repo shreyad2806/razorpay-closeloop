@@ -308,7 +308,8 @@ class TestConflictBlock:
         output = guard.evaluate(result)
 
         assert output.passed is True
-        assert output.has_conflict is False
+        # HIGH #8: has_conflict=None (unknown) passes through from engine result.
+        assert output.has_conflict is not True
 
     def test_conflict_blocks(self):
         """Conflicting evidence → BLOCK regardless of coverage."""
@@ -452,7 +453,8 @@ class TestNoveltyBlock:
         output = guard.evaluate(result)
 
         assert output.passed is True
-        assert output.is_novel is False
+        # HIGH #8: is_novel=None (unknown) passes through from engine result.
+        assert output.is_novel is not True
 
     def test_novel_case_not_directly_settable(self):
         """Novelty is tracked but requires external detection.
@@ -464,8 +466,8 @@ class TestNoveltyBlock:
         result = _make_engine_result(evidence_coverage=0.9, evidence_consistency=0.9)
         output = guard.evaluate(result)
 
-        # Default is_novel is False since engine_result doesn't set it
-        assert output.is_novel is False
+        # HIGH #8: is_novel=None (unknown) passes through from engine result.
+        assert output.is_novel is not True
 
     def test_block_on_novelty_disabled(self):
         """When block_on_novelty is False, novelty doesn't block."""

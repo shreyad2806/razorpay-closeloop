@@ -44,6 +44,9 @@ def _make_state_with_selection(
         "exception_id": "EXC-001",
         "evidence_coverage": coverage,
         "evidence_consistency": consistency,
+        # HIGH #8: Explicitly set verified-safe defaults
+        "has_conflict": False,
+        "is_novel": False,
     }
     state.candidates = {
         "candidates": [

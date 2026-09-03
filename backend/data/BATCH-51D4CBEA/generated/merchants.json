@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Quick Store",
+    "reference": "MER-QUI-001",
+    "currency": "INR",
+    "created_at": "2025-01-30T02:54:56"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Green Enterprises",
+    "reference": "MER-GRE-002",
+    "currency": "INR",
+    "created_at": "2025-05-26T01:54:38"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Prime Mart",
+    "reference": "MER-PRI-003",
+    "currency": "INR",
+    "created_at": "2025-01-18T04:28:59"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Silver Labs",
+    "reference": "MER-SIL-004",
+    "currency": "INR",
+    "created_at": "2025-06-29T02:23:04"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Royal Goods",
+    "reference": "MER-ROY-005",
+    "currency": "INR",
+    "created_at": "2025-03-16T19:48:47"
+  }
+]

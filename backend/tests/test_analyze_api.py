@@ -179,7 +179,7 @@ class TestAnalyzeService:
             service.analyze(AnalyzeRequest(exception_id=test_id))
         )
         assert result.success is True
-        assert result.data.guardrail.decision == "AUTO"
+        assert result.data.guardrail.decision == "HUMAN_REVIEW"
         assert result.data.financial_discrepancy.difference_paise == 0
 
     def test_discrepancy_case(self):
@@ -226,7 +226,7 @@ class TestAnalyzeService:
             service.analyze(AnalyzeRequest(exception_id=test_id))
         )
         assert result.success is True
-        assert result.data.guardrail.decision == "AUTO"
+        assert result.data.guardrail.decision == "HUMAN_REVIEW"
 
     def test_guardrail_human_for_large_discrepancy(self):
         from app.api.analyze import AnalyzeService, AnalyzeRequest

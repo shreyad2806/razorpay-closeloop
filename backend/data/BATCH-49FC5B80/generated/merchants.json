@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Silver Market",
+    "reference": "MER-SIL-001",
+    "currency": "INR",
+    "created_at": "2025-03-17T15:51:57"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Elite Mart",
+    "reference": "MER-ELI-002",
+    "currency": "INR",
+    "created_at": "2025-01-11T05:54:25"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Store",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-02-24T16:29:48"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Green Digital",
+    "reference": "MER-GRE-004",
+    "currency": "INR",
+    "created_at": "2025-06-13T06:14:36"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Market",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-02-14T20:40:56"
+  }
+]

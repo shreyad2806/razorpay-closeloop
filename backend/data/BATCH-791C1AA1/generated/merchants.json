@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Red Hub",
+    "reference": "MER-RED-001",
+    "currency": "INR",
+    "created_at": "2025-02-06T11:31:48"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Mart",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-06-07T17:07:16"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Trading",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-02-01T15:11:19"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Crystal Enterprises",
+    "reference": "MER-CRY-004",
+    "currency": "INR",
+    "created_at": "2025-06-13T07:30:18"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Green Shop",
+    "reference": "MER-GRE-005",
+    "currency": "INR",
+    "created_at": "2025-02-24T14:46:08"
+  }
+]
