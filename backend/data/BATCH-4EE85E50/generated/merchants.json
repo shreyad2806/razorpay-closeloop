@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Global Digital",
+    "reference": "MER-GLO-001",
+    "currency": "INR",
+    "created_at": "2025-04-18T11:37:40"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Gold Co",
+    "reference": "MER-GOL-002",
+    "currency": "INR",
+    "created_at": "2025-03-13T20:20:32"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Fresh Goods",
+    "reference": "MER-FRE-003",
+    "currency": "INR",
+    "created_at": "2025-01-27T22:08:57"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Smart Labs",
+    "reference": "MER-SMA-004",
+    "currency": "INR",
+    "created_at": "2025-02-26T11:34:38"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Green Enterprises",
+    "reference": "MER-GRE-005",
+    "currency": "INR",
+    "created_at": "2025-01-24T08:14:25"
+  }
+]

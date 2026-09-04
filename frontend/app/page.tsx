@@ -18,12 +18,19 @@ import {
   getSafetyMetrics,
   listExceptions,
   getHealth,
+  listModels,
+  getLearningMetrics,
 } from "@/app/lib/api";
 import {
   StatCard,
+  StatCardSkeleton,
+  TableSkeleton,
+  ChartSkeleton,
+  CardSkeleton,
   Badge,
   LoadingState,
   ErrorState,
+  Toast,
 } from "@/components/ui";
 import {
   formatPct,
@@ -78,6 +85,8 @@ export default function DashboardPage() {
   const [safety, setSafety] = useState<SafetyMetrics | null>(null);
   const [exceptions, setExceptions] = useState<ExceptionListItem[]>([]);
   const [health, setHealth] = useState<HealthResponse | null>(null);
+  const [modelsCount, setModelsCount] = useState(0);
+  const [learningOk, setLearningOk] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -85,11 +94,13 @@ export default function DashboardPage() {
     let mounted = true;
     async function load() {
       setLoading(true);
-      const [mRes, sRes, eRes, hRes] = await Promise.all([
+      const [mRes, sRes, eRes, hRes, mlRes, lRes] = await Promise.all([
         getMetrics(),
         getSafetyMetrics(),
         listExceptions({ limit: 500 }),
         getHealth(),
+        listModels(),
+        getLearningMetrics(),
       ]);
       if (!mounted) return;
       if (mRes.ok && mRes.data) setMetrics(mRes.data.data as SystemMetrics);
@@ -97,6 +108,8 @@ export default function DashboardPage() {
       if (eRes.ok && eRes.data)
         setExceptions((eRes.data.data as ExceptionListItem[]) || []);
       if (hRes.ok && hRes.data) setHealth(hRes.data);
+      if (mlRes.ok && mlRes.data?.data) setModelsCount((mlRes.data.data as { model_id: string }[]).length);
+      if (lRes.ok) setLearningOk(true);
       if (!mRes.ok && !eRes.ok) setError("Cannot connect to backend");
       setLoading(false);
     }
@@ -106,7 +119,25 @@ export default function DashboardPage() {
     };
   }, []);
 
-  if (loading) return <LoadingState message="Loading Control Center…" />;
+  if (loading)
+    return (
+      <div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Control Center</h2>
+          <p className="text-sm text-slate-400 mt-1">Loading…</p>
+        </div>
+        <div className="stat-grid mb-6">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <StatCardSkeleton key={i} />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <ChartSkeleton />
+          <ChartSkeleton />
+        </div>
+        <CardSkeleton />
+      </div>
+    );
   if (error) return <ErrorState title="Backend Unavailable" message={error} />;
 
   // ─── Derive metrics from exception list ─────────────────────────────────
@@ -375,16 +406,12 @@ export default function DashboardPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatusIndicator label="Backend" ok={!!health} />
             <StatusIndicator label="Database" ok={!!health} />
-            <StatusIndicator label="ML Engine" ok={true} />
-            <StatusIndicator label="Evidence" ok={true} />
-            <StatusIndicator label="Agent" ok={true} />
-            <StatusIndicator label="LLM" ok={false} />
-            <StatusIndicator label="MCP" ok={true} />
-            <StatusIndicator
-              label="Version"
-              ok={true}
-              detail={health?.version}
-            />
+            <StatusIndicator label="ML Engine" ok={modelsCount > 0} detail={modelsCount > 0 ? `${modelsCount} models` : undefined} />
+            <StatusIndicator label="Evidence" ok={exceptions.length > 0} detail={exceptions.length > 0 ? `${exceptions.length} exceptions` : undefined} />
+            <StatusIndicator label="Agent" ok={!!metrics} />
+            <StatusIndicator label="Guardrails" ok={!!safety} />
+            <StatusIndicator label="Learning" ok={learningOk} />
+            <StatusIndicator label="Version" ok={!!health} detail={health?.version} />
           </div>
         </div>
       </div>

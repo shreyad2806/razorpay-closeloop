@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Quick Trading",
+    "reference": "MER-QUI-001",
+    "currency": "INR",
+    "created_at": "2025-04-12T06:01:57"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Crystal Solutions",
+    "reference": "MER-CRY-002",
+    "currency": "INR",
+    "created_at": "2025-02-17T17:36:18"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Fresh Enterprises",
+    "reference": "MER-FRE-003",
+    "currency": "INR",
+    "created_at": "2025-04-19T08:05:44"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Red Mart",
+    "reference": "MER-RED-004",
+    "currency": "INR",
+    "created_at": "2025-04-03T22:36:46"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Red Services",
+    "reference": "MER-RED-005",
+    "currency": "INR",
+    "created_at": "2025-02-26T05:11:43"
+  }
+]

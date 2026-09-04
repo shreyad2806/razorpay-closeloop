@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Mart",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-05-04T17:11:45"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Elite Store",
+    "reference": "MER-ELI-002",
+    "currency": "INR",
+    "created_at": "2025-05-11T08:48:53"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Gold Store",
+    "reference": "MER-GOL-003",
+    "currency": "INR",
+    "created_at": "2025-05-02T05:54:15"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Tech Mart",
+    "reference": "MER-TEC-004",
+    "currency": "INR",
+    "created_at": "2025-06-19T21:23:29"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Royal Solutions",
+    "reference": "MER-ROY-005",
+    "currency": "INR",
+    "created_at": "2025-04-08T22:06:34"
+  }
+]

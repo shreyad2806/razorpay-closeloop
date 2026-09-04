@@ -273,3 +273,35 @@ body {
 .clipboard-icon {
   @apply opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer;
 }
+
+/* ─── Skeleton Animation ────────────────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+/* ─── Responsive Tables ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .data-table {
+    @apply text-xs;
+  }
+  .data-table th,
+  .data-table td {
+    @apply px-2 py-2;
+  }
+  .stat-grid {
+    @apply grid-cols-1;
+  }
+  .page-container {
+    @apply px-3 py-4;
+  }
+}

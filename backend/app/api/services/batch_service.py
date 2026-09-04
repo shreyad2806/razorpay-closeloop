@@ -23,6 +23,9 @@ from app.generator.orchestrator import DatasetGenerator, save_dataset
 from app.reconciliation.engine import reconcile_batch
 from app.schemas.config import GeneratorConfig
 from app.schemas.enums import MatchStatus
+from app.core.structured_logging import (
+    WorkflowEvent, batch_logger, set_correlation_ids,
+)
 
 
 # In-memory batch registry (production would use a database)
@@ -74,6 +77,14 @@ class BatchService:
         name = data.get("name", f"Batch {batch_id}")
         description = data.get("description", "")
         source = data.get("source", "synthetic")
+
+        set_correlation_ids(batch_id=batch_id)
+        timer = batch_logger.start_timer()
+        batch_logger.info(WorkflowEvent.BATCH_STARTED.value,
+                         f"Creating batch: {name}",
+                         batch_id=batch_id, name=name, source=source,
+                         num_merchants=data.get("num_merchants", 5),
+                         num_cases=data.get("num_cases", 20))
 
         start_time = time.time()
 
@@ -129,6 +140,12 @@ class BatchService:
         }
         _batch_registry[batch_id] = batch_meta
 
+        elapsed = batch_logger.elapsed_ms(timer)
+        batch_logger.success(WorkflowEvent.BATCH_COMPLETED.value,
+                            f"Batch created: {batch_id}",
+                            duration_ms=elapsed,
+                            batch_id=batch_id, records=record_count)
+
         return batch_meta
 
     def run_batch(self, batch_id: str) -> Optional[Dict[str, Any]]:
@@ -158,6 +175,12 @@ class BatchService:
 
         batch["status"] = "RUNNING"
         start_time = time.time()
+
+        set_correlation_ids(batch_id=batch_id)
+        timer = batch_logger.start_timer()
+        batch_logger.info(WorkflowEvent.RECORDS_RECEIVED.value,
+                         f"Starting batch reconciliation",
+                         batch_id=batch_id)
 
         try:
             # Load data directly from batch directory
@@ -191,6 +214,12 @@ class BatchService:
             cases = self._load_json(os.path.join(generated_dir, "cases.json"))
             case_mapping = {c.get("payment_id", ""): c.get("case_id", "") for c in cases}
 
+            batch_logger.info(WorkflowEvent.RECONCILIATION_STARTED.value,
+                             f"Running reconciliation on {len(payments)} payments",
+                             batch_id=batch_id, payment_count=len(payments),
+                             settlement_count=len(settlements))
+
+            recon_timer = batch_logger.start_timer()
             # Run existing deterministic reconciliation
             results = reconcile_batch(
                 payments=payments,
@@ -201,6 +230,7 @@ class BatchService:
                 adjustments=adjustments,
                 case_mapping=case_mapping,
             )
+            recon_elapsed = batch_logger.elapsed_ms(recon_timer)
 
             # Compute summary statistics
             total = len(results)
@@ -226,6 +256,24 @@ class BatchService:
             batch["total_records"] = total
             batch["matched_records"] = matched
 
+            batch_logger.success(WorkflowEvent.RECONCILIATION_COMPLETED.value,
+                                f"Reconciliation done: {total} records",
+                                duration_ms=recon_elapsed,
+                                batch_id=batch_id, total=total, matched=matched,
+                                exceptions=exceptions,
+                                match_rate=round(match_rate, 4))
+            if exceptions > 0:
+                batch_logger.warning(WorkflowEvent.EXCEPTIONS_CREATED.value,
+                                   f"{exceptions} exceptions found",
+                                   batch_id=batch_id, exception_count=exceptions)
+
+            batch_elapsed = batch_logger.elapsed_ms(timer)
+            batch_logger.success(WorkflowEvent.BATCH_COMPLETED.value,
+                                f"Batch completed: {batch_id}",
+                                duration_ms=batch_elapsed,
+                                batch_id=batch_id, total=total, matched=matched,
+                                exceptions=exceptions)
+
             return {
                 "batch_id": batch_id,
                 "status": "COMPLETED",
@@ -243,6 +291,13 @@ class BatchService:
         except Exception as e:
             batch["status"] = "FAILED"
             batch["failure_count"] = batch.get("failure_count", 0) + 1
+            batch_elapsed = batch_logger.elapsed_ms(timer)
+            batch_logger.failure(WorkflowEvent.BATCH_FAILED.value,
+                               f"Batch processing failed",
+                               duration_ms=batch_elapsed,
+                               batch_id=batch_id,
+                               error_type=type(e).__name__,
+                               error_message=str(e))
             return {
                 "batch_id": batch_id,
                 "status": "FAILED",

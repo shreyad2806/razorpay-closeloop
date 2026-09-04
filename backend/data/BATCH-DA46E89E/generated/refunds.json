@@ -1,0 +1,18 @@
+[
+  {
+    "refund_id": "REF-000001",
+    "payment_id": "PAY-000011",
+    "case_id": null,
+    "amount": 1083144,
+    "status": "PROCESSED",
+    "refund_timestamp": "2025-05-17T16:31:57"
+  },
+  {
+    "refund_id": "REF-000002",
+    "payment_id": "PAY-000015",
+    "case_id": null,
+    "amount": 5198214,
+    "status": "PROCESSED",
+    "refund_timestamp": "2025-05-18T16:03:18"
+  }
+]

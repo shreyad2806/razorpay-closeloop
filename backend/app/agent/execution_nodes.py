@@ -14,6 +14,9 @@ import time
 from datetime import datetime
 from typing import Any, Dict, Optional
 
+from app.core.structured_logging import (
+    WorkflowEvent, resolution_logger, verification_logger, set_correlation_ids,
+)
 from app.schemas.agent_state import (
     AgentState,
     VerificationStatus as AgentVerificationStatus,
@@ -171,6 +174,14 @@ def execute_resolution(state: AgentState) -> Dict[str, Any]:
     start_time = time.perf_counter()
     node_name = "execute_resolution"
 
+    candidate = state.selected_candidate or {}
+    resolution_logger.info(WorkflowEvent.EXECUTION_STARTED.value,
+                         f"Executing resolution",
+                         exception_id=state.metadata.exception_id,
+                         workflow_id=state.metadata.workflow_id,
+                         resolution_type=candidate.get("resolution_type"),
+                         adjustment_paise=candidate.get("amount_paise", 0))
+
     try:
         action_request = _build_action_request(state)
         financial_state = _build_financial_state(state)
@@ -183,9 +194,25 @@ def execute_resolution(state: AgentState) -> Dict[str, Any]:
         updates["execution_status"] = result.status.value
         updates["metadata"]["current_node"] = node_name
 
+        elapsed_ms = (time.perf_counter() - start_time) * 1000
+        resolution_logger.success(WorkflowEvent.EXECUTION_COMPLETED.value,
+                                f"Execution: {result.status.value}",
+                                duration_ms=elapsed_ms,
+                                exception_id=state.metadata.exception_id,
+                                workflow_id=state.metadata.workflow_id,
+                                execution_status=result.status.value,
+                                execution_id=result.execution_id)
         return updates
 
     except Exception as e:
+        elapsed_ms = (time.perf_counter() - start_time) * 1000
+        resolution_logger.failure(WorkflowEvent.EXECUTION_FAILED.value,
+                                f"Execution failed",
+                                duration_ms=elapsed_ms,
+                                exception_id=state.metadata.exception_id,
+                                workflow_id=state.metadata.workflow_id,
+                                error_type=type(e).__name__,
+                                error_message=str(e))
         return _record_node(state, node_name, success=False, error=str(e), start_time=start_time)
 
 
@@ -206,6 +233,11 @@ def verify_execution(state: AgentState) -> Dict[str, Any]:
     """
     start_time = time.perf_counter()
     node_name = "verify_execution"
+
+    verification_logger.info(WorkflowEvent.VERIFICATION_STARTED.value,
+                           f"Starting execution verification",
+                           exception_id=state.metadata.exception_id,
+                           workflow_id=state.metadata.workflow_id)
 
     try:
         exec_result_dict = state.execution_result
@@ -259,9 +291,27 @@ def verify_execution(state: AgentState) -> Dict[str, Any]:
         updates["financial_diff"] = diff.model_dump(mode="json")
         updates["metadata"]["current_node"] = node_name
 
+        elapsed_ms = (time.perf_counter() - start_time) * 1000
+        verification_logger.success(WorkflowEvent.VERIFICATION_COMPLETED.value,
+                                  f"Verification: {verification.status.value}",
+                                  duration_ms=elapsed_ms,
+                                  exception_id=state.metadata.exception_id,
+                                  workflow_id=state.metadata.workflow_id,
+                                  verification_status=verification.status.value,
+                                  passed=verification.passed,
+                                  checks_count=len(verification.checks),
+                                  stale_checks=len(verification.stale_checks))
         return updates
 
     except Exception as e:
+        elapsed_ms = (time.perf_counter() - start_time) * 1000
+        verification_logger.failure(WorkflowEvent.VERIFICATION_FAILED.value,
+                                  f"Verification failed",
+                                  duration_ms=elapsed_ms,
+                                  exception_id=state.metadata.exception_id,
+                                  workflow_id=state.metadata.workflow_id,
+                                  error_type=type(e).__name__,
+                                  error_message=str(e))
         return _record_node(state, node_name, success=False, error=str(e), start_time=start_time)
 
 

@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Hub",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-05-16T14:16:43"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Crystal Shop",
+    "reference": "MER-CRY-002",
+    "currency": "INR",
+    "created_at": "2025-02-14T00:12:25"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Store",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-02-13T04:29:40"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Blue Market",
+    "reference": "MER-BLU-004",
+    "currency": "INR",
+    "created_at": "2025-05-05T01:23:43"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Red Trading",
+    "reference": "MER-RED-005",
+    "currency": "INR",
+    "created_at": "2025-01-19T19:12:17"
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Store",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-03-31T04:23:42"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Goods",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-01-12T05:11:57"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Store",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-04-08T12:29:26"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Mart",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-04-20T06:17:06"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Quick Digital",
+    "reference": "MER-QUI-005",
+    "currency": "INR",
+    "created_at": "2025-02-15T17:12:11"
+  }
+]

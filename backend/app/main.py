@@ -1,6 +1,10 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.structured_logging import (
+    WorkflowEvent, system_logger, api_logger,
+)
 from app.api.analyze import AnalyzeRequest, AnalyzeResponse, AnalyzeService
 from app.api.errors import (
     BusinessRuleException,
@@ -53,6 +57,79 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json",
 )
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Application Lifecycle
+# ─────────────────────────────────────────────────────────────────────────────
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application startup and shutdown lifecycle."""
+    # ── Startup ──
+    system_logger.info(WorkflowEvent.STARTUP.value, "CloseLoop starting up")
+
+    # Check database connectivity
+    try:
+        from app.database.database import engine
+        with engine.connect() as conn:
+            conn.execute(__import__('sqlalchemy').text("SELECT 1"))
+        system_logger.info(WorkflowEvent.HEALTH_CHECK.value, "Database connected")
+    except Exception as e:
+        system_logger.warning(WorkflowEvent.DEPENDENCY_UNAVAILABLE.value,
+                            f"Database unavailable: {type(e).__name__}")
+
+    # Check ML components
+    try:
+        from app.ml.classifier import ExceptionClassifier
+        system_logger.info(WorkflowEvent.HEALTH_CHECK.value, "ML classifier available")
+    except Exception as e:
+        system_logger.warning(WorkflowEvent.DEPENDENCY_UNAVAILABLE.value,
+                            f"ML classifier unavailable: {type(e).__name__}")
+
+    # Check MLflow
+    try:
+        from app.services.mlflow_model_registry import MLflowModelRegistry
+        registry = MLflowModelRegistry()
+        models = registry.list_models()
+        system_logger.info(WorkflowEvent.HEALTH_CHECK.value,
+                         f"MLflow registry available: {len(models)} models")
+    except Exception as e:
+        system_logger.warning(WorkflowEvent.DEPENDENCY_UNAVAILABLE.value,
+                            f"MLflow unavailable: {type(e).__name__}")
+
+    # Check LLM
+    try:
+        from app.llm.config import LLMConfig
+        config = LLMConfig.from_env()
+        if config.enabled:
+            system_logger.info(WorkflowEvent.HEALTH_CHECK.value,
+                             f"LLM enabled: provider={config.provider}")
+        else:
+            system_logger.info(WorkflowEvent.HEALTH_CHECK.value,
+                             "LLM disabled (deterministic fallback active)")
+    except Exception as e:
+        system_logger.warning(WorkflowEvent.DEPENDENCY_UNAVAILABLE.value,
+                            f"LLM config unavailable: {type(e).__name__}")
+
+    # Check LangGraph
+    try:
+        from app.agent.workflow import create_workflow
+        wf = create_workflow()
+        system_logger.info(WorkflowEvent.HEALTH_CHECK.value, "LangGraph workflow compiled")
+    except Exception as e:
+        system_logger.warning(WorkflowEvent.DEPENDENCY_UNAVAILABLE.value,
+                            f"LangGraph unavailable: {type(e).__name__}")
+
+    system_logger.info(WorkflowEvent.STARTUP.value, "CloseLoop startup complete",
+                     version="1.0.0")
+
+    yield
+
+    # ── Shutdown ──
+    system_logger.info(WorkflowEvent.SHUTDOWN.value, "CloseLoop shutting down")
+
+
+app.router.lifespan_context = lifespan
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Middleware (order matters: outermost first)

@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Tech Market",
+    "reference": "MER-TEC-001",
+    "currency": "INR",
+    "created_at": "2025-06-15T00:43:19"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Gold Shop",
+    "reference": "MER-GOL-002",
+    "currency": "INR",
+    "created_at": "2025-06-11T01:19:48"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Market",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-04-10T14:11:27"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Silver Digital",
+    "reference": "MER-SIL-004",
+    "currency": "INR",
+    "created_at": "2025-05-21T03:55:22"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Silver Hub",
+    "reference": "MER-SIL-005",
+    "currency": "INR",
+    "created_at": "2025-06-04T04:32:16"
+  }
+]

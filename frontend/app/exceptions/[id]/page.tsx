@@ -19,7 +19,10 @@ import {
   ErrorState,
   SectionHeader,
   PipelineProgress,
+  DetailSkeleton,
+  Toast,
 } from "@/components/ui";
+import EvidenceGraph from "@/components/EvidenceGraph";
 import {
   formatPaise,
   formatPct,
@@ -33,6 +36,7 @@ import type {
   SimilarCasesResponse,
   AnalysisResult,
   ExplanationResult,
+  GuardrailSummary,
 } from "@/app/types";
 
 type Tab =
@@ -161,7 +165,18 @@ export default function ExceptionDetailPage({
     if (data?.data) setExc(data.data as ExceptionDetail);
   }
 
-  if (loading) return <LoadingState message="Loading exception…" />;
+  if (loading)
+    return (
+      <div>
+        <div className="mb-4">
+          <div className="flex items-center gap-2 text-xs text-slate-400 mb-3">
+            <span className="h-3 w-16 animate-pulse bg-slate-200 rounded" />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-900">Exception Investigation</h2>
+        </div>
+        <DetailSkeleton />
+      </div>
+    );
   if (error || !exc)
     return <ErrorState title="Exception Not Found" message={error || id} />;
 
@@ -214,6 +229,14 @@ export default function ExceptionDetailPage({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ─── Safety Summary ──────────────────────────────────────────────────── */}
+      <SafetySummary exc={exc} analysis={analysis} />
+
+      {/* ─── Evidence Graph (Hero) ─────────────────────────────────────────────── */}
+      <div className="mb-4">
+        <EvidenceGraph evidence={evidence?.evidence ?? null} />
       </div>
 
       {/* ─── Pipeline ────────────────────────────────────────────────────────── */}
@@ -271,6 +294,158 @@ export default function ExceptionDetailPage({
 // ═══════════════════════════════════════════════════════════════════════════════
 // TAB COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════════
+
+function SafetySummary({
+  exc,
+  analysis,
+}: {
+  exc: ExceptionDetail;
+  analysis: AnalysisResult | null;
+}) {
+  const decision = exc.guardrail_decision || analysis?.guardrail?.decision || null;
+  const risk = exc.risk_category;
+  const confidence = analysis?.guardrail?.confidence ?? exc.classification_confidence ?? null;
+  const exposure = analysis?.guardrail?.exposure_paise ?? null;
+  const reasons = analysis?.guardrail?.reasons ?? [];
+  const status = exc.status;
+
+  const isAuto = decision === "AUTO";
+  const isHumanReview = decision === "HUMAN_REVIEW" || !decision;
+  const isUnresolved = decision === "UNRESOLVED" || decision === "BLOCKED";
+  const isHighRisk = risk === "HIGH" || risk === "CRITICAL";
+
+  return (
+    <div className="card mb-4 overflow-hidden">
+      <div className="px-4 py-3">
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            Resolution Safety
+          </div>
+          {decision && (
+            <div
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+                isAuto
+                  ? "bg-emerald-100 text-emerald-700 border border-emerald-300"
+                  : isUnresolved
+                    ? "bg-red-100 text-red-700 border border-red-300"
+                    : "bg-blue-100 text-blue-700 border border-blue-300"
+              }`}
+            >
+              {isAuto && <span>✓</span>}
+              {isUnresolved && <span>✕</span>}
+              {isHumanReview && !isUnresolved && <span>👁</span>}
+              {decision.replace(/_/g, " ")}
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          {/* Confidence */}
+          <SafetyMetric
+            label="Confidence"
+            value={confidence != null ? formatPct(confidence) : "—"}
+            warn={confidence != null && confidence < 0.5}
+            danger={confidence != null && confidence < 0.3}
+          />
+
+          {/* Risk */}
+          <SafetyMetric
+            label="Risk"
+            value={risk || "—"}
+            danger={isHighRisk}
+            badge="risk"
+          />
+
+          {/* Guardrails */}
+          <SafetyMetric
+            label="Guardrails"
+            value={
+              decision === "AUTO"
+                ? "✓ PASSED"
+                : decision === "HUMAN_REVIEW"
+                  ? "⚠ REVIEW"
+                  : decision === "UNRESOLVED" || decision === "BLOCKED"
+                    ? "✕ BLOCKED"
+                    : "—"
+            }
+            success={decision === "AUTO"}
+            warn={decision === "HUMAN_REVIEW"}
+            danger={decision === "UNRESOLVED" || decision === "BLOCKED"}
+          />
+
+          {/* Verification */}
+          <SafetyMetric
+            label="Verification"
+            value={
+              status === "RESOLVED" || status === "APPROVED"
+                ? "✓ PASSED"
+                : status === "REJECTED"
+                  ? "✕ FAILED"
+                  : status === "ESCALATED"
+                    ? "⚠ PENDING"
+                    : "—"
+            }
+            success={status === "RESOLVED" || status === "APPROVED"}
+            danger={status === "REJECTED"}
+            warn={status === "ESCALATED"}
+          />
+
+          {/* Exposure */}
+          <SafetyMetric
+            label="Exposure"
+            value={exposure != null ? formatPaise(exposure) : "—"}
+          />
+        </div>
+
+        {/* Guardrail reasons (brief) */}
+        {reasons.length > 0 && !isAuto && (
+          <div className="mt-3 text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2">
+            {reasons[0]}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SafetyMetric({
+  label,
+  value,
+  success,
+  warn,
+  danger,
+  badge,
+}: {
+  label: string;
+  value: string;
+  success?: boolean;
+  warn?: boolean;
+  danger?: boolean;
+  badge?: "risk" | "guardrail";
+}) {
+  return (
+    <div className="flex flex-col">
+      <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">{label}</div>
+      {badge ? (
+        <Badge text={value} variant={badge} />
+      ) : (
+        <div
+          className={`text-sm font-bold ${
+            danger
+              ? "text-red-600"
+              : success
+                ? "text-emerald-600"
+                : warn
+                  ? "text-blue-600"
+                  : "text-slate-800"
+          }`}
+        >
+          {value}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function SummaryTab({
   exc,
@@ -531,8 +706,12 @@ function IntelligenceTab({ analysis }: { analysis: AnalysisResult | null }) {
       </div>
     );
 
+  const conf = analysis.classification_confidence ?? analysis.ml_confidence;
+  const isLowConf = conf != null && conf < 0.5;
+
   return (
     <div className="space-y-6">
+      {/* Classification */}
       <div className="card">
         <div className="card-header">
           <SectionHeader title="ML Classification" />
@@ -540,7 +719,26 @@ function IntelligenceTab({ analysis }: { analysis: AnalysisResult | null }) {
         <div className="card-body">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <InfoItem label="Predicted Type" value={formatExceptionType(analysis.classification_type || "UNKNOWN")} />
-            <InfoItem label="ML Confidence" value={analysis.classification_confidence != null ? formatPct(analysis.classification_confidence) : "—"} />
+            <div>
+              <div className="text-[11px] text-slate-400 uppercase tracking-wider mb-1">ML Confidence</div>
+              <div className="flex items-center gap-2">
+                {conf != null ? (
+                  <>
+                    <div className="w-20 h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${conf >= 0.7 ? "bg-emerald-500" : conf >= 0.5 ? "bg-amber-500" : "bg-red-500"}`}
+                        style={{ width: `${conf * 100}%` }}
+                      />
+                    </div>
+                    <span className={`text-sm font-bold ${isLowConf ? "text-red-600" : "text-slate-800"}`}>
+                      {formatPct(conf)}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-sm font-medium text-slate-400">—</span>
+                )}
+              </div>
+            </div>
             <InfoItem label="Risk" value={analysis.risk || "—"} badge="risk" />
             <InfoItem label="Similar Cases" value={String(analysis.similar_case_count ?? 0)} />
           </div>
@@ -584,26 +782,42 @@ function CandidatesTab({ analysis }: { analysis: AnalysisResult | null }) {
               }`}
             >
               <div className="flex items-start justify-between">
-                <div>
-                  <div className="text-sm font-semibold text-slate-800">
-                    {c.resolution_type.replace(/_/g, " ")}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <div className="text-sm font-semibold text-slate-800">
+                      {c.resolution_type.replace(/_/g, " ")}
+                    </div>
+                    {i === 0 && (
+                      <Badge text="RECOMMENDED" className="bg-brand/10 text-brand border-brand/20" />
+                    )}
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">
-                    {c.source} · Confidence: {formatPct(c.confidence)}
+                  <div className="flex items-center gap-3 mt-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-slate-400">Confidence</span>
+                      <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${c.confidence >= 0.7 ? "bg-emerald-500" : c.confidence >= 0.5 ? "bg-amber-500" : "bg-red-500"}`}
+                          style={{ width: `${c.confidence * 100}%` }}
+                        />
+                      </div>
+                      <span className="text-xs font-bold tabular-nums text-slate-600">
+                        {formatPct(c.confidence)}
+                      </span>
+                    </div>
+                    <span className="text-xs text-slate-300">·</span>
+                    <span className="text-xs text-slate-400">{c.source}</span>
                   </div>
                   {c.description && (
-                    <div className="text-xs text-slate-400 mt-1">
+                    <div className="text-xs text-slate-400 mt-1.5">
                       {c.description}
                     </div>
                   )}
                 </div>
-                <div className="text-right">
+                <div className="text-right ml-4">
                   <div className="text-sm font-bold tabular-nums">
                     {formatPaise(c.adjustment_paise)}
                   </div>
-                  {i === 0 && (
-                    <Badge text="RECOMMENDED" className="mt-1 bg-brand/10 text-brand border-brand/20" />
-                  )}
+                  <div className="text-[10px] text-slate-400 mt-0.5">adjustment</div>
                 </div>
               </div>
             </div>
@@ -626,6 +840,7 @@ function GuardrailsTab({ analysis }: { analysis: AnalysisResult | null }) {
 
   const g = analysis.guardrail;
   const isAuto = g.decision === "AUTO";
+  const isBlocked = g.decision === "UNRESOLVED" || g.decision === "BLOCKED";
 
   return (
     <div className="space-y-6">
@@ -647,36 +862,97 @@ function GuardrailsTab({ analysis }: { analysis: AnalysisResult | null }) {
           <div className="mt-3 text-sm text-slate-500">
             {isAuto
               ? "All safety conditions passed"
-              : g.reasons[0] || "Safety conditions not met"}
+              : isBlocked
+                ? "Resolution blocked by financial guardrail"
+                : g.reasons[0] || "Safety conditions not met"}
           </div>
         </div>
       </div>
 
-      {/* Guardrail Details */}
+      {/* Guardrail Evaluation */}
       <div className="card">
         <div className="card-header">
           <SectionHeader title="Guardrail Evaluation" />
         </div>
         <div className="card-body">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <InfoItem label="Confidence" value={formatPct(g.confidence)} />
-            <InfoItem label="Risk" value={g.risk_category} badge="risk" />
-            <InfoItem label="Exposure" value={formatPaise(g.exposure_paise)} />
-            <InfoItem label="Decision" value={g.decision} badge="guardrail" />
+          {/* Key metrics row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <SafetyMetric label="Confidence" value={formatPct(g.confidence)} danger={g.confidence < 0.3} warn={g.confidence < 0.5 && g.confidence >= 0.3} />
+            <SafetyMetric label="Risk" value={g.risk_category} badge="risk" />
+            <SafetyMetric label="Exposure" value={formatPaise(g.exposure_paise)} warn={g.exposure_paise > 100000} />
+            <SafetyMetric label="Decision" value={g.decision} badge="guardrail" />
           </div>
-          {g.reasons.length > 0 && (
-            <div className="mt-4 space-y-1">
-              <div className="text-xs text-slate-400 uppercase tracking-wider mb-2">Reasons</div>
-              {g.reasons.map((r, i) => (
-                <div key={i} className="text-sm text-slate-600 flex items-start gap-2">
-                  <span className="text-slate-300 mt-0.5">•</span>
-                  <span>{r}</span>
-                </div>
-              ))}
+
+          {/* Safety check list */}
+          <div className="border border-slate-100 rounded-lg p-4">
+            <div className="text-xs text-slate-400 uppercase tracking-wider mb-3">Safety Checks</div>
+            <div className="space-y-2">
+              <SafetyCheck
+                label="Confidence Threshold"
+                passed={g.confidence >= 0.7}
+                detail={g.confidence >= 0.7 ? "Above threshold" : `Below threshold (${formatPct(g.confidence)})`}
+              />
+              <SafetyCheck
+                label="Risk Assessment"
+                passed={g.risk_category === "LOW"}
+                detail={g.risk_category === "LOW" ? "Low risk" : `${g.risk_category} risk`}
+              />
+              <SafetyCheck
+                label="Conflict Detection"
+                passed={!analysis.evidence.conflicts.length}
+                detail={analysis.evidence.conflicts.length === 0 ? "No conflicts" : `${analysis.evidence.conflicts.length} conflict(s) detected`}
+              />
+              <SafetyCheck
+                label="Evidence Coverage"
+                passed={analysis.evidence.coverage === "FULLY_EXPLAINED"}
+                detail={analysis.evidence.coverage.replace(/_/g, " ").toLowerCase()}
+              />
+              <SafetyCheck
+                label="Financial Exposure"
+                passed={g.exposure_paise <= 100000}
+                detail={g.exposure_paise <= 100000 ? "Within limit" : `₹${(g.exposure_paise / 100).toLocaleString()} exceeds threshold`}
+              />
             </div>
-          )}
+          </div>
         </div>
       </div>
+
+      {/* Reasons */}
+      {g.reasons.length > 0 && (
+        <div className="card">
+          <div className="card-header">
+            <SectionHeader title="Guardrail Reasons" />
+          </div>
+          <div className="card-body space-y-2">
+            {g.reasons.map((r, i) => (
+              <div key={i} className="flex items-start gap-2 text-sm">
+                <span className="text-slate-300 mt-0.5">•</span>
+                <span className="text-slate-600">{r}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SafetyCheck({
+  label,
+  passed,
+  detail,
+}: {
+  label: string;
+  passed: boolean;
+  detail: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className={`text-sm ${passed ? "text-emerald-500" : "text-red-500"}`}>
+        {passed ? "✓" : "✕"}
+      </span>
+      <span className="text-sm font-medium text-slate-700 flex-1">{label}</span>
+      <span className={`text-xs ${passed ? "text-emerald-600" : "text-red-600"}`}>{detail}</span>
     </div>
   );
 }

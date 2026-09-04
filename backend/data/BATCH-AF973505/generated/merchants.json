@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Crystal Goods",
+    "reference": "MER-CRY-001",
+    "currency": "INR",
+    "created_at": "2025-02-08T14:04:29"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Goods",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-01-31T02:57:16"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Shop",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-06-04T21:22:06"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Crystal Solutions",
+    "reference": "MER-CRY-004",
+    "currency": "INR",
+    "created_at": "2025-01-27T17:36:54"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Trading",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-06-09T01:49:32"
+  }
+]

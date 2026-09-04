@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { listModels } from "@/app/lib/api";
-import { Badge, LoadingState, EmptyState } from "@/components/ui";
+import { Badge, LoadingState, EmptyState, CardSkeleton } from "@/components/ui";
 import { formatPct } from "@/app/lib/utils";
 import type { ModelItem } from "@/app/types";
 
@@ -30,7 +30,20 @@ export default function ModelsPage() {
     return () => { mounted = false; };
   }, []);
 
-  if (loading) return <LoadingState message="Loading models…" />;
+  if (loading)
+    return (
+      <div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Models</h2>
+          <p className="text-sm text-slate-400 mt-1">Loading…</p>
+        </div>
+        <div className="space-y-4">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
 
   if (error) {
     return (

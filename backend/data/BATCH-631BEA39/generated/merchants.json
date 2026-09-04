@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Quick Market",
+    "reference": "MER-QUI-001",
+    "currency": "INR",
+    "created_at": "2025-05-21T08:39:27"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Smart Trading",
+    "reference": "MER-SMA-002",
+    "currency": "INR",
+    "created_at": "2025-04-13T01:47:00"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Gold Co",
+    "reference": "MER-GOL-003",
+    "currency": "INR",
+    "created_at": "2025-03-15T03:17:47"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Red Co",
+    "reference": "MER-RED-004",
+    "currency": "INR",
+    "created_at": "2025-02-01T01:48:27"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Trading",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-03-19T15:20:16"
+  }
+]

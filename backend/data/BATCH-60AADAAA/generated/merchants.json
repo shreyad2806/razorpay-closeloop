@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Star Services",
+    "reference": "MER-STA-001",
+    "currency": "INR",
+    "created_at": "2025-01-17T17:56:12"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Prime Co",
+    "reference": "MER-PRI-002",
+    "currency": "INR",
+    "created_at": "2025-05-31T14:10:11"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Prime Store",
+    "reference": "MER-PRI-003",
+    "currency": "INR",
+    "created_at": "2025-04-25T20:33:45"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Smart Trading",
+    "reference": "MER-SMA-004",
+    "currency": "INR",
+    "created_at": "2025-05-24T20:43:34"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Shop",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-04-28T10:34:34"
+  }
+]

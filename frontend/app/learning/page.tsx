@@ -8,7 +8,7 @@ import {
   getSafetyMetrics,
   recordFeedback,
 } from "@/app/lib/api";
-import { StatCard, LoadingState, ErrorState, SectionHeader } from "@/components/ui";
+import { StatCard, StatCardSkeleton, CardSkeleton, LoadingState, ErrorState, SectionHeader, Toast } from "@/components/ui";
 import { formatPct, formatPaise, formatNum } from "@/app/lib/utils";
 import type { LearningMetrics, SafetyMetrics } from "@/app/types";
 
@@ -96,7 +96,25 @@ export default function LearningPage() {
     setTimeout(() => { setFeedbackResult(null); setFeedbackError(null); }, 5000);
   }
 
-  if (loading) return <LoadingState message="Loading learning metrics…" />;
+  if (loading)
+    return (
+      <div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Learning & Feedback</h2>
+          <p className="text-sm text-slate-400 mt-1">Loading…</p>
+        </div>
+        <div className="stat-grid mb-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <StatCardSkeleton key={i} />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
+        <CardSkeleton />
+      </div>
+    );
   if (error) return <ErrorState title="Error" message={error} />;
 
   const a = metrics?.automation || {};

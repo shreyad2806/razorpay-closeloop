@@ -24,6 +24,9 @@ from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Optional
 from uuid import uuid4
 
+from app.core.structured_logging import (
+    WorkflowEvent, mcp_logger, set_correlation_ids,
+)
 from mcp.audit import MCPAuditLogger
 from mcp.config import MCPServerConfig, MCPServerMode, MCPToolCategory
 from mcp.idempotency import MCPOperationExecutor
@@ -72,6 +75,13 @@ class MCPServer:
         self._start_time = datetime.now(timezone.utc)
         self._request_count = 0
         self._error_count = 0
+        mcp_logger.info(
+            WorkflowEvent.MCP_SERVER_STARTED.value,
+            f"MCP server initialized: {self._config.server_name}",
+            server_name=self._config.server_name,
+            mode=self._config.mode.value,
+            enabled_categories=[c.value for c in self._config.enabled_categories],
+        )
 
     @property
     def idempotency_executor(self) -> MCPOperationExecutor:
@@ -109,6 +119,10 @@ class MCPServer:
             return
 
         self._registry.register_tool(definition, handler)
+        mcp_logger.debug(WorkflowEvent.STARTUP.value,
+                       f"MCP tool registered: {definition.name}",
+                       tool_name=definition.name,
+                       category=definition.category)
 
     def register_tools(
         self,
@@ -134,6 +148,9 @@ class MCPServer:
         - Delegation to registry
         - Audit logging
         - Error handling
+
+        Structured log sequence per call:
+          MCP_TOOL_CALLED → MCP_TOOL_COMPLETED | MCP_TOOL_FAILED
         """
         start_time = time.time()
         self._request_count += 1
@@ -141,6 +158,21 @@ class MCPServer:
         # Generate request ID if not provided
         if not request.request_id:
             request.request_id = _gen_id("REQ")
+
+        set_correlation_ids(workflow_id=request.workflow_id or "",
+                           exception_id=request.exception_id or "",
+                           request_id=request.request_id)
+
+        # ── MCP_TOOL_CALLED ──
+        mcp_logger.info(
+            WorkflowEvent.MCP_TOOL_CALLED.value,
+            f"MCP tool called: {request.tool_name}",
+            tool_name=request.tool_name,
+            request_id=request.request_id,
+            workflow_id=request.workflow_id,
+            exception_id=request.exception_id,
+            parameter_keys=list(request.parameters.keys()) if request.parameters else [],
+        )
 
         # Check tool exists
         definition = self._registry.get_definition(request.tool_name)
@@ -151,6 +183,18 @@ class MCPServer:
                 tool_name=request.tool_name,
                 status=MCPToolStatus.ERROR,
                 error=f"Tool '{request.tool_name}' not registered",
+            )
+            duration_ms = (time.time() - start_time) * 1000
+            mcp_logger.error(
+                WorkflowEvent.MCP_TOOL_FAILED.value,
+                f"MCP tool not registered: {request.tool_name}",
+                tool_name=request.tool_name,
+                request_id=request.request_id,
+                workflow_id=request.workflow_id,
+                exception_id=request.exception_id,
+                duration_ms=round(duration_ms, 2),
+                error_type="tool_not_registered",
+                error_message=f"Tool '{request.tool_name}' not registered",
             )
             self._audit_request(request, response, start_time)
             return response
@@ -166,6 +210,18 @@ class MCPServer:
                     error=f"Category '{definition.category}' is disabled",
                 )
                 self._error_count += 1
+                duration_ms = (time.time() - start_time) * 1000
+                mcp_logger.error(
+                    WorkflowEvent.MCP_TOOL_FAILED.value,
+                    f"MCP tool category disabled: {request.tool_name}",
+                    tool_name=request.tool_name,
+                    request_id=request.request_id,
+                    workflow_id=request.workflow_id,
+                    exception_id=request.exception_id,
+                    duration_ms=round(duration_ms, 2),
+                    error_type="category_disabled",
+                    error_message=f"Category '{definition.category}' is disabled",
+                )
                 self._audit_request(request, response, start_time)
                 return response
         except ValueError:
@@ -180,6 +236,18 @@ class MCPServer:
                 status=MCPToolStatus.ERROR,
                 error=f"Tool '{request.tool_name}' is disabled",
             )
+            duration_ms = (time.time() - start_time) * 1000
+            mcp_logger.error(
+                WorkflowEvent.MCP_TOOL_FAILED.value,
+                f"MCP tool disabled: {request.tool_name}",
+                tool_name=request.tool_name,
+                request_id=request.request_id,
+                workflow_id=request.workflow_id,
+                exception_id=request.exception_id,
+                duration_ms=round(duration_ms, 2),
+                error_type="tool_disabled",
+                error_message=f"Tool '{request.tool_name}' is disabled",
+            )
             self._audit_request(request, response, start_time)
             return response
 
@@ -192,6 +260,30 @@ class MCPServer:
 
         if response.status == MCPToolStatus.ERROR:
             self._error_count += 1
+            # ── MCP_TOOL_FAILED ──
+            mcp_logger.error(
+                WorkflowEvent.MCP_TOOL_FAILED.value,
+                f"MCP tool failed: {request.tool_name} — {response.error or 'unknown error'}",
+                tool_name=request.tool_name,
+                request_id=request.request_id,
+                workflow_id=request.workflow_id,
+                exception_id=request.exception_id,
+                duration_ms=round(duration_ms, 2),
+                error_type="tool_execution_error",
+                error_message=str(response.error or "")[:300],
+            )
+        else:
+            # ── MCP_TOOL_COMPLETED ──
+            mcp_logger.success(
+                WorkflowEvent.MCP_TOOL_COMPLETED.value,
+                f"MCP tool completed: {request.tool_name}",
+                tool_name=request.tool_name,
+                request_id=request.request_id,
+                workflow_id=request.workflow_id,
+                exception_id=request.exception_id,
+                duration_ms=round(duration_ms, 2),
+                result_summary="success",
+            )
 
         # Audit
         self._audit_request(request, response, start_time)

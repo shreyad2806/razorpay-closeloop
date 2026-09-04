@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Green Enterprises",
+    "reference": "MER-GRE-001",
+    "currency": "INR",
+    "created_at": "2025-06-16T08:14:11"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Trading",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-01-03T10:15:59"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Market",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-05-02T14:23:53"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Services",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-03-14T19:30:18"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Shop",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-01-08T11:43:01"
+  }
+]

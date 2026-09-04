@@ -1,0 +1,50 @@
+[
+  {
+    "case_id": "CASE-000001",
+    "payment_id": "PAY-000001",
+    "payment_amount": 2538309,
+    "total_refunds": 0,
+    "total_fees": 63457,
+    "total_taxes": 456895,
+    "total_adjustments": 0,
+    "expected_amount": 2017957,
+    "actual_amount": 2474852,
+    "difference": 456895,
+    "true_exception_type": "MISSING_RECORD",
+    "true_resolution": "MISSING_RECORD_ESCALATION",
+    "resolvable": false,
+    "risk_category": "HIGH"
+  },
+  {
+    "case_id": "CASE-000002",
+    "payment_id": "PAY-000002",
+    "payment_amount": 3283505,
+    "total_refunds": 0,
+    "total_fees": 82087,
+    "total_taxes": 623865,
+    "total_adjustments": 0,
+    "expected_amount": 2577553,
+    "actual_amount": 2577553,
+    "difference": 0,
+    "true_exception_type": "EXACT_MATCH",
+    "true_resolution": "NO_ACTION",
+    "resolvable": true,
+    "risk_category": "LOW"
+  },
+  {
+    "case_id": "CASE-000003",
+    "payment_id": "PAY-000003",
+    "payment_amount": 528136,
+    "total_refunds": 0,
+    "total_fees": 10562,
+    "total_taxes": 95064,
+    "total_adjustments": 9648,
+    "expected_amount": 432158,
+    "actual_amount": 432955,
+    "difference": 797,
+    "true_exception_type": "FEE_DIFFERENCE",
+    "true_resolution": "FEE_ADJUSTMENT",
+    "resolvable": true,
+    "risk_category": "LOW"
+  }
+]

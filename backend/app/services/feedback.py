@@ -14,6 +14,9 @@ from datetime import datetime
 from typing import Dict, List, Optional
 from uuid import uuid4
 
+from app.core.structured_logging import (
+    WorkflowEvent, feedback_logger, set_correlation_ids,
+)
 from app.schemas.feedback import (
     ActualOutcomeRecord,
     CorrectionDetail,
@@ -123,6 +126,16 @@ class FeedbackService:
 
         self._feedback[feedback_id] = record
         self._by_workflow.setdefault(workflow_id, []).append(feedback_id)
+
+        set_correlation_ids(exception_id=exception_id, workflow_id=workflow_id)
+        feedback_logger.info(WorkflowEvent.FEEDBACK_RECORDED.value,
+                           f"Feedback recorded: {feedback_type.value}",
+                           exception_id=exception_id,
+                           workflow_id=workflow_id,
+                           feedback_type=feedback_type.value,
+                           reviewer=reviewer,
+                           feedback_id=feedback_id)
+
         return record
 
     def get_feedback(self, feedback_id: str) -> Optional[FeedbackRecord]:

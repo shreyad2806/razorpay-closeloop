@@ -15,6 +15,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from app.core.structured_logging import (
+    WorkflowEvent, exception_logger, review_logger, feedback_logger,
+    set_correlation_ids,
+)
 from app.services.feedback import FeedbackService, OutcomeService
 from app.schemas.feedback import (
     ActualOutcomeRecord,
@@ -125,6 +129,14 @@ class ExceptionService:
         reason = resolution.get("reason", "")
         candidate_id = resolution.get("candidate_id")
 
+        set_correlation_ids(exception_id=exception_id)
+        exception_logger.info(WorkflowEvent.RESOLUTION_PROPOSAL.value,
+                            f"Resolution proposal submitted",
+                            exception_id=exception_id,
+                            resolution_type=resolution_type,
+                            adjustment_paise=adjustment_paise,
+                            payment_id=exc.get("payment_id"))
+
         # Record the proposal as an outcome (PHASE 9 learning data)
         workflow_id = f"WF-{exception_id}"
         outcome = self._outcome_service.record_outcome(
@@ -187,6 +199,13 @@ class ExceptionService:
         comments = approval.get("comments", "")
         workflow_id = exc.get("workflow_id", f"WF-{exception_id}")
 
+        set_correlation_ids(exception_id=exception_id, workflow_id=workflow_id)
+        review_logger.info(WorkflowEvent.APPROVED.value,
+                         f"Exception approved by {approved_by}",
+                         exception_id=exception_id,
+                         reviewer=approved_by,
+                         resolution_type=exc.get("resolution_type"))
+
         # Record feedback
         fb = self._feedback_service.record_feedback(
             workflow_id=workflow_id,
@@ -230,6 +249,13 @@ class ExceptionService:
         rejected_by = rejection.get("rejected_by", "unknown")
         reason = rejection.get("reason", "No reason provided")
         workflow_id = exc.get("workflow_id", f"WF-{exception_id}")
+
+        set_correlation_ids(exception_id=exception_id, workflow_id=workflow_id)
+        review_logger.info(WorkflowEvent.REJECTED.value,
+                         f"Exception rejected by {rejected_by}",
+                         exception_id=exception_id,
+                         reviewer=rejected_by,
+                         resolution_type=exc.get("resolution_type"))
 
         # Record feedback
         fb = self._feedback_service.record_feedback(
@@ -278,6 +304,13 @@ class ExceptionService:
             return {"error": f"Exception '{exception_id}' not found"}
 
         workflow_id = exc.get("workflow_id", f"WF-{exception_id}")
+
+        set_correlation_ids(exception_id=exception_id, workflow_id=workflow_id)
+        review_logger.warning(WorkflowEvent.ESCALATED.value,
+                            f"Exception escalated: {reason[:100]}",
+                            exception_id=exception_id,
+                            escalated_by=escalated_by or "system",
+                            resolution_type=exc.get("resolution_type"))
 
         # Record feedback
         fb = self._feedback_service.record_feedback(

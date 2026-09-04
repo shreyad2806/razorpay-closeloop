@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Quick Store",
+    "reference": "MER-QUI-001",
+    "currency": "INR",
+    "created_at": "2025-05-09T16:56:27"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Trading",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-02-25T16:40:09"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Silver Shop",
+    "reference": "MER-SIL-003",
+    "currency": "INR",
+    "created_at": "2025-04-02T09:36:52"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Crystal Labs",
+    "reference": "MER-CRY-004",
+    "currency": "INR",
+    "created_at": "2025-06-14T19:16:22"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Elite Trading",
+    "reference": "MER-ELI-005",
+    "currency": "INR",
+    "created_at": "2025-04-26T00:31:12"
+  }
+]

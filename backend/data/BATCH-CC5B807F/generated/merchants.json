@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Green Co",
+    "reference": "MER-GRE-001",
+    "currency": "INR",
+    "created_at": "2025-01-02T00:18:29"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Prime Enterprises",
+    "reference": "MER-PRI-002",
+    "currency": "INR",
+    "created_at": "2025-06-28T13:34:40"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Silver Shop",
+    "reference": "MER-SIL-003",
+    "currency": "INR",
+    "created_at": "2025-02-16T12:25:39"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Trading",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-04-28T08:41:56"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Red Mart",
+    "reference": "MER-RED-005",
+    "currency": "INR",
+    "created_at": "2025-01-02T03:55:39"
+  }
+]

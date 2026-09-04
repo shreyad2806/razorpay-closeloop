@@ -9,7 +9,7 @@ import {
   listModels,
   getLearningMetrics,
 } from "@/app/lib/api";
-import { StatCard, LoadingState, ErrorState, SectionHeader } from "@/components/ui";
+import { StatCard, StatCardSkeleton, LoadingState, ErrorState, SectionHeader } from "@/components/ui";
 import { formatPct, formatNum } from "@/app/lib/utils";
 import type {
   HealthResponse,
@@ -149,7 +149,36 @@ export default function SystemPage() {
     return () => { mounted = false; };
   }, []);
 
-  if (loading) return <LoadingState message="Loading system info…" />;
+  if (loading)
+    return (
+      <div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">System</h2>
+          <p className="text-sm text-slate-400 mt-1">Loading…</p>
+        </div>
+        <div className="stat-grid mb-6">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <StatCardSkeleton key={i} />
+          ))}
+        </div>
+        <div className="card mb-6"><div className="card-body">
+          <div className="h-5 w-32 animate-pulse bg-slate-200 rounded mb-4" />
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="h-10 animate-pulse bg-slate-100 rounded-lg" />
+            ))}
+          </div>
+        </div></div>
+        <div className="card"><div className="card-body">
+          <div className="h-5 w-40 animate-pulse bg-slate-200 rounded mb-4" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {Array.from({ length: 15 }).map((_, i) => (
+              <div key={i} className="h-8 animate-pulse bg-slate-100 rounded-lg" />
+            ))}
+          </div>
+        </div></div>
+      </div>
+    );
   if (error) return <ErrorState title="Backend Unavailable" message={error} />;
 
   return (

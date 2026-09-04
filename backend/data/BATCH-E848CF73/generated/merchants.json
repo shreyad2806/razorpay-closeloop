@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Hub",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-04-29T15:09:41"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Store",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-03-13T17:20:58"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Gold Solutions",
+    "reference": "MER-GOL-003",
+    "currency": "INR",
+    "created_at": "2025-04-27T08:31:58"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Services",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-02-21T04:10:42"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Global Co",
+    "reference": "MER-GLO-005",
+    "currency": "INR",
+    "created_at": "2025-04-29T20:07:22"
+  }
+]

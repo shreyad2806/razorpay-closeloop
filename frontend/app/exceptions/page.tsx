@@ -3,7 +3,11 @@
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { listExceptions } from "@/app/lib/api";
-import { Badge, LoadingState, ErrorState, EmptyState } from "@/components/ui";
+import { Badge, LoadingState, ErrorState, EmptyState, TableSkeleton } from "@/components/ui";
+
+function SkeletonLine({ className = "" }: { className?: string }) {
+  return <div className={`animate-pulse bg-slate-200 rounded ${className}`} aria-hidden="true" />;
+}
 import { formatPaise, formatExceptionType, fmtDate } from "@/app/lib/utils";
 import type { ExceptionListItem, ExceptionType, RiskCategory, ExceptionStatus } from "@/app/types";
 
@@ -91,7 +95,17 @@ export default function ExceptionsPage() {
     return result;
   }, [exceptions, typeFilter, statusFilter, riskFilter, search, sortField, sortDir]);
 
-  if (loading) return <LoadingState message="Loading exceptions…" />;
+  if (loading)
+    return (
+      <div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Exceptions</h2>
+          <p className="text-sm text-slate-400 mt-1">Loading…</p>
+        </div>
+        <div className="card mb-4"><div className="card-body"><SkeletonLine className="h-10 w-full" /></div></div>
+        <div className="card"><TableSkeleton rows={10} columns={8} /></div>
+      </div>
+    );
   if (error) return <ErrorState title="Error" message={error} />;
 
   return (

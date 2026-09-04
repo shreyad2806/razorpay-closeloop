@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Crystal Goods",
+    "reference": "MER-CRY-001",
+    "currency": "INR",
+    "created_at": "2025-04-20T16:41:36"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Digital",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-06-06T01:33:53"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Services",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-04-12T11:48:53"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Trading",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-06-12T18:54:20"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Quick Services",
+    "reference": "MER-QUI-005",
+    "currency": "INR",
+    "created_at": "2025-05-10T16:45:42"
+  }
+]

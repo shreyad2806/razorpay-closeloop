@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Mart",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-01-20T05:26:47"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Silver Mart",
+    "reference": "MER-SIL-002",
+    "currency": "INR",
+    "created_at": "2025-05-30T03:24:11"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Mart",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-03-06T11:05:27"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Tech Services",
+    "reference": "MER-TEC-004",
+    "currency": "INR",
+    "created_at": "2025-04-06T22:41:26"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Red Services",
+    "reference": "MER-RED-005",
+    "currency": "INR",
+    "created_at": "2025-06-05T09:13:16"
+  }
+]

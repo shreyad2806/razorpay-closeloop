@@ -7,7 +7,7 @@ import {
   runBatch,
   getBatchSummary,
 } from "@/app/lib/api";
-import { Badge, LoadingState, EmptyState } from "@/components/ui";
+import { Badge, LoadingState, EmptyState, CardSkeleton, Toast } from "@/components/ui";
 import { formatPct, fmtDate } from "@/app/lib/utils";
 import type { BatchItem, BatchSummary } from "@/app/types";
 
@@ -85,7 +85,20 @@ export default function BatchesPage() {
     setRunning(null);
   }
 
-  if (loading) return <LoadingState message="Loading batches…" />;
+  if (loading)
+    return (
+      <div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Batches</h2>
+          <p className="text-sm text-slate-400 mt-1">Loading…</p>
+        </div>
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
 
   if (error)
     return (

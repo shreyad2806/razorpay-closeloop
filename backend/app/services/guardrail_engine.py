@@ -22,6 +22,9 @@ import time
 import traceback
 from typing import Dict, Optional
 
+from app.core.structured_logging import (
+    WorkflowEvent, guardrail_logger, set_correlation_ids,
+)
 from app.schemas.confidence_gate import ConfidenceGateConfig, GateAction
 from app.schemas.decision_matrix import AutomationDecision
 from app.schemas.evidence_guard import EvidenceAction
@@ -90,10 +93,36 @@ class GuardrailEngine:
         """
         start_time = time.perf_counter()
 
+        set_correlation_ids(exception_id=engine_result.exception_id)
+        guardrail_logger.info(WorkflowEvent.GUARDRAILS_CHECKED.value,
+                            f"Evaluating guardrails",
+                            exception_id=engine_result.exception_id,
+                            confidence=engine_result.confidence,
+                            risk=engine_result.risk_category)
+
         try:
-            return self._evaluate_inner(engine_result, dependency_status)
+            result = self._evaluate_inner(engine_result, dependency_status)
+            elapsed_ms = (time.perf_counter() - start_time) * 1000
+            guardrail_logger.success(WorkflowEvent.GUARDRAILS_CHECKED.value,
+                                   f"Guardrail decision: {result.decision.value}",
+                                   duration_ms=elapsed_ms,
+                                   exception_id=engine_result.exception_id,
+                                   decision=result.decision.value,
+                                   confidence=result.confidence,
+                                   risk=result.risk_category,
+                                   exposure_paise=result.financial_exposure_paise,
+                                   passed_gates=len(result.passed_gates),
+                                   failed_gates=len(result.failed_gates))
+            return result
         except Exception:
             # FAIL-CLOSED: unexpected error → HUMAN_REVIEW
+            elapsed_ms = (time.perf_counter() - start_time) * 1000
+            guardrail_logger.failure(WorkflowEvent.GUARDRAILS_FAILED.value,
+                                   f"Guardrail evaluation failed",
+                                   duration_ms=elapsed_ms,
+                                   exception_id=engine_result.exception_id,
+                                   error_type="unexpected",
+                                   error_message=str(Exception))
             return self._fail_closed_on_error(engine_result, start_time)
 
     def _evaluate_inner(

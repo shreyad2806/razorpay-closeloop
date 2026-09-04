@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Goods",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-02-05T18:19:26"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Store",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-03-29T18:57:36"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Green Hub",
+    "reference": "MER-GRE-003",
+    "currency": "INR",
+    "created_at": "2025-06-29T05:23:45"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Prime Mart",
+    "reference": "MER-PRI-004",
+    "currency": "INR",
+    "created_at": "2025-05-27T23:08:51"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Green Shop",
+    "reference": "MER-GRE-005",
+    "currency": "INR",
+    "created_at": "2025-04-10T11:09:16"
+  }
+]
