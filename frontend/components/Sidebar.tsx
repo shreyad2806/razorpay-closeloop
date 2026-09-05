@@ -23,8 +23,19 @@ export function Sidebar() {
   return (
     <aside className="sidebar" id="sidebar">
       <div className="sidebar-header">
-        <h1>CloseLoop</h1>
-        <div className="subtitle">Razorpay Financial Operations</div>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center text-white font-bold text-base shadow-sm">
+            ₹
+          </div>
+          <div>
+            <h1 className="text-base font-bold text-slate-900 tracking-tight leading-none">
+              Razorpay <span className="text-brand">CloseLoop</span>
+            </h1>
+            <div className="subtitle text-[11px] text-slate-400 font-medium mt-1">
+              Autonomous Financial Reconciliation
+            </div>
+          </div>
+        </div>
       </div>
       <nav>
         {navItems.map((item) => (
@@ -37,9 +48,8 @@ export function Sidebar() {
             <span>{item.label}</span>
           </Link>
         ))}
-      </nav>
-      <div className="sidebar-footer">
-        <div>v1.0.0 · Phases 1–14</div>
+      </nav>        <div className="sidebar-footer">
+        <div>v1.0.0</div>
       </div>
     </aside>
   );

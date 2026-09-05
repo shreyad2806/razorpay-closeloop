@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Mart",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-06-05T21:57:11"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Services",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-02-04T16:35:42"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Red Trading",
+    "reference": "MER-RED-003",
+    "currency": "INR",
+    "created_at": "2025-01-15T08:47:25"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Shop",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-04-16T19:55:30"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Silver Co",
+    "reference": "MER-SIL-005",
+    "currency": "INR",
+    "created_at": "2025-02-05T00:48:39"
+  }
+]

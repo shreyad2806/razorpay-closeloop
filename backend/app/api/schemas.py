@@ -70,7 +70,26 @@ class BatchStatus(str, Enum):
 
 
 class BatchCreateRequest(BaseModel):
-    """Request body for POST /batches."""
+    """Request body for POST /batches.
+
+    Use ``payload=None`` (or omit it) to generate synthetic data.
+    Provide a ``payload`` dict with ``payments`` and ``cases`` lists
+    to upload pre-built financial records.
+    """
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "name": "demo-batch",
+                    "description": "Synthetic reconciliation test batch",
+                    "source": "synthetic",
+                    "num_merchants": 5,
+                    "num_cases": 20,
+                }
+            ]
+        }
+    }
 
     name: str = Field(..., min_length=1, max_length=200, description="Batch name")
     description: Optional[str] = Field(default=None, max_length=1000)

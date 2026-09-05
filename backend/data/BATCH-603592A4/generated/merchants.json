@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Digital",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-02-19T12:50:21"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Prime Services",
+    "reference": "MER-PRI-002",
+    "currency": "INR",
+    "created_at": "2025-04-20T12:53:30"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Hub",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-06-18T01:24:37"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Hub",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-02-17T18:07:01"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Solutions",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-05-04T14:38:03"
+  }
+]

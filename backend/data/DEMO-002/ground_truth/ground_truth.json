@@ -1,0 +1,185 @@
+﻿{
+  "batch_id": "DEMO-002",
+  "cases": [
+    {
+      "case_id": "CASE-DEMO-032",
+      "payment_id": "PAY-DEMO-032",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "APPROVED"
+    },
+    {
+      "case_id": "CASE-DEMO-032",
+      "payment_id": "PAY-DEMO-032",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "APPROVED"
+    },
+    {
+      "case_id": "CASE-DEMO-033",
+      "payment_id": "PAY-DEMO-033",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-034",
+      "payment_id": "PAY-DEMO-034",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-035",
+      "payment_id": "PAY-DEMO-035",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-036",
+      "payment_id": "PAY-DEMO-036",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "ESCALATED"
+    },
+    {
+      "case_id": "CASE-DEMO-037",
+      "payment_id": "PAY-DEMO-037",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-038",
+      "payment_id": "PAY-DEMO-038",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-039",
+      "payment_id": "PAY-DEMO-039",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "APPROVED"
+    },
+    {
+      "case_id": "CASE-DEMO-040",
+      "payment_id": "PAY-DEMO-040",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-041",
+      "payment_id": "PAY-DEMO-041",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "APPROVED"
+    },
+    {
+      "case_id": "CASE-DEMO-042",
+      "payment_id": "PAY-DEMO-042",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-043",
+      "payment_id": "PAY-DEMO-043",
+      "expected_outcome": "ESCALATE",
+      "ground_truth_status": "REJECTED"
+    },
+    {
+      "case_id": "CASE-DEMO-044",
+      "payment_id": "PAY-DEMO-044",
+      "expected_outcome": "ESCALATE",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-045",
+      "payment_id": "PAY-DEMO-045",
+      "expected_outcome": "ESCALATE",
+      "ground_truth_status": "ESCALATED"
+    },
+    {
+      "case_id": "CASE-DEMO-046",
+      "payment_id": "PAY-DEMO-046",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-047",
+      "payment_id": "PAY-DEMO-047",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-048",
+      "payment_id": "PAY-DEMO-048",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-049",
+      "payment_id": "PAY-DEMO-049",
+      "expected_outcome": "ESCALATE",
+      "ground_truth_status": "REJECTED"
+    },
+    {
+      "case_id": "CASE-DEMO-050",
+      "payment_id": "PAY-DEMO-050",
+      "expected_outcome": "ESCALATE",
+      "ground_truth_status": "REJECTED"
+    },
+    {
+      "case_id": "CASE-DEMO-051",
+      "payment_id": "PAY-DEMO-051",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-052",
+      "payment_id": "PAY-DEMO-052",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-053",
+      "payment_id": "PAY-DEMO-053",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-054",
+      "payment_id": "PAY-DEMO-054",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-055",
+      "payment_id": "PAY-DEMO-055",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "APPROVED"
+    },
+    {
+      "case_id": "CASE-DEMO-056",
+      "payment_id": "PAY-DEMO-056",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-057",
+      "payment_id": "PAY-DEMO-057",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-058",
+      "payment_id": "PAY-DEMO-058",
+      "expected_outcome": "ESCALATE",
+      "ground_truth_status": "ESCALATED"
+    },
+    {
+      "case_id": "CASE-DEMO-059",
+      "payment_id": "PAY-DEMO-059",
+      "expected_outcome": "RESOLVED",
+      "ground_truth_status": "PENDING"
+    },
+    {
+      "case_id": "CASE-DEMO-060",
+      "payment_id": "PAY-DEMO-060",
+      "expected_outcome": "ESCALATE",
+      "ground_truth_status": "ESCALATED"
+    }
+  ]
+}

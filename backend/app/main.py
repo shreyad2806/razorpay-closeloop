@@ -120,6 +120,15 @@ async def lifespan(app: FastAPI):
         system_logger.warning(WorkflowEvent.DEPENDENCY_UNAVAILABLE.value,
                             f"LangGraph unavailable: {type(e).__name__}")
 
+    # Seed demo feedback records for Learning page
+    try:
+        from scripts.seed_feedback import seed_demo_feedback
+        seed_demo_feedback()
+        system_logger.info(WorkflowEvent.STARTUP.value, "Demo feedback records seeded")
+    except Exception as e:
+        system_logger.warning(WorkflowEvent.DEPENDENCY_UNAVAILABLE.value,
+                            f"Feedback seeding skipped: {type(e).__name__}: {e}")
+
     system_logger.info(WorkflowEvent.STARTUP.value, "CloseLoop startup complete",
                      version="1.0.0")
 

@@ -1,0 +1,16 @@
+﻿[
+  {
+    "refund_id": "REF-DEMO-020",
+    "payment_id": "PAY-DEMO-050",
+    "amount": 1200000,
+    "status": "REFUNDED",
+    "created_at": "2025-09-03T19:23:00"
+  },
+  {
+    "refund_id": "REF-DEMO-030",
+    "payment_id": "PAY-DEMO-060",
+    "amount": 490000,
+    "status": "REFUNDED",
+    "created_at": "2025-09-05T01:13:00"
+  }
+]

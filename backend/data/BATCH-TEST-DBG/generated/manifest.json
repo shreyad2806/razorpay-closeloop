@@ -1,0 +1,46 @@
+{
+  "seed": 84,
+  "generated_at": "2026-09-04T16:46:57.153269Z",
+  "config": {
+    "num_merchants": 2,
+    "num_cases": 5,
+    "currency": "INR",
+    "date_range_start": "2025-01-01T00:00:00",
+    "date_range_end": "2025-06-30T00:00:00",
+    "fee_rate_bps": 200,
+    "tax_rate_bps": 1800
+  },
+  "counts": {
+    "merchants": 2,
+    "payments": 5,
+    "settlements": 5,
+    "refunds": 4,
+    "fees": 7,
+    "taxes": 5,
+    "adjustments": 0,
+    "cases": 5
+  },
+  "scenario_distribution": {
+    "EXACT_MATCH": 1,
+    "FEE_DIFFERENCE": 3,
+    "MISSING_RECORD": 1
+  },
+  "risk_distribution": {
+    "LOW": 2,
+    "MEDIUM": 2,
+    "HIGH": 1
+  },
+  "resolvable_count": 4,
+  "unresolved_count": 1,
+  "validation": {
+    "valid": true,
+    "error_count": 0,
+    "warning_count": 0,
+    "errors": [],
+    "warnings": []
+  },
+  "batch_id": "BATCH-TEST-DBG",
+  "batch_seed": 84,
+  "generation_time_seconds": 0.001,
+  "events_per_second": 32361.94
+}

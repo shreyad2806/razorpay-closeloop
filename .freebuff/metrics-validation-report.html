@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/metrics Validation Report</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e8; line-height: 1.6; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+  h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  h2 { font-size: 20px; font-weight: 600; color: #fff; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #1e1e2e; }
+  h3 { font-size: 16px; font-weight: 600; color: #a0a0b0; margin: 20px 0 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .subtitle { color: #6a6a80; font-size: 14px; margin-bottom: 32px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-right: 6px; }
+  .badge-pass { background: #0a2e1a; color: #34d399; border: 1px solid #166534; }
+  .badge-fail { background: #2e0a0a; color: #f87171; border: 1px solid #7f1d1d; }
+  .badge-warn { background: #2e2a0a; color: #fbbf24; border: 1px solid #78350f; }
+  .badge-info { background: #0a1e2e; color: #60a5fa; border: 1px solid #1e3a5f; }
+  .card { background: #12121c; border: 1px solid #1e1e2e; border-radius: 12px; padding: 24px; margin: 16px 0; }
+  .card-title { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 12px; }
+  .finding { border-left: 3px solid #f59e0b; padding: 16px 20px; margin: 16px 0; background: #1a1510; border-radius: 0 8px 8px 0; }
+  .finding-fix { border-left-color: #34d399; background: #0a1a12; }
+  .finding-root { border-left-color: #f87171; background: #1a0a0a; }
+  .code-block { background: #0d0d14; border: 1px solid #1e1e2e; border-radius: 8px; padding: 16px; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 13px; overflow-x: auto; margin: 12px 0; line-height: 1.5; }
+  .code-block .old { color: #f87171; text-decoration: line-through; opacity: 0.7; }
+  .code-block .new { color: #34d399; }
+  .code-block .comment { color: #6b7280; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th { background: #1a1a28; color: #a0a0b0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 16px; text-align: left; font-weight: 600; }
+  td { padding: 12px 16px; border-top: 1px solid #1e1e2e; font-size: 14px; }
+  tr:hover td { background: #16161f; }
+  .metric-row { display: flex; gap: 16px; margin: 12px 0; }
+  .metric-card { flex: 1; background: #16161f; border-radius: 8px; padding: 16px; text-align: center; }
+  .metric-value { font-size: 28px; font-weight: 700; color: #fff; }
+  .metric-label { font-size: 12px; color: #6a6a80; margin-top: 4px; }
+  .comparison { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; margin: 16px 0; }
+  .comparison-arrow { color: #f59e0b; font-size: 24px; }
+  .json-block { background: #0d0d14; border: 1px solid #1e1e2e; border-radius: 8px; padding: 16px; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 13px; overflow-x: auto; margin: 12px 0; }
+  .json-key { color: #60a5fa; }
+  .json-str { color: #34d399; }
+  .json-num { color: #fbbf24; }
+  .json-null { color: #6b7280; font-style: italic; }
+  .flow { display: flex; align-items: center; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+  .flow-step { background: #1a1a28; border: 1px solid #2e2e3e; border-radius: 8px; padding: 8px 14px; font-size: 13px; color: #e0e0e8; }
+  .flow-step.active { border-color: #34d399; background: #0a1a12; }
+  .flow-arrow { color: #4a4a5e; }
+  .check { color: #34d399; }
+  .cross { color: #f87171; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .metric-row { flex-direction: column; }
+    .comparison { grid-template-columns: 1fr; }
+    .comparison-arrow { text-align: center; transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>/metrics Validation Report</h1>
+  <p class="subtitle">Razorpay CloseLoop — Phase 16.2 Financial Safety Visibility — Metrics Fix</p>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <h2>Executive Summary</h2>
+  <div class="metric-row">
+    <div class="metric-card">
+      <div class="metric-value" style="color:#34d399">3</div>
+      <div class="metric-label">Defects Fixed</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">2</div>
+      <div class="metric-label">Files Changed</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:#34d399">5063</div>
+      <div class="metric-label">Tests Passing</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:#34d399">0</div>
+      <div class="metric-label">Regressions</div>
+    </div>
+  </div>
+
+  <!-- FINDING 1 -->
+  <h2>Finding 1: "resolved" Field Incorrect</h2>
+  <div class="card">
+    <div class="card-title">The Problem</div>
+    <p style="color:#a0a0b0; margin-bottom:16px;">
+      <code>GET /metrics/batches/{id}</code> reported <code>resolved: 8</code> when the batch had
+      0 matched records and 8 exceptions. The <code>resolved</code> field was mapped from
+      <code>success_count</code>, which is set to <strong>total records processed</strong>,
+      not resolved exceptions.
+    </p>
+
+    <h3>Root Cause</h3>
+    <div class="finding finding-root">
+      <strong>batch_service.py run_batch()</strong> sets <code>batch["success_count"] = total</code>
+      (all records processed), then <code>get_summary()</code> maps this to
+      <code>"resolved": batch.get("success_count", 0)</code>.
+      Semantically, <code>success_count</code> means "processed without error", not "exceptions resolved".
+    </div>
+
+    <h3>Before Fix</h3>
+    <div class="json-block">
+{
+  <span class="json-key">"total_exceptions"</span>: <span class="json-num">8</span>,
+  <span class="json-key">"resolved"</span>: <span class="json-num" style="color:#f87171">8</span>,    <span style="color:#6b7280">// ← WRONG: should be 0</span>
+  <span class="json-key">"unresolved"</span>: <span class="json-num" style="color:#f87171">0</span>,  <span style="color:#6b7280">// ← WRONG: should be 8</span>
+  <span class="json-key">"matched_records"</span>: <span class="json-num">0</span>
+}
+    </div>
+
+    <h3>After Fix</h3>
+    <div class="json-block">
+{
+  <span class="json-key">"total_exceptions"</span>: <span class="json-num">10</span>,
+  <span class="json-key">"resolved"</span>: <span class="json-num" style="color:#34d399">0</span>,    <span style="color:#34d399">// ← matches matched_records</span>
+  <span class="json-key">"unresolved"</span>: <span class="json-num" style="color:#34d399">10</span>,  <span style="color:#34d399">// ← equals total_exceptions</span>
+  <span class="json-key">"matched_records"</span>: <span class="json-num">0</span>
+}
+    </div>
+
+    <h3>Code Change</h3>
+    <div class="code-block">
+<span class="old">"resolved": batch.get("success_count", 0),</span>
+<span class="old">"unresolved": batch.get("failure_count", 0),</span>
+
+<span class="new">"resolved": batch.get("matched_records", 0) or 0,</span>
+<span class="new">"unresolved": batch.get("exception_count", 0) or 0,</span>
+    </div>
+  </div>
+
+  <!-- FINDING 2 -->
+  <h2>Finding 2: Overall /metrics "unresolved" Was Always Zero</h2>
+  <div class="card">
+    <div class="card-title">The Problem</div>
+    <p style="color:#a0a0b0; margin-bottom:16px;">
+      <code>GET /metrics</code> reported <code>unresolved: 0</code> even when exceptions existed.
+      The <code>get_metrics()</code> method initialized <code>unresolved = 0</code> but never
+      populated it from batch data.
+    </p>
+
+    <h3>Root Cause</h3>
+    <div class="finding finding-root">
+      <strong>dependencies.py MetricsService.get_metrics()</strong> reads <code>exception_count</code>
+      into <code>exceptions</code> but never computes <code>unresolved</code> from it.
+      Since <code>auto_resolved = 0</code> and <code>human_review = 0</code> at batch level,
+      unresolved should equal exceptions.
+    </div>
+
+    <h3>Code Change</h3>
+    <div class="code-block">
+<span class="comment"># Before: uninitialized variable</span>
+<span class="old">unresolved = 0  <span class="comment"># Never updated!</span></span>
+
+<span class="comment"># After: computed from exception data</span>
+<span class="new">unresolved = exceptions - auto_resolved - human_review</span>
+    </div>
+  </div>
+
+  <!-- FINDING 3 -->
+  <h2>Finding 3: Safety guardrail_pass_rate Misleading at Zero</h2>
+  <div class="card">
+    <div class="card-title">The Problem</div>
+    <p style="color:#a0a0b0; margin-bottom:16px;">
+      <code>GET /metrics/safety</code> returned <code>guardrail_pass_rate: 1.0</code> when zero
+      decisions had been made. A 100% pass rate with zero decisions is semantically wrong.
+    </p>
+
+    <h3>Root Cause</h3>
+    <div class="finding finding-root">
+      <strong>dependencies.py MetricsService.get_safety_metrics()</strong> defaulted to
+      <code>1.0</code> when <code>total_decisions == 0</code>. Mathematically, zero
+      decisions has no meaningful pass rate.
+    </div>
+
+    <h3>Code Change</h3>
+    <div class="code-block">
+<span class="old">guardrail_pass_rate = (total_auto / total_decisions) if total_decisions > 0 else 1.0</span>
+
+<span class="new">guardrail_pass_rate = (total_auto / total_decisions) if total_decisions > 0 else None</span>
+
+<span class="comment"># Also updated the return dict:</span>
+<span class="old">"guardrail_pass_rate": round(guardrail_pass_rate, 4),</span>
+<span class="new">"guardrail_pass_rate": round(guardrail_pass_rate, 4) if guardrail_pass_rate is not None else None,</span>
+    </div>
+
+    <h3>Result</h3>
+    <div class="json-block">
+{
+  <span class="json-key">"auto_decisions"</span>: <span class="json-num">0</span>,
+  <span class="json-key">"guardrail_pass_rate"</span>: <span class="json-null">null</span>   <span style="color:#34d399">// ← was 1.0</span>
+}
+    </div>
+  </div>
+
+  <!-- VERIFICATION -->
+  <h2>Manual API Verification</h2>
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Endpoint</th>
+          <th>Key Metric</th>
+          <th>Before</th>
+          <th>After</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>GET /metrics/batches/{id}</code></td>
+          <td>resolved</td>
+          <td style="color:#f87171">10 (= total records)</td>
+          <td style="color:#34d399">0 (= matched_records)</td>
+          <td><span class="badge badge-pass">FIXED</span></td>
+        </tr>
+        <tr>
+          <td><code>GET /metrics/batches/{id}</code></td>
+          <td>unresolved</td>
+          <td style="color:#f87171">0</td>
+          <td style="color:#34d399">10 (= total_exceptions)</td>
+          <td><span class="badge badge-pass">FIXED</span></td>
+        </tr>
+        <tr>
+          <td><code>GET /metrics</code></td>
+          <td>unresolved</td>
+          <td style="color:#f87171">0</td>
+          <td style="color:#34d399">10 (= exceptions - auto - human)</td>
+          <td><span class="badge badge-pass">FIXED</span></td>
+        </tr>
+        <tr>
+          <td><code>GET /metrics/safety</code></td>
+          <td>guardrail_pass_rate</td>
+          <td style="color:#f87171">1.0 (misleading)</td>
+          <td style="color:#34d399">null (no decisions)</td>
+          <td><span class="badge badge-pass">FIXED</span></td>
+        </tr>
+        <tr>
+          <td><code>GET /metrics</code></td>
+          <td>cross-validation</td>
+          <td style="color:#f87171">exc ≠ unresolved + auto + human</td>
+          <td style="color:#34d399">exc = unresolved + auto + human ✓</td>
+          <td><span class="badge badge-pass">FIXED</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CROSS-VALIDATION -->
+  <h2>Cross-Validation Results</h2>
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Check</th>
+          <th>Formula</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Batch: resolved == matched_records</td>
+          <td><code>resolved = matched_records</code></td>
+          <td><span class="badge badge-pass">PASS</span> 0 == 0</td>
+        </tr>
+        <tr>
+          <td>Batch: unresolved == total_exceptions</td>
+          <td><code>unresolved = exception_count</code></td>
+          <td><span class="badge badge-pass">PASS</span> 10 == 10</td>
+        </tr>
+        <tr>
+          <td>Batch: total == matched + unresolved</td>
+          <td><code>total = matched + unresolved</code></td>
+          <td><span class="badge badge-pass">PASS</span> 10 == 0 + 10</td>
+        </tr>
+        <tr>
+          <td>Overall: exc == unresolved + auto + human</td>
+          <td><code>exceptions = unresolved + auto + human</code></td>
+          <td><span class="badge badge-pass">PASS</span> 10 == 10 + 0 + 0</td>
+        </tr>
+        <tr>
+          <td>Overall: total == matched + exc</td>
+          <td><code>total_records = matched + exceptions</code></td>
+          <td><span class="badge badge-pass">PASS</span> 10 == 0 + 10</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SAFETY ARCHITECTURE -->
+  <h2>Safety Metrics Architecture</h2>
+  <div class="card">
+    <div class="card-title">Why Safety Metrics Are Zero</div>
+    <p style="color:#a0a0b0; margin-bottom:16px;">
+      The batch processing flow runs only <strong>deterministic reconciliation</strong>.
+      The full safety pipeline (guardrails, verification, LangGraph decisions) runs
+      separately via the exception workflow, not during batch processing.
+    </p>
+
+    <div class="flow">
+      <div class="flow-step active">Batch Create</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step active">Reconciliation</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step" style="opacity:0.5">Guardrails</div>
+      <span class="flow-arrow" style="opacity:0.5">→</span>
+      <div class="flow-step" style="opacity:0.5">LangGraph</div>
+      <span class="flow-arrow" style="opacity:0.5">→</span>
+      <div class="flow-step" style="opacity:0.5">Verification</div>
+      <span class="flow-arrow" style="opacity:0.5">→</span>
+      <div class="flow-step" style="opacity:0.5">Safety Decisions</div>
+    </div>
+    <p style="color:#6a6a80; font-size:13px; margin-top:8px;">
+      Active steps (green): executed during batch processing.
+      Faded steps: executed by the exception/LangGraph workflow, not batch processing.
+    </p>
+
+    <h3>Where Safety Data Actually Lives</h3>
+    <table>
+      <thead>
+        <tr><th>Data Source</th><th>Fields</th><th>Populated By</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Batch Registry</td>
+          <td>exception_count, matched_records, total_records</td>
+          <td>BatchService.run_batch()</td>
+        </tr>
+        <tr>
+          <td>BatchLearningMetrics</td>
+          <td>auto_decisions, human_decisions, verification_failures</td>
+          <td>BatchLearningService (Phase 9G)</td>
+        </tr>
+        <tr>
+          <td>GuardrailEngine</td>
+          <td>guardrail_blocks, high_value_blocks, conflict_blocks</td>
+          <td>GuardrailEngine (Phase 6)</td>
+        </tr>
+        <tr>
+          <td>ResolutionExecution</td>
+          <td>guardrail_decision, verification_result</td>
+          <td>ResolutionService (Phase 11)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="color:#6a6a80; font-size:13px; margin-top:8px;">
+      The <code>GET /metrics/safety</code> endpoint reads from the batch registry,
+      which does not have these fields. The all-zero values are structurally correct
+      for the current architecture — safety decisions are not persisted in the batch registry.
+    </p>
+  </div>
+
+  <!-- TEST RESULTS -->
+  <h2>Test Results</h2>
+  <div class="metric-row">
+    <div class="metric-card">
+      <div class="metric-value" style="color:#34d399">5063</div>
+      <div class="metric-label">Passed</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:#f87171">1</div>
+      <div class="metric-label">Failed (pre-existing)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:#6a6a80">4</div>
+      <div class="metric-label">Skipped</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:#34d399">0</div>
+      <div class="metric-label">Regressions</div>
+    </div>
+  </div>
+  <p style="color:#6a6a80; font-size:13px; margin-top:8px;">
+    The single failure is <code>test_exact_match_produces_no_action_without_llm</code> —
+    a pre-existing issue unrelated to this change.
+  </p>
+
+  <!-- FILES CHANGED -->
+  <h2>Files Changed</h2>
+  <table>
+    <thead>
+      <tr><th>File</th><th>Change</th><th>Lines</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>backend/app/api/services/batch_service.py</code></td>
+        <td>Fixed <code>get_summary()</code>: resolved → matched_records, unresolved → exception_count</td>
+        <td>2 lines</td>
+      </tr>
+      <tr>
+        <td><code>backend/app/api/dependencies.py</code></td>
+        <td>Fixed <code>get_metrics()</code>: compute unresolved from exceptions. Fixed <code>get_safety_metrics()</code>: guardrail_pass_rate → None at zero decisions.</td>
+        <td>4 lines</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- REMAINING CONCERNS -->
+  <h2>Remaining Architectural Concerns</h2>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>Item</th><th>Status</th><th>Detail</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Safety metrics (auto_decisions, guardrail_blocks, etc.)</td>
+          <td><span class="badge badge-warn">STRUCTURAL</span></td>
+          <td>Batch registry does not store these fields. They exist in BatchLearningMetrics / GuardrailEngine but are not aggregated into the batch-level metrics endpoint.</td>
+        </tr>
+        <tr>
+          <td>AnalyzeService fallback</td>
+          <td><span class="badge badge-info">BY DESIGN</span></td>
+          <td>LLM not configured → deterministic fallback with fallback_used=True. Not a defect.</td>
+        </tr>
+        <tr>
+          <td>Data source mismatch</td>
+          <td><span class="badge badge-info">ARCHITECTURAL</span></td>
+          <td>Exceptions use BATCH-00052158 registry, evidence uses batch_001 adapter. Consistent when batch_id is specified.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

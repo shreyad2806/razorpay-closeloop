@@ -1,0 +1,14 @@
+[
+  {
+    "payment_id": "PAY-TEST-001",
+    "merchant_id": "M-001",
+    "amount": 50000,
+    "status": "CAPTURED"
+  },
+  {
+    "payment_id": "PAY-TEST-002",
+    "merchant_id": "M-001",
+    "amount": 75000,
+    "status": "CAPTURED"
+  }
+]

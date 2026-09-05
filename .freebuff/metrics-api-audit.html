@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloseLoop — /metrics API Audit</title>
+<style>
+  :root {
+    --bg: #0a0e1a; --surface: #111827; --surface2: #1a2235; --border: #1e2d45;
+    --text: #e2e8f0; --text2: #94a3b8; --text3: #64748b;
+    --green: #10b981; --green-bg: #052e1c; --green-border: #166534;
+    --red: #ef4444; --red-bg: #450a0a; --red-border: #991b1b;
+    --yellow: #f59e0b; --yellow-bg: #451a03; --yellow-border: #92400e;
+    --blue: #3b82f6; --blue-bg: #172554; --blue-border: #1e40af;
+    --purple: #8b5cf6; --purple-bg: #2e1065; --purple-border: #5b21b6;
+    --cyan: #06b6d4; --font: 'Inter', system-ui, sans-serif; --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+  .header { text-align: center; margin-bottom: 3rem; padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
+  .header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .header h1 span { color: var(--blue); }
+  .header .subtitle { color: var(--text2); font-size: 1rem; }
+  .header .meta { display: flex; gap: 2rem; justify-content: center; margin-top: 1rem; color: var(--text3); font-size: 0.85rem; }
+  .badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.7rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
+  .badge-pass { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-warn { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .section { margin-bottom: 2.5rem; }
+  .section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .section-title .num { color: var(--text3); font-weight: 400; font-size: 0.9rem; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  th { background: var(--surface2); padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+  td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .method { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; font-family: var(--mono); }
+  .method-get { background: #064e3b; color: #34d399; }
+  .path { font-family: var(--mono); font-size: 0.82rem; color: var(--cyan); }
+  .detail { color: var(--text2); font-size: 0.82rem; line-height: 1.5; }
+  code { font-family: var(--mono); background: rgba(255,255,255,0.05); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.8rem; }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: 0.8rem; font-family: var(--mono); color: var(--text2); margin: 0.5rem 0; }
+  .defect { background: var(--red-bg); border-left: 3px solid var(--red); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 0.75rem 0; }
+  .defect h4 { color: var(--red); font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .defect p { color: var(--text2); font-size: 0.82rem; }
+  .warning-box { background: var(--yellow-bg); border-left: 3px solid var(--yellow); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 0.75rem 0; }
+  .warning-box h4 { color: var(--yellow); font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .warning-box p { color: var(--text2); font-size: 0.82rem; }
+  .pass-box { background: var(--green-bg); border-left: 3px solid var(--green); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 0.75rem 0; }
+  .pass-box h4 { color: var(--green); font-size: 0.85rem; }
+  .pass-box p { color: var(--text2); font-size: 0.82rem; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; text-align: center; }
+  .summary-card .value { font-size: 2rem; font-weight: 800; }
+  .summary-card .label { font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.3rem; }
+  .val-green { color: var(--green); } .val-red { color: var(--red); } .val-yellow { color: var(--yellow); } .val-blue { color: var(--blue); }
+  .flow { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.75rem 0; }
+  .flow-node { padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+  .flow-arrow { color: var(--text3); font-size: 0.85rem; }
+  .fn-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .fn-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .fn-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .fn-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  @media (max-width: 768px) { .container { padding: 1rem; } .summary-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1><span>CloseLoop</span> — /metrics API Audit</h1>
+  <div class="subtitle">Endpoint verification against running FastAPI server at localhost:8000</div>
+  <div class="meta">
+    <span>📅 Sep 5, 2026</span>
+    <span>🔗 localhost:8000</span>
+    <span>🧪 Real HTTP requests</span>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="section">
+  <div class="section-title"><span class="num">01</span> Audit Summary</div>
+  <div class="summary-grid">
+    <div class="summary-card"><div class="value val-blue">4</div><div class="label">Endpoints Tested</div></div>
+    <div class="summary-card"><div class="value val-green">3</div><div class="label">Passing</div></div>
+    <div class="summary-card"><div class="value val-yellow">1</div><div class="label">Warning</div></div>
+    <div class="summary-card"><div class="value val-red">2</div><div class="label">Defects</div></div>
+  </div>
+</div>
+
+<!-- Endpoint Results -->
+<div class="section">
+  <div class="section-title"><span class="num">02</span> Endpoint-by-Endpoint Results</div>
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th style="width:70px">Result</th><th style="width:55px">Code</th><th style="width:55px">Method</th><th>Endpoint</th><th>What It Does</th><th>Findings</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-get">GET</span></td>
+        <td class="path">/metrics</td>
+        <td class="detail">Overall system metrics</td>
+        <td class="detail">Returns 13 fields from batch registry. Cross-validated: total_records, exceptions, matched_records all match /batches sum.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-get">GET</span></td>
+        <td class="path">/metrics/throughput</td>
+        <td class="detail">Processing throughput</td>
+        <td class="detail">Returns 5 fields. records_per_second=84.25, batches_processed=1. All computed from real batch timing data.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-get">GET</span></td>
+        <td class="path">/metrics/batches/{id}</td>
+        <td class="detail">Batch-specific metrics</td>
+        <td class="detail">Returns 19 fields. Nonexistent batch → 404. Data matches batch registry.</td>
+      </tr>
+      <tr style="background: rgba(245,158,11,0.05);">
+        <td><span class="badge badge-warn">WARN</span></td>
+        <td>200</td>
+        <td><span class="method method-get">GET</span></td>
+        <td class="path">/metrics/safety</td>
+        <td class="detail">Safety-critical metrics</td>
+        <td class="detail">Returns all-zero values. Safety fields never populated by batch processing. guardrail_pass_rate=1.0 when 0 decisions — misleading.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- Defects -->
+<div class="section">
+  <div class="section-title"><span class="num">03</span> Defects Found</div>
+
+  <div class="defect">
+    <h4>🔴 DEFECT #1: Batch summary "resolved" field is misleading</h4>
+    <p><code>get_summary()</code> returns <code>"resolved": batch.get("success_count", 0)</code>. But <code>success_count</code> is set to <code>total</code> (total records processed), NOT the count of actually resolved exceptions. A batch with 8 exceptions and 0 matched records shows <code>"resolved": 8</code>.</p>
+  </div>
+
+  <pre>
+# Batch summary shows:
+#   "total_exceptions": 8
+#   "resolved": 8          ← This means "8 records processed", not "8 resolved"
+#   "unresolved": 0        ← This means "0 failures", not "0 unresolved cases"
+#   "auto_resolved": 0     ← Hardcoded
+#   "human_review": 0      ← Hardcoded
+#   "escalated": 0         ← Hardcoded
+
+# In get_summary():
+"resolved": batch.get("success_count", 0),   # Actually = total_records
+"unresolved": batch.get("failure_count", 0),  # Actually = 0 (never set to non-zero)
+  </pre>
+
+  <div class="defect">
+    <h4>🔴 DEFECT #2: Safety metrics are structurally empty</h4>
+    <p><code>get_safety_metrics()</code> reads batch fields (<code>auto_decisions</code>, <code>guardrail_blocks</code>, etc.) that are <strong>never written</strong> by the batch service. All safety metrics return 0. The <code>guardrail_pass_rate</code> returns <code>1.0</code> when there are zero decisions — implying 100% pass rate with no data.</p>
+  </div>
+
+  <pre>
+# Batch run_batch() stores:
+batch["status"] = "COMPLETED"
+batch["success_count"] = total
+batch["exception_count"] = exceptions
+batch["processing_time_ms"] = ...
+batch["match_rate"] = ...
+batch["matched_records"] = matched
+
+# But NEVER stores:
+batch["auto_decisions"]       ← read by get_safety_metrics()
+batch["human_decisions"]      ← read by get_safety_metrics()
+batch["unresolved_decisions"] ← read by get_safety_metrics()
+batch["guardrail_blocks"]     ← read by get_safety_metrics()
+batch["high_value_blocks"]    ← read by get_safety_metrics()
+batch["conflict_blocks"]      ← read by get_safety_metrics()
+batch["novelty_blocks"]       ← read by get_safety_metrics()
+batch["verification_failures"]← read by get_safety_metrics()
+
+# Result: safety metrics are always all-zero
+  </pre>
+
+  <div class="warning-box">
+    <h4>⚠️ Root Cause: Batch processing doesn't run the full agent workflow</h4>
+    <p><code>POST /batches/{id}/run</code> runs only deterministic reconciliation. It does NOT invoke guardrails, verification, decision-making, or resolution execution. Those happen in the LangGraph agent workflow, which is triggered separately. The safety metrics fields are designed for the agent workflow but are queried from the batch registry which never has them.</p>
+  </div>
+</div>
+
+<!-- Data Flow -->
+<div class="section">
+  <div class="section-title"><span class="num">04</span> Data Flow Architecture</div>
+
+  <h4 style="color: var(--text2); font-size: 0.9rem; margin-bottom: 0.75rem;">GET /metrics — How data flows</h4>
+  <div class="flow">
+    <div class="flow-node fn-blue">HTTP GET /metrics</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-blue">MetricsService.get_metrics()</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-green">_batch_registry</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-green">Sum all batch fields</div>
+  </div>
+  <p class="detail" style="margin-left: 1rem;">Reads from the in-memory <code>_batch_registry</code> dict. Only fields actually written by <code>run_batch()</code> have real values.</p>
+
+  <h4 style="color: var(--text2); font-size: 0.9rem; margin: 1.5rem 0 0.75rem;">GET /metrics/safety — Why it's empty</h4>
+  <div class="flow">
+    <div class="flow-node fn-blue">HTTP GET /metrics/safety</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-blue">MetricsService.get_safety_metrics()</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-green">_batch_registry</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-red">Reads fields that don't exist</div>
+  </div>
+  <div class="flow" style="margin-top: 0.25rem;">
+    <div style="width: 2rem"></div>
+    <div class="flow-node fn-red">auto_decisions=0</div>
+    <div class="flow-node fn-red">guardrail_blocks=0</div>
+    <div class="flow-node fn-red">verification_failures=0</div>
+    <div class="flow-node fn-red">pass_rate=1.0 (misleading)</div>
+  </div>
+
+  <h4 style="color: var(--text2); font-size: 0.9rem; margin: 1.5rem 0 0.75rem;">Two Separate Workflows</h4>
+  <div class="flow">
+    <div class="flow-node fn-green">POST /batches/{id}/run</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-green">Deterministic Reconciliation</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-yellow">Exceptions Created</div>
+  </div>
+  <div class="flow" style="margin-top: 0.25rem;">
+    <div style="width: 2rem"></div>
+    <div class="flow-arrow" style="color: var(--red);">↓ stops here — no guardrails/verification</div>
+  </div>
+  <div class="flow" style="margin-top: 0.5rem;">
+    <div class="flow-node fn-blue">LangGraph Agent Workflow</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-blue">Guardrails</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-blue">Decision</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-blue">Verification</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-green">Resolution</div>
+  </div>
+  <p class="detail" style="margin-left: 1rem;">Safety metrics would be populated by the agent workflow, not batch reconciliation.</p>
+</div>
+
+<!-- Cross-Validation -->
+<div class="section">
+  <div class="section-title"><span class="num">05</span> Cross-Validation Results</div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Check</th><th>Expected</th><th>Actual</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="detail"><code>/metrics</code> total_records = sum of <code>/batches</code> total_records</td>
+        <td class="detail">8 = 8</td>
+        <td class="detail">8 = 8</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="detail"><code>/metrics</code> exceptions = sum of <code>/batches</code> exception_count</td>
+        <td class="detail">8 = 8</td>
+        <td class="detail">8 = 8</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="detail"><code>/metrics</code> matched_records = sum of <code>/batches</code> matched_records</td>
+        <td class="detail">0 = 0</td>
+        <td class="detail">0 = 0</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td class="detail"><code>/metrics/batches/{id}</code> total_records = <code>/batches/{id}</code> total_records</td>
+        <td class="detail">8 = 8</td>
+        <td class="detail">8 = 8</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+      </tr>
+      <tr style="background: rgba(239,68,68,0.05);">
+        <td class="detail"><code>/metrics/batches/{id}</code> resolved ≠ actual resolved exceptions</td>
+        <td class="detail">Should show resolved exception count</td>
+        <td class="detail">Shows total_records (8) instead</td>
+        <td><span class="badge badge-fail">FAIL</span></td>
+      </tr>
+      <tr style="background: rgba(239,68,68,0.05);">
+        <td class="detail"><code>/metrics/safety</code> shows actual guardrail/verification data</td>
+        <td class="detail">Non-zero when guardrails have run</td>
+        <td class="detail">All zeros — fields never populated</td>
+        <td><span class="badge badge-fail">FAIL</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- Verdict -->
+<div class="section">
+  <div class="section-title"><span class="num">06</span> Verdict & Recommendations</div>
+
+  <div class="pass-box">
+    <h4>✅ What works correctly</h4>
+    <p><code>GET /metrics</code>, <code>GET /metrics/throughput</code>, and <code>GET /metrics/batches/{id}</code> return real data from the batch registry. The core reconciliation metrics (total_records, matched_records, exceptions, match_rate, timing) are accurate and cross-validated. Nonexistent batch returns 404.</p>
+  </div>
+
+  <div class="defect" style="margin-top: 1rem;">
+    <h4>🔴 What needs attention</h4>
+    <p><strong>Defect #1 — "resolved" field in batch summary is misleading.</strong> <code>get_summary()</code> maps <code>success_count</code> (total records processed) to <code>"resolved"</code>. This should either be renamed to <code>"records_processed"</code> or the field should track actual exception resolution status.</p>
+    <p style="margin-top: 0.5rem;"><strong>Defect #2 — Safety metrics are structurally empty.</strong> The batch service never writes the fields that <code>get_safety_metrics()</code> reads. Either: (a) the batch service should populate safety fields during processing, (b) the metrics should read from a different source (exception statuses), or (c) the endpoint should explicitly indicate "no safety data available" rather than returning misleading zeros.</p>
+  </div>
+
+  <div class="warning-box" style="margin-top: 1rem;">
+    <h4>⚠️ guardrail_pass_rate=1.0 with zero decisions is misleading</h4>
+    <p>When <code>total_decisions = 0</code>, <code>guardrail_pass_rate</code> defaults to <code>1.0</code> (100%). This should be <code>null</code> or <code>0.0</code> to indicate "no data" rather than "all passed".</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+﻿[
+  {
+    "fee_id": "FEE-DEMO-011",
+    "payment_id": "PAY-DEMO-041",
+    "amount": 475000,
+    "type": "PROCESSING_FEE",
+    "created_at": "2025-09-02T16:50:00"
+  },
+  {
+    "fee_id": "FEE-DEMO-012",
+    "payment_id": "PAY-DEMO-042",
+    "amount": 155000,
+    "type": "PROCESSING_FEE",
+    "created_at": "2025-09-02T19:07:00"
+  },
+  {
+    "fee_id": "FEE-DEMO-024",
+    "payment_id": "PAY-DEMO-054",
+    "amount": 240000,
+    "type": "PROCESSING_FEE",
+    "created_at": "2025-09-04T07:31:00"
+  },
+  {
+    "fee_id": "FEE-DEMO-029",
+    "payment_id": "PAY-DEMO-059",
+    "amount": 180000,
+    "type": "PROCESSING_FEE",
+    "created_at": "2025-09-04T22:56:00"
+  }
+]

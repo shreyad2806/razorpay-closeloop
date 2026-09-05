@@ -19,23 +19,6 @@ import type {
   ModelItem,
 } from "@/app/types";
 
-const PHASES = [
-  { num: 1, name: "Synthetic Financial Data" },
-  { num: 2, name: "Deterministic Reconciliation" },
-  { num: 3, name: "Financial Evidence" },
-  { num: 4, name: "ML Classification + Similarity" },
-  { num: 5, name: "Resolution Candidates" },
-  { num: 6, name: "Hard Financial Guardrails" },
-  { num: 7, name: "LangGraph Agent Workflow" },
-  { num: 8, name: "Resolution Execution + Verification" },
-  { num: 9, name: "Learning + Feedback" },
-  { num: 10, name: "MLflow + Model Registry" },
-  { num: 11, name: "MCP Controlled Tools" },
-  { num: 12, name: "LLM Explanation Layer" },
-  { num: 13, name: "REST API + Documentation" },
-  { num: 14, name: "Backend Testing (4,800+ tests)" },
-  { num: 15, name: "Production Frontend" },
-];
 
 /** Component health status — derived from real backend API responses. */
 type ComponentStatus = {
@@ -297,31 +280,6 @@ export default function SystemPage() {
         </div>
       </div>
 
-      {/* ─── Implemented Phases ───────────────────────────────────────────────── */}
-      <div className="card">
-        <div className="card-header">
-          <SectionHeader
-            title="Implemented Phases"
-            subtitle={`${PHASES.length} phases`}
-          />
-        </div>
-        <div className="card-body">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {PHASES.map((p) => (
-              <div
-                key={p.num}
-                className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50"
-              >
-                <span className="text-emerald-500 text-sm">✅</span>
-                <span className="text-xs font-semibold text-slate-500 w-8">
-                  Phase {p.num}
-                </span>
-                <span className="text-sm text-slate-700">{p.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

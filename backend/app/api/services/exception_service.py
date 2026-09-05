@@ -48,8 +48,13 @@ class ExceptionService:
         if data_dir is None:
             data_dir = str(Path(__file__).parent.parent.parent.parent / "data")
         self._data_dir = data_dir
-        self._feedback_service = FeedbackService()
+        # Use the singleton FeedbackService so approve/reject/escalate
+        # records are visible to the Learning metrics service.
+        from app.api.dependencies import get_feedback_service
+        self._feedback_service = get_feedback_service()
         self._outcome_service = OutcomeService()
+        # Load curated demo status overrides on first init
+        self._load_demo_overrides()
 
     def list_exceptions(
         self,
@@ -347,18 +352,42 @@ class ExceptionService:
     # Private Helpers
     # ─────────────────────────────────────────────────────────────────────
 
+    def _load_demo_overrides(self):
+        """Load curated demo status overrides from the demo batches."""
+        import json as _json
+        # Load overrides from all demo batches
+        for demo_name in ["DEMO-60", "DEMO-001"]:
+            overrides_path = os.path.join(self._data_dir, demo_name, "status_overrides.json")
+            if os.path.isfile(overrides_path):
+                with open(overrides_path, "r") as f:
+                    overrides = _json.load(f)
+                for case_id, status in overrides.items():
+                    if case_id not in _exception_registry:
+                        _exception_registry[case_id] = {"status": status}
+
     def _load_cases(self, batch_id: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Load cases from batch data."""
+        """Load cases from batch data.
+
+        Prioritizes demo batches (DEMO-001, DEMO-60) when no batch_id is specified.
+        Falls back to scanning all batch directories.
+        """
         if batch_id:
             batch_dirs = [batch_id]
         else:
-            # Find all batch directories
+            # Prioritize demo batches if they exist
             batch_dirs = []
-            if os.path.isdir(self._data_dir):
-                for d in os.listdir(self._data_dir):
-                    gen_dir = os.path.join(self._data_dir, d, "generated")
-                    if os.path.isdir(gen_dir):
-                        batch_dirs.append(d)
+            for demo_name in ["DEMO-60", "DEMO-001"]:
+                demo_dir = os.path.join(self._data_dir, demo_name, "generated")
+                if os.path.isdir(demo_dir):
+                    batch_dirs.append(demo_name)
+            
+            # Fallback: find all batch directories if no demos exist
+            if not batch_dirs:
+                if os.path.isdir(self._data_dir):
+                    for d in os.listdir(self._data_dir):
+                        gen_dir = os.path.join(self._data_dir, d, "generated")
+                        if os.path.isdir(gen_dir):
+                            batch_dirs.append(d)
 
         all_cases = []
         for bd in batch_dirs:

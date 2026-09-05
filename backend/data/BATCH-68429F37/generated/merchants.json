@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Silver Shop",
+    "reference": "MER-SIL-001",
+    "currency": "INR",
+    "created_at": "2025-01-01T06:58:00"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Royal Shop",
+    "reference": "MER-ROY-002",
+    "currency": "INR",
+    "created_at": "2025-04-13T17:21:44"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Services",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-04-23T14:12:51"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Prime Trading",
+    "reference": "MER-PRI-004",
+    "currency": "INR",
+    "created_at": "2025-01-24T16:27:54"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Crystal Shop",
+    "reference": "MER-CRY-005",
+    "currency": "INR",
+    "created_at": "2025-03-13T11:55:47"
+  }
+]

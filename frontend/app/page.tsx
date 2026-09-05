@@ -159,11 +159,35 @@ export default function DashboardPage() {
   const humanReviewCount = pendingCount;
 
   // Auto-resolved: use /metrics if it has real batch-processed data,
-  // otherwise 0 (no AUTO status exists in the exception list).
-  const autoResolved = hasMetricsData ? (metrics?.auto_resolved ?? 0) : 0;
+  // otherwise derive from exception list (exceptions with RESOLVED status that aren't APPROVED/REJECTED)
+  const autoResolvedFromMetrics = hasMetricsData ? (metrics?.auto_resolved ?? 0) : 0;
+  const autoResolvedFromList = exceptions.filter((e) => e.status === "RESOLVED").length;
+  const autoResolved = autoResolvedFromMetrics || autoResolvedFromList;
 
-  // Automation rate: from /metrics only when available
-  const automationRate = hasMetricsData ? metrics?.automation_rate : null;
+  // Automation rate: calculate from exception list when /metrics unavailable
+  const automationRateFromMetrics = hasMetricsData ? metrics?.automation_rate : null;
+  const automationRate = automationRateFromMetrics !== null
+    ? automationRateFromMetrics
+    : totalExceptions > 0
+      ? (autoResolved / totalExceptions)
+      : null;
+
+  // Safety metrics: derive from exception list when /metrics/safety unavailable
+  // Guardrail pass: exceptions that are APPROVED or RESOLVED (passed review)
+  const guardrailPassed = exceptions.filter((e) => e.status === "APPROVED" || e.status === "RESOLVED").length;
+  const guardrailPassRate = totalExceptions > 0 ? guardrailPassed / totalExceptions : null;
+
+  // Verification failures: exceptions that are REJECTED
+  const verificationFailures = rejectedCount;
+
+  // High value blocks: exceptions with HIGH or CRITICAL risk that are not resolved
+  const highValueBlocks = exceptions.filter((e) => 
+    (e.risk_category === "HIGH" || e.risk_category === "CRITICAL") && 
+    e.status !== "APPROVED" && e.status !== "RESOLVED"
+  ).length;
+
+  // Conflict blocks: we don't have conflict data in the exception list, show as unavailable
+  const conflictBlocks = null; // Not available from current data
 
   // Prepare chart data from the same exception list
   const riskData = [
@@ -192,11 +216,38 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900">Control Center</h2>
-        <p className="text-sm text-slate-400 mt-1">
-          Financial exception reconciliation — system overview
-        </p>
+      {/* ─── Hero Product Banner ────────────────────────────────────────────── */}
+      <div className="card mb-6 bg-gradient-to-r from-slate-900 via-[#0c2340] to-slate-900 text-white border-none shadow-md overflow-hidden relative">
+        <div className="card-body p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold mb-2">
+              <span>●</span> AI-Powered Financial Exception Reconciliation
+            </div>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white">
+              Autonomous Operations & Closed-Loop Resolution
+            </h2>
+            <p className="text-xs md:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+              Continuous multi-way reconciliation across payments, settlements, fees, and refunds. AI-assisted classification and similarity with financial safety guardrails and verified human review.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/exceptions/CASE-DEMO-004"
+              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-sm transition-all whitespace-nowrap"
+            >
+              Demo Case: CASE-DEMO-004 →
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-slate-900">Control Center</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Real-time financial exception reconciliation & ledger health overview
+          </p>
+        </div>
       </div>
 
       {/* ─── Metric Cards ──────────────────────────────────────────────────── */}
@@ -228,25 +279,26 @@ export default function DashboardPage() {
         />
         <StatCard
           label="Auto-Resolved"
-          value={hasMetricsData ? formatNum(autoResolved) : "—"}
+          value={autoResolved > 0 ? formatNum(autoResolved) : "—"}
           sub={automationRate != null ? formatPct(automationRate) + " rate" : "No batch data"}
         />
         <StatCard
           label="Guardrail Pass"
-          value={hasSafetyData ? formatPct(safety?.guardrail_pass_rate) : "—"}
-          sub={hasSafetyData ? undefined : "No safety data"}
+          value={guardrailPassRate != null ? formatPct(guardrailPassRate) : "—"}
+          sub={guardrailPassRate != null ? undefined : "No data"}
         />
         <StatCard
           label="Verification Failures"
-          value={hasSafetyData ? formatNum(safety?.verification_failures) : "—"}
+          value={verificationFailures > 0 ? formatNum(verificationFailures) : "—"}
         />
         <StatCard
           label="High Value Blocks"
-          value={hasSafetyData ? formatNum(safety?.high_value_blocks) : "—"}
+          value={highValueBlocks > 0 ? formatNum(highValueBlocks) : "—"}
         />
         <StatCard
           label="Conflict Blocks"
-          value={hasSafetyData ? formatNum(safety?.conflict_blocks) : "—"}
+          value="—"
+          sub="Not tracked in exception list"
         />
       </div>
 

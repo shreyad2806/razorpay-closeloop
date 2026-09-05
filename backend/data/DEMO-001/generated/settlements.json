@@ -1,0 +1,114 @@
+[
+  {
+    "settlement_id": "SET-DEMO-001",
+    "payment_id": "PAY-DEMO-001",
+    "amount": 4500000,
+    "status": "SETTLED",
+    "created_at": "2025-09-01T10:00:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-002",
+    "payment_id": "PAY-DEMO-002",
+    "amount": 2350000,
+    "status": "SETTLED",
+    "created_at": "2025-09-01T13:17:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-003",
+    "payment_id": "PAY-DEMO-003",
+    "amount": 8920000,
+    "status": "SETTLED",
+    "created_at": "2025-09-01T16:34:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-004",
+    "payment_id": "PAY-DEMO-004",
+    "amount": 5400000,
+    "status": "PARTIAL",
+    "created_at": "2025-09-01T19:51:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-005",
+    "payment_id": "PAY-DEMO-005",
+    "amount": 2880000,
+    "status": "PARTIAL",
+    "created_at": "2025-09-01T22:08:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-006",
+    "payment_id": "PAY-DEMO-006",
+    "amount": 8750000,
+    "status": "PARTIAL",
+    "created_at": "2025-09-02T01:25:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-013",
+    "payment_id": "PAY-DEMO-013",
+    "amount": 4100000,
+    "status": "SETTLED",
+    "created_at": "2025-09-02T22:24:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-013-DUP",
+    "payment_id": "PAY-DEMO-013",
+    "amount": 4100000,
+    "status": "SETTLED",
+    "created_at": "2025-09-02T22:24:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-014",
+    "payment_id": "PAY-DEMO-014",
+    "amount": 2750000,
+    "status": "SETTLED",
+    "created_at": "2025-09-03T01:41:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-014-DUP",
+    "payment_id": "PAY-DEMO-014",
+    "amount": 2750000,
+    "status": "SETTLED",
+    "created_at": "2025-09-03T01:41:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-021",
+    "payment_id": "PAY-DEMO-021",
+    "amount": 3650000,
+    "status": "SETTLED",
+    "created_at": "2025-09-03T22:40:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-022",
+    "payment_id": "PAY-DEMO-022",
+    "amount": 4720000,
+    "status": "PARTIAL",
+    "created_at": "2025-09-04T01:57:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-025",
+    "payment_id": "PAY-DEMO-025",
+    "amount": 13500000,
+    "status": "SETTLED",
+    "created_at": "2025-09-04T10:48:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-026",
+    "payment_id": "PAY-DEMO-026",
+    "amount": 2610000,
+    "status": "PARTIAL",
+    "created_at": "2025-09-04T13:05:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-028",
+    "payment_id": "PAY-DEMO-028",
+    "amount": 4300000,
+    "status": "SETTLED",
+    "created_at": "2025-09-04T19:39:00"
+  },
+  {
+    "settlement_id": "SET-DEMO-028-DUP",
+    "payment_id": "PAY-DEMO-028",
+    "amount": 4300000,
+    "status": "SETTLED",
+    "created_at": "2025-09-04T19:39:00"
+  }
+]

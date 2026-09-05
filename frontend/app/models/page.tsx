@@ -51,7 +51,7 @@ export default function ModelsPage() {
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-slate-900">Models</h2>
           <p className="text-sm text-slate-400 mt-1">
-            MLflow model registry — Phase 10 model lineage and versioning
+            ML model registry
           </p>
         </div>
         <div className="card">
@@ -70,7 +70,7 @@ export default function ModelsPage() {
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-slate-900">Models</h2>
         <p className="text-sm text-slate-400 mt-1">
-          MLflow model registry — Phase 10 model lineage and versioning
+          ML model registry
         </p>
       </div>
 

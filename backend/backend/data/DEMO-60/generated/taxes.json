@@ -1,0 +1,38 @@
+[
+  {
+    "tax_id": "TAX-DEMO60-006",
+    "payment_id": "PAY-DEMO60-006",
+    "amount": 99001,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-DEMO60-016",
+    "payment_id": "PAY-DEMO60-016",
+    "amount": 234002,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-DEMO60-026",
+    "payment_id": "PAY-DEMO60-026",
+    "amount": 369004,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-DEMO60-036",
+    "payment_id": "PAY-DEMO60-036",
+    "amount": 504006,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-DEMO60-046",
+    "payment_id": "PAY-DEMO60-046",
+    "amount": 639008,
+    "tax_type": "GST"
+  },
+  {
+    "tax_id": "TAX-DEMO60-056",
+    "payment_id": "PAY-DEMO60-056",
+    "amount": 774010,
+    "tax_type": "GST"
+  }
+]

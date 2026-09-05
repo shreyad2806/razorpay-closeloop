@@ -199,11 +199,15 @@ class ExplainService:
         return None
 
     def _load_financial_context(self, exception_id: str) -> Dict[str, Any]:
-        """Load related financial records for an exception."""
-        adapter = self._get_adapter()
+        """Load related financial records for an exception.
 
-        # Search for records matching this exception
-        records = adapter.search_records(limit=100)
+        Uses the adapter's direct lookup methods (get_payment,
+        get_settlements_for_payment, etc.) which is the same path
+        used by IntelligenceService.get_evidence. This avoids the
+        structural mismatch in search_records() which returns wrapped
+        results.
+        """
+        adapter = self._get_adapter()
 
         context: Dict[str, Any] = {
             "payments": [],
@@ -213,21 +217,24 @@ class ExplainService:
             "adjustments": [],
         }
 
-        for rec in records:
-            exc_id = rec.get("exception_id", "")
-            case_id = rec.get("case_id", "")
-            if exc_id == exception_id or case_id == exception_id:
-                rec_type = rec.get("record_type", rec.get("entity_type", "")).lower()
-                if "payment" in rec_type:
-                    context["payments"].append(rec)
-                elif "settlement" in rec_type:
-                    context["settlements"].append(rec)
-                elif "refund" in rec_type:
-                    context["refunds"].append(rec)
-                elif "fee" in rec_type:
-                    context["fees"].append(rec)
-                elif "adjustment" in rec_type:
-                    context["adjustments"].append(rec)
+        # Look up the case to get the payment_id
+        case = adapter.get_case(exception_id)
+        if case is None:
+            return context
+
+        payment_id = case.get("payment_id", "")
+        if not payment_id:
+            return context
+
+        # Use the same direct adapter methods as IntelligenceService.get_evidence
+        payment = adapter.get_payment(payment_id)
+        if payment:
+            context["payments"].append(payment)
+
+        context["settlements"] = adapter.get_settlements_for_payment(payment_id)
+        context["refunds"] = adapter.get_refunds_for_payment(payment_id)
+        context["fees"] = adapter.get_fees_for_payment(payment_id)
+        context["adjustments"] = adapter.get_adjustments_for_payment(payment_id)
 
         return context
 

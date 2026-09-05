@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Services",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-04-22T20:15:40"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Global Market",
+    "reference": "MER-GLO-002",
+    "currency": "INR",
+    "created_at": "2025-05-08T06:31:53"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Star Market",
+    "reference": "MER-STA-003",
+    "currency": "INR",
+    "created_at": "2025-03-11T22:17:45"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Smart Shop",
+    "reference": "MER-SMA-004",
+    "currency": "INR",
+    "created_at": "2025-05-31T14:05:52"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Elite Enterprises",
+    "reference": "MER-ELI-005",
+    "currency": "INR",
+    "created_at": "2025-03-27T12:25:04"
+  }
+]

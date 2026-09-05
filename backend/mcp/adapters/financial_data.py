@@ -51,7 +51,7 @@ class FinancialDataAdapter:
         self._cases: List[Dict[str, Any]] = []
         self._merchants: List[Dict[str, Any]] = []
 
-    def load_batch(self, batch_id: str = "batch_001") -> bool:
+    def load_batch(self, batch_id: str = "DEMO-001") -> bool:
         """Load data from a specific batch directory.
 
         Returns True if data was loaded successfully.

@@ -288,3 +288,96 @@ class TestFallbackIntegration:
         assert isinstance(data.missing_evidence, list)
         assert isinstance(data.fallback_used, bool)
         assert result.provider_status != ""
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Evidence-Explain Consistency Test
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class TestEvidenceExplainConsistency:
+    """Verify that /explain and /evidence return the same evidence records
+    for the same exception.
+
+    This test guards against the structural mismatch where ExplainService
+    used search_records() (which returns wrapped results) while
+    IntelligenceService used direct adapter methods (get_payment, etc.).
+    """
+
+    def _make_client(self):
+        from app.main import app
+        return TestClient(app, raise_server_exceptions=False)
+
+    def test_explain_and_evidence_return_same_record_count(self):
+        """Both /explain and /evidence must report the same evidence count."""
+        client = self._make_client()
+
+        # Use a case that exists in the DEMO-001 dataset
+        test_id = "CASE-DEMO-004"
+
+        explain_resp = client.get(f"/exceptions/{test_id}/explain")
+        evidence_resp = client.get(f"/exceptions/{test_id}/evidence")
+
+        assert explain_resp.status_code == 200
+        assert evidence_resp.status_code == 200
+
+        explain_data = explain_resp.json()["data"]
+        evidence_data = evidence_resp.json()["data"]
+
+        # The critical assertion: record counts must match
+        assert explain_data["evidence_record_count"] == evidence_data["record_count"], (
+            f"Evidence count mismatch: explain={explain_data['evidence_record_count']} "
+            f"vs evidence={evidence_data['record_count']}"
+        )
+
+        # Both must find at least one evidence record
+        assert explain_data["evidence_record_count"] > 0, \
+            "Explain should find evidence records for a valid exception"
+
+    def test_explain_evidence_not_zero_when_evidence_has_records(self):
+        """Explain must never report 0 evidence when evidence endpoint finds records."""
+        client = self._make_client()
+
+        test_id = "CASE-DEMO-006"
+
+        explain_resp = client.get(f"/exceptions/{test_id}/explain")
+        evidence_resp = client.get(f"/exceptions/{test_id}/evidence")
+
+        assert explain_resp.status_code == 200
+        assert evidence_resp.status_code == 200
+
+        explain_count = explain_resp.json()["data"]["evidence_record_count"]
+        evidence_count = evidence_resp.json()["data"]["record_count"]
+
+        # If evidence has records, explain must too
+        if evidence_count > 0:
+            assert explain_count > 0, (
+                f"Explain found 0 evidence but evidence endpoint found {evidence_count}"
+            )
+
+    def test_explain_evidence_summary_describes_actual_records(self):
+        """Explain's evidence_summary must reference real record types, not 'No evidence'."""
+        client = self._make_client()
+
+        test_id = "CASE-DEMO-010"
+
+        explain_resp = client.get(f"/exceptions/{test_id}/explain")
+        evidence_resp = client.get(f"/exceptions/{test_id}/evidence")
+
+        assert explain_resp.status_code == 200
+        assert evidence_resp.status_code == 200
+
+        explain_data = explain_resp.json()["data"]
+        evidence_data = evidence_resp.json()["data"]
+
+        if evidence_data["record_count"] > 0:
+            # evidence_summary should mention records, not be empty
+            assert "no evidence" not in explain_data["evidence_summary"].lower(), (
+                f"Explain says 'No evidence' but evidence endpoint found "
+                f"{evidence_data['record_count']} records"
+            )
+            # missing_evidence should be empty when records exist
+            assert len(explain_data["missing_evidence"]) == 0, (
+                f"Explain reports missing_evidence={explain_data['missing_evidence']} "
+                f"but evidence endpoint found {evidence_data['record_count']} records"
+            )

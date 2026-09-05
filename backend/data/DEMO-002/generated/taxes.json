@@ -1,0 +1,26 @@
+﻿[
+  {
+    "tax_id": "TAX-DEMO-009",
+    "payment_id": "PAY-DEMO-039",
+    "amount": 838000,
+    "type": "GST",
+    "rate_percent": 18,
+    "created_at": "2025-09-02T10:16:00"
+  },
+  {
+    "tax_id": "TAX-DEMO-010",
+    "payment_id": "PAY-DEMO-040",
+    "amount": 467500,
+    "type": "GST",
+    "rate_percent": 18,
+    "created_at": "2025-09-02T13:33:00"
+  },
+  {
+    "tax_id": "TAX-DEMO-023",
+    "payment_id": "PAY-DEMO-053",
+    "amount": 792000,
+    "type": "GST",
+    "rate_percent": 18,
+    "created_at": "2025-09-04T04:14:00"
+  }
+]

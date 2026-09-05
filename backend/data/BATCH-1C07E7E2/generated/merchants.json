@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Tech Services",
+    "reference": "MER-TEC-001",
+    "currency": "INR",
+    "created_at": "2025-05-03T20:39:18"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Goods",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-05-26T07:19:23"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Diamond Co",
+    "reference": "MER-DIA-003",
+    "currency": "INR",
+    "created_at": "2025-01-01T09:05:07"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Green Enterprises",
+    "reference": "MER-GRE-004",
+    "currency": "INR",
+    "created_at": "2025-04-05T20:29:21"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Solutions",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-05-04T05:12:59"
+  }
+]

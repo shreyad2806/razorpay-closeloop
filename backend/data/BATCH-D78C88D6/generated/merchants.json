@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Trading",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-03-07T00:07:11"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Green Market",
+    "reference": "MER-GRE-002",
+    "currency": "INR",
+    "created_at": "2025-05-21T03:39:50"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Hub",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-06-02T16:58:23"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Smart Goods",
+    "reference": "MER-SMA-004",
+    "currency": "INR",
+    "created_at": "2025-04-22T12:30:03"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Shop",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-03-29T22:50:28"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "case_id": "CASE-TEST-001",
+    "payment_id": "PAY-TEST-001",
+    "merchant_id": "M-001",
+    "expected_amount": 50000,
+    "actual_amount": 50000,
+    "difference": 0
+  },
+  {
+    "case_id": "CASE-TEST-002",
+    "payment_id": "PAY-TEST-002",
+    "merchant_id": "M-001",
+    "expected_amount": 75000,
+    "actual_amount": 70000,
+    "difference": 5000
+  }
+]

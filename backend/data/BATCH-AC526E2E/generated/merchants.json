@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Shop",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-05-17T06:11:35"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Shop",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-03-31T14:30:38"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Enterprises",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-05-30T12:39:39"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Mart",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-06-26T16:49:22"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Star Labs",
+    "reference": "MER-STA-005",
+    "currency": "INR",
+    "created_at": "2025-06-08T09:47:34"
+  }
+]

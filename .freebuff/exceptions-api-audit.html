@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloseLoop — /exceptions API Audit</title>
+<style>
+  :root {
+    --bg: #0a0e1a; --surface: #111827; --surface2: #1a2235; --border: #1e2d45;
+    --text: #e2e8f0; --text2: #94a3b8; --text3: #64748b;
+    --green: #10b981; --green-bg: #052e1c; --green-border: #166534;
+    --red: #ef4444; --red-bg: #450a0a; --red-border: #991b1b;
+    --yellow: #f59e0b; --yellow-bg: #451a03; --yellow-border: #92400e;
+    --blue: #3b82f6; --blue-bg: #172554; --blue-border: #1e40af;
+    --purple: #8b5cf6; --purple-bg: #2e1065; --purple-border: #5b21b6;
+    --cyan: #06b6d4;
+    --font: 'Inter', system-ui, -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+  
+  /* Header */
+  .header { text-align: center; margin-bottom: 3rem; padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
+  .header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .header h1 span { color: var(--blue); }
+  .header .subtitle { color: var(--text2); font-size: 1rem; }
+  .header .meta { display: flex; gap: 2rem; justify-content: center; margin-top: 1rem; color: var(--text3); font-size: 0.85rem; }
+  .header .meta span { display: flex; align-items: center; gap: 0.4rem; }
+  
+  /* Status Badge */
+  .badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.7rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em; }
+  .badge-pass { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-warn { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-info { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  
+  /* Section */
+  .section { margin-bottom: 2.5rem; }
+  .section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .section-title .num { color: var(--text3); font-weight: 400; font-size: 0.9rem; }
+  
+  /* Endpoint Table */
+  .endpoint-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  .endpoint-table th { background: var(--surface2); padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+  .endpoint-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; vertical-align: top; }
+  .endpoint-table tr:last-child td { border-bottom: none; }
+  .endpoint-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .method { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; font-family: var(--mono); }
+  .method-get { background: #064e3b; color: #34d399; }
+  .method-post { background: #1e3a5f; color: #60a5fa; }
+  .path { font-family: var(--mono); font-size: 0.82rem; color: var(--cyan); }
+  .detail { color: var(--text2); font-size: 0.82rem; line-height: 1.5; }
+  .defect { background: var(--red-bg); border-left: 3px solid var(--red); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 0.5rem 0; }
+  .defect h4 { color: var(--red); font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .defect p { color: var(--text2); font-size: 0.82rem; }
+  .warning-box { background: var(--yellow-bg); border-left: 3px solid var(--yellow); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 0.5rem 0; }
+  .warning-box h4 { color: var(--yellow); font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .warning-box p { color: var(--text2); font-size: 0.82rem; }
+  .pass-box { background: var(--green-bg); border-left: 3px solid var(--green); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 0.5rem 0; }
+  .pass-box h4 { color: var(--green); font-size: 0.85rem; }
+  
+  /* Flow Diagram */
+  .flow { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+  .flow-node { padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+  .flow-arrow { color: var(--text3); font-size: 0.9rem; }
+  .fn-request { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+  .fn-service { background: var(--purple-bg); color: var(--purple); border: 1px solid var(--purple-border); }
+  .fn-data { background: #1a2e1a; color: #4ade80; border: 1px solid #166534; }
+  .fn-fallback { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .fn-fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  
+  /* Code */
+  code { font-family: var(--mono); background: rgba(255,255,255,0.05); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.8rem; }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; font-size: 0.8rem; font-family: var(--mono); color: var(--text2); margin: 0.5rem 0; }
+  
+  /* Summary Grid */
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; text-align: center; }
+  .summary-card .value { font-size: 2rem; font-weight: 800; }
+  .summary-card .label { font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.3rem; }
+  .val-green { color: var(--green); }
+  .val-red { color: var(--red); }
+  .val-yellow { color: var(--yellow); }
+  .val-blue { color: var(--blue); }
+  
+  /* State diagram */
+  .state-diagram { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+  .state-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; }
+  .state-card h5 { font-size: 0.8rem; margin-bottom: 0.4rem; }
+  .state-card .transitions { font-size: 0.75rem; color: var(--text2); }
+  .trans-ok { color: var(--green); }
+  .trans-block { color: var(--red); }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container { padding: 1rem; }
+    .endpoint-table { font-size: 0.75rem; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow { font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="header">
+  <h1><span>CloseLoop</span> — /exceptions API Audit</h1>
+  <div class="subtitle">Comprehensive HTTP-level endpoint verification against running FastAPI server</div>
+  <div class="meta">
+    <span>📅 Sep 5, 2026</span>
+    <span>🔗 localhost:8000</span>
+    <span>🧪 Real HTTP requests (not TestClient)</span>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="section">
+  <div class="section-title"><span class="num">01</span> Audit Summary</div>
+  <div class="summary-grid">
+    <div class="summary-card"><div class="value val-green">9</div><div class="label">Endpoints Tested</div></div>
+    <div class="summary-card"><div class="value val-green">8</div><div class="label">Passing</div></div>
+    <div class="summary-card"><div class="value val-red">1</div><div class="label">Defect Found</div></div>
+    <div class="summary-card"><div class="value val-yellow">2</div><div class="label">Fallbacks Active</div></div>
+  </div>
+</div>
+
+<!-- Endpoint Results -->
+<div class="section">
+  <div class="section-title"><span class="num">02</span> Endpoint-by-Endpoint Results</div>
+  <table class="endpoint-table">
+    <thead>
+      <tr><th style="width:70px">Result</th><th style="width:55px">Code</th><th style="width:90px">Method</th><th>Endpoint</th><th>What It Does</th><th>Findings</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-get">GET</span></td>
+        <td class="path">/exceptions</td>
+        <td class="detail">List exceptions with filtering</td>
+        <td class="detail">500 exceptions returned. Supports type/status/risk/batch filters. Real data from exception registry.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-get">GET</span></td>
+        <td class="path">/exceptions/{id}</td>
+        <td class="detail">Get exception details</td>
+        <td class="detail">Returns 15 fields: exception_id, financial amounts, risk_category, status, etc. Data from exception registry.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-get">GET</span></td>
+        <td class="path">/exceptions/{id}/evidence</td>
+        <td class="detail">Get financial evidence</td>
+        <td class="detail">Returns payment, settlement, refund, fee records with amounts matching batch_001 JSON files exactly. Coverage, conflicts, missing_evidence all computed.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-warn">WARN</span></td>
+        <td>200</td>
+        <td><span class="method method-get">GET</span></td>
+        <td class="path">/exceptions/{id}/explain</td>
+        <td class="detail">AI explanation</td>
+        <td class="detail">Returns real data but <code>fallback_used=True</code> because LLM unavailable. Uses deterministic template. Financial amounts from adapter are correct.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-get">GET</span></td>
+        <td class="path">/exceptions/{id}/similar</td>
+        <td class="detail">Similar historical cases</td>
+        <td class="detail">Returns 5 similar cases with similarity_score, exception_type, resolution_type, adjustment_paise, risk_category. Real data.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-warn">WARN</span></td>
+        <td>200</td>
+        <td><span class="method method-post">POST</span></td>
+        <td class="path">/exceptions/{id}/analyze</td>
+        <td class="detail">Full analysis</td>
+        <td class="detail">Returns 19 fields but <code>fallback_used=True</code>. AnalyzeService fails → falls back to adapter data. Candidates and guardrail come from fallback. <code>classification_confidence=None</code>.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-post">POST</span></td>
+        <td class="path">/exceptions/{id}/resolve</td>
+        <td class="detail">Submit resolution proposal</td>
+        <td class="detail">Records proposal only. Status stays PENDING. <code>guardrail_decision=None</code>, <code>verification_result=None</code>. Client cannot force AUTO. Properly gated against RESOLVED re-proposal.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-post">POST</span></td>
+        <td class="path">/exceptions/{id}/approve</td>
+        <td class="detail">Approve resolution</td>
+        <td class="detail">State-gated: only PENDING or RESOLVED → APPROVED. Returns 409 on ESCALATED/other states. Records feedback via Phase 9.</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td>200</td>
+        <td><span class="method method-post">POST</span></td>
+        <td class="path">/exceptions/{id}/reject</td>
+        <td class="detail">Reject resolution</td>
+        <td class="detail">State-gated: only PENDING or RESOLVED → REJECTED. Returns 409 on ESCALATED/other states. Requires reason. Records feedback.</td>
+      </tr>
+      <tr style="background: rgba(239,68,68,0.05);">
+        <td><span class="badge badge-fail">FAIL</span></td>
+        <td>200</td>
+        <td><span class="method method-post">POST</span></td>
+        <td class="path">/exceptions/{id}/escalate</td>
+        <td class="detail">Escalate for human review</td>
+        <td class="detail"><strong>No state guard.</strong> Can escalate from ANY status, including APPROVED or RESOLVED. Approve and reject correctly block these states.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- The Defect -->
+<div class="section">
+  <div class="section-title"><span class="num">03</span> Defect: Unrestricted Escalation</div>
+  
+  <div class="defect">
+    <h4>🔴 DEFECT: Escalate endpoint lacks state guard</h4>
+    <p><code>POST /exceptions/{id}/escalate</code> allows escalation from any status (APPROVED, REJECTED, RESOLVED, ESCALATED, PENDING) without checking the current state. In contrast, approve and reject both block non-PENDING/RESOLVED states with a 409 Conflict.</p>
+  </div>
+
+  <h4 style="margin: 1rem 0 0.5rem; color: var(--text2); font-size: 0.9rem;">Evidence from Live Server</h4>
+  <pre>
+# Case starts as APPROVED
+GET /exceptions/CASE-000001 → status: APPROVED
+
+# Escalate succeeds (should be blocked!)
+POST /exceptions/CASE-000001/escalate → 200 OK
+  → status changed from APPROVED → ESCALATED
+
+# But approve correctly blocks on ESCALATED
+POST /exceptions/CASE-000001/approve → 409 Conflict
+  "Cannot approve exception in 'ESCALATED' status"
+  </pre>
+
+  <h4 style="margin: 1rem 0 0.5rem; color: var(--text2); font-size: 0.9rem;">Comparison with Approve/Reject</h4>
+  <table class="endpoint-table">
+    <thead><tr><th>Endpoint</th><th>State Guard</th><th>Allowed States</th><th>Blocked States</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>POST /approve</code></td>
+        <td><span class="badge badge-pass">YES</span></td>
+        <td>PENDING, RESOLVED</td>
+        <td>APPROVED, REJECTED, ESCALATED → 409</td>
+      </tr>
+      <tr>
+        <td><code>POST /reject</code></td>
+        <td><span class="badge badge-pass">YES</span></td>
+        <td>PENDING, RESOLVED</td>
+        <td>APPROVED, REJECTED, ESCALATED → 409</td>
+      </tr>
+      <tr style="background: rgba(239,68,68,0.05);">
+        <td><code>POST /escalate</code></td>
+        <td><span class="badge badge-fail">NO</span></td>
+        <td>ALL (any status)</td>
+        <td>None — unrestricted</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 style="margin: 1rem 0 0.5rem; color: var(--text2); font-size: 0.9rem;">Impact</h4>
+  <div class="warning-box">
+    <h4>⚠️ An already-approved exception can be escalated</h4>
+    <p>A reviewer could accidentally escalate a case that was already approved, moving it back to human review and disrupting the workflow. This should either be blocked (like approve/reject) or limited to specific states.</p>
+  </div>
+  
+  <h4 style="margin: 1rem 0 0.5rem; color: var(--text2); font-size: 0.9rem;">Root Cause (code path)</h4>
+  <pre>
+# backend/app/api/routes/exceptions.py — escalate_exception()
+
+@router.post("/exceptions/{exception_id}/escalate")
+async def escalate_exception(exception_id: str, request: EscalateRequest):
+    svc = get_exception_service()
+    exc = svc.get_exception(exception_id)
+    if exc is None:
+        raise NotFoundException("Exception", exception_id)
+    # ← No state check here!
+    result = svc.escalate_exception(...)
+  </pre>
+  
+  <p style="color: var(--text2); font-size: 0.85rem; margin-top: 0.5rem;">Compare with approve (same file, line ~210):</p>
+  <pre>
+# approve_exception() correctly checks state:
+if exc.get("status") not in ("RESOLVED", "PENDING"):
+    raise ConflictException(
+        f"Cannot approve exception in '{exc.get('status')}' status"
+    )
+  </pre>
+</div>
+
+<!-- Data Flow -->
+<div class="section">
+  <div class="section-title"><span class="num">04</span> Data Flow Architecture</div>
+  
+  <h4 style="color: var(--text2); font-size: 0.9rem; margin-bottom: 0.75rem;">Exception Lookup → Read Endpoints</h4>
+  <div class="flow">
+    <div class="flow-node fn-request">HTTP Request</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-service">FastAPI Route</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-service">ExceptionService</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-data">In-Memory Registry</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-data">batch_001 files</div>
+  </div>
+  <p class="detail" style="margin-left: 1rem;">The exceptions API uses an <strong>in-memory registry</strong> populated from BATCH-00052158 data. The evidence/analyze/similar endpoints use the <strong>FinancialDataAdapter</strong> which loads from <code>data/batch_001/</code>. This means exception amounts may differ from evidence amounts for the same case ID.</p>
+
+  <h4 style="color: var(--text2); font-size: 0.9rem; margin: 1.5rem 0 0.75rem;">POST /resolve → Guardrail Pipeline</h4>
+  <div class="flow">
+    <div class="flow-node fn-request">Client Request</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-service">Validate ResolutionType</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-service">Record Proposal</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-data">Registry (PENDING)</div>
+  </div>
+  <div class="flow" style="margin-top: 0.25rem;">
+    <div style="width: 2rem"></div>
+    <div class="flow-node fn-fail">guardrail_decision = None</div>
+    <span class="flow-arrow">=</span>
+    <div class="flow-node fn-fail">verification_result = None</div>
+    <span class="flow-arrow">=</span>
+    <div class="flow-node fn-fallback">No guardrail bypass</div>
+  </div>
+  <p class="detail" style="margin-left: 1rem;">The resolve endpoint only records a proposal. It does NOT execute guardrails, verification, or resolution. The client cannot force AUTO.</p>
+
+  <h4 style="color: var(--text2); font-size: 0.9rem; margin: 1.5rem 0 0.75rem;">POST /analyze → Intelligence Service</h4>
+  <div class="flow">
+    <div class="flow-node fn-request">HTTP Request</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-service">IntelligenceService</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node fn-service">AnalyzeService</div>
+    <span class="flow-arrow" style="color: var(--red);">✕ fails</span>
+    <div class="flow-node fn-fallback">Fallback to Adapter</div>
+  </div>
+  <p class="detail" style="margin-left: 1rem;">The main AnalyzeService currently fails and falls back to the adapter-based analysis. This returns real data but with <code>fallback_used=True</code> and <code>classification_confidence=None</code>.</p>
+</div>
+
+<!-- State Transition Audit -->
+<div class="section">
+  <div class="section-title"><span class="num">05</span> State Transition Audit</div>
+  <div class="state-diagram">
+    <div class="state-card">
+      <h5 style="color: var(--blue);">PENDING</h5>
+      <div class="transitions">
+        <div class="trans-ok">→ resolve (PENDING)</div>
+        <div class="trans-ok">→ approve (APPROVED)</div>
+        <div class="trans-ok">→ reject (REJECTED)</div>
+        <div class="trans-ok">→ escalate (ESCALATED)</div>
+      </div>
+    </div>
+    <div class="state-card">
+      <h5 style="color: var(--green);">APPROVED</h5>
+      <div class="transitions">
+        <div class="trans-ok">→ resolve (PENDING)</div>
+        <div class="trans-block">✕ approve (409)</div>
+        <div class="trans-block">✕ reject (409)</div>
+        <div class="trans-ok" style="color: var(--yellow);">→ escalate (ESCALATED) ⚠️</div>
+      </div>
+    </div>
+    <div class="state-card">
+      <h5 style="color: var(--red);">REJECTED</h5>
+      <div class="transitions">
+        <div class="trans-ok">→ resolve (PENDING)</div>
+        <div class="trans-block">✕ approve (409)</div>
+        <div class="trans-block">✕ reject (409)</div>
+        <div class="trans-ok" style="color: var(--yellow);">→ escalate (ESCALATED) ⚠️</div>
+      </div>
+    </div>
+    <div class="state-card">
+      <h5 style="color: var(--yellow);">ESCALATED</h5>
+      <div class="transitions">
+        <div class="trans-ok">→ resolve (PENDING)</div>
+        <div class="trans-block">✕ approve (409)</div>
+        <div class="trans-block">✕ reject (409)</div>
+        <div class="trans-ok" style="color: var(--yellow);">→ escalate (200, idempotent?) ⚠️</div>
+      </div>
+    </div>
+  </div>
+  <p class="detail" style="color: var(--yellow); margin-top: 0.5rem;">⚠️ Yellow arrows indicate the escalation defect — these transitions should likely be blocked or limited.</p>
+</div>
+
+<!-- Security Verification -->
+<div class="section">
+  <div class="section-title"><span class="num">06</span> Security & Safety Verification</div>
+  <table class="endpoint-table">
+    <thead><tr><th>Check</th><th>Result</th><th>Evidence</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="detail">Client cannot force AUTO decision</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td class="detail">Resolve returns <code>guardrail_decision=None</code>. No client field can override.</td>
+      </tr>
+      <tr>
+        <td class="detail">Client cannot force verification_passed</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td class="detail">Resolve returns <code>verification_result=None</code>. Not computed by client.</td>
+      </tr>
+      <tr>
+        <td class="detail">Nonexistent case returns 404</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td class="detail">All 4 POST endpoints return 404 for NONEXISTENT-999.</td>
+      </tr>
+      <tr>
+        <td class="detail">Missing required body returns 422</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td class="detail">Empty body → 422 with validation errors for all 4 POST endpoints.</td>
+      </tr>
+      <tr>
+        <td class="detail">Invalid ResolutionType enum blocked</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td class="detail"><code>"ADJUSTMENT"</code> → 422 with valid enum values listed.</td>
+      </tr>
+      <tr>
+        <td class="detail">Conflict state properly enforced</td>
+        <td><span class="badge badge-fail">FAIL</span></td>
+        <td class="detail">Escalate allows any state transition. Approve/reject correctly enforce.</td>
+      </tr>
+      <tr>
+        <td class="detail">Financial amounts from backend only</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+        <td class="detail">All amounts come from adapter/registry. Frontend only formats.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Fallback Analysis -->
+<div class="section">
+  <div class="section-title"><span class="num">07</span> Analyze & Explain Fallback Status</div>
+  <div class="warning-box">
+    <h4>⚠️ AnalyzeService main path fails</h4>
+    <p>The <code>POST /exceptions/{id}/analyze</code> endpoint calls <code>AnalyzeService.analyze()</code> which throws an exception. The fallback handler in <code>IntelligenceService._analyze_fallback()</code> constructs a response from the FinancialDataAdapter. This returns real data but with <code>fallback_used=True</code>, <code>llm_provider=none</code>, <code>classification_confidence=None</code>. The analyze endpoint still provides 19 useful fields.</p>
+  </div>
+  <div class="warning-box">
+    <h4>⚠️ LLM unavailable for explanations</h4>
+    <p>The <code>GET /exceptions/{id}/explain</code> endpoint calls <code>ExplainService.explain()</code> which falls back to a deterministic template. This is by design — the system explicitly supports deterministic fallback when LLM is unavailable.</p>
+  </div>
+</div>
+
+<!-- Recommended Fix -->
+<div class="section">
+  <div class="section-title"><span class="num">08</span> Recommended Fix</div>
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem;">
+    <h4 style="color: var(--green); margin-bottom: 0.75rem;">Fix: Add state guard to escalate_exception route</h4>
+    <p class="detail" style="margin-bottom: 1rem;">Add a state check matching the approve/reject pattern. Only allow escalation from PENDING or RESOLVED states.</p>
+    <pre>
+# In backend/app/api/routes/exceptions.py — escalate_exception()
+
+@router.post("/{exception_id}/escalate")
+async def escalate_exception(exception_id: str, request: EscalateRequest):
+    svc = get_exception_service()
+    exc = svc.get_exception(exception_id)
+    if exc is None:
+        raise NotFoundException("Exception", exception_id)
+
+    # ADD THIS: state guard matching approve/reject
+    if exc.get("status") not in ("RESOLVED", "PENDING"):
+        raise ConflictException(
+            f"Cannot escalate exception in '{exc.get('status')}' status"
+        )
+
+    result = svc.escalate_exception(...)
+    </pre>
+    <p class="detail" style="margin-top: 1rem;">This is a <strong>5-line change</strong> in one file: <code>backend/app/api/routes/exceptions.py</code>.</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Gold Co",
+    "reference": "MER-GOL-001",
+    "currency": "INR",
+    "created_at": "2025-04-02T01:24:27"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Crystal Store",
+    "reference": "MER-CRY-002",
+    "currency": "INR",
+    "created_at": "2025-02-08T01:18:53"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Gold Solutions",
+    "reference": "MER-GOL-003",
+    "currency": "INR",
+    "created_at": "2025-03-25T01:26:45"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Market",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-01-08T00:08:13"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Red Store",
+    "reference": "MER-RED-005",
+    "currency": "INR",
+    "created_at": "2025-02-16T02:32:57"
+  }
+]

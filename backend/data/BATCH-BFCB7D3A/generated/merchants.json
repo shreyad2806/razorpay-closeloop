@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Global Goods",
+    "reference": "MER-GLO-001",
+    "currency": "INR",
+    "created_at": "2025-03-09T06:01:17"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Mart",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-02-05T21:48:38"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Silver Co",
+    "reference": "MER-SIL-003",
+    "currency": "INR",
+    "created_at": "2025-05-26T19:03:07"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Hub",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-06-20T02:24:24"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Quick Goods",
+    "reference": "MER-QUI-005",
+    "currency": "INR",
+    "created_at": "2025-06-03T15:06:26"
+  }
+]

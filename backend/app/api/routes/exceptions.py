@@ -253,6 +253,7 @@ async def reject_exception(exception_id: str, request: RejectRequest):
     response_model=ApiResponse,
     responses={
         **_ERRORS_404,
+        **_ERRORS_409,
         **_ERRORS_422,
     },
 )
@@ -272,6 +273,11 @@ async def escalate_exception(exception_id: str, request: EscalateRequest):
     exc = svc.get_exception(exception_id)
     if exc is None:
         raise NotFoundException("Exception", exception_id)
+
+    if exc.get("status") not in ("RESOLVED", "PENDING"):
+        raise ConflictException(
+            f"Cannot escalate exception in '{exc.get('status')}' status"
+        )
 
     result = svc.escalate_exception(
         exception_id,

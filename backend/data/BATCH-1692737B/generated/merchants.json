@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Crystal Solutions",
+    "reference": "MER-CRY-001",
+    "currency": "INR",
+    "created_at": "2025-02-28T18:58:07"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Prime Goods",
+    "reference": "MER-PRI-002",
+    "currency": "INR",
+    "created_at": "2025-04-23T17:51:11"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Services",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-05-03T05:27:01"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Prime Solutions",
+    "reference": "MER-PRI-004",
+    "currency": "INR",
+    "created_at": "2025-05-08T12:28:38"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Prime Market",
+    "reference": "MER-PRI-005",
+    "currency": "INR",
+    "created_at": "2025-03-17T18:14:35"
+  }
+]

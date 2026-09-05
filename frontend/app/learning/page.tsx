@@ -144,7 +144,7 @@ export default function LearningPage() {
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-slate-900">Learning & Feedback</h2>
         <p className="text-sm text-slate-400 mt-1">
-          Phase 9 learning metrics and feedback analytics
+          Feedback analytics and safety metrics
         </p>
       </div>
 

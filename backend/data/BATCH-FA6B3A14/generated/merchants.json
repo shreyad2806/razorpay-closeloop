@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Enterprises",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-06-09T23:02:08"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Mart",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-03-25T15:13:04"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Co",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-04-07T17:45:28"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Silver Mart",
+    "reference": "MER-SIL-004",
+    "currency": "INR",
+    "created_at": "2025-03-25T05:13:52"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Goods",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-01-04T23:05:06"
+  }
+]

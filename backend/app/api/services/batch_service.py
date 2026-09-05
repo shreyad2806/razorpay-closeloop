@@ -44,6 +44,119 @@ class BatchService:
         if data_dir is None:
             data_dir = str(Path(__file__).parent.parent.parent.parent / "data")
         self._data_dir = data_dir
+        self._register_prebuilt_batches()
+
+    def _register_prebuilt_batches(self):
+        """Register pre-built batches from data directories."""
+        import json as _json
+        import sys
+        
+        # Debug: print data directory
+        print(f"[BATCH] Data directory: {self._data_dir}", file=sys.stderr)
+        
+        # Register DEMO-60 if it exists and has reconciliation results
+        demo60_dir = os.path.join(self._data_dir, "DEMO-60", "generated")
+        print(f"[BATCH] DEMO-60 dir check: {demo60_dir}", file=sys.stderr)
+        print(f"[BATCH] DEMO-60 dir exists: {os.path.isdir(demo60_dir)}", file=sys.stderr)
+        
+        if os.path.isdir(demo60_dir):
+            results_path = os.path.join(demo60_dir, "reconciliation_results.json")
+            cases_path = os.path.join(demo60_dir, "cases.json")
+            print(f"[BATCH] Results path: {results_path}, exists: {os.path.isfile(results_path)}", file=sys.stderr)
+            print(f"[BATCH] Cases path: {cases_path}, exists: {os.path.isfile(cases_path)}", file=sys.stderr)
+            
+            if os.path.isfile(results_path) and os.path.isfile(cases_path):
+                with open(results_path, "r") as f:
+                    results = _json.load(f)
+                with open(cases_path, "r") as f:
+                    cases = _json.load(f)
+                
+                total = len(results)
+                # Count exceptions: EXCEPTION + MISSING status
+                exceptions = sum(1 for r in results if r.get("match_status") in ("EXCEPTION", "MISSING"))
+                matched = total - exceptions
+                
+                print(f"[BATCH] DEMO-60: {total} records, {matched} matched, {exceptions} exceptions", file=sys.stderr)
+                
+                # Check if batch already registered
+                if "DEMO-60" not in _batch_registry:
+                    _batch_registry["DEMO-60"] = {
+                        "batch_id": "DEMO-60",
+                        "name": "Demo Batch 60 - Hackathon",
+                        "description": "Realistic 60-record financial reconciliation demo",
+                        "source": "prebuilt",
+                        "status": "COMPLETED",
+                        "created_at": datetime.utcnow().isoformat(),
+                        "exception_count": exceptions,
+                        "total_records": total,
+                        "matched_records": matched,
+                        "success_count": matched,
+                        "failure_count": 0,
+                        "processing_time_ms": 100,
+                        "match_rate": round(matched / total, 4) if total > 0 else 0,
+                        "exception_rate": round(exceptions / total, 4) if total > 0 else 0,
+                        "auto_resolved": 0,
+                        "human_review": 0,
+                        "unresolved": exceptions,
+                        "verification_passed": 0,
+                        "verification_failed": 0,
+                        "financial_impact_paise": 0,
+                        "auto_decisions": 0,
+                        "human_decisions": 0,
+                        "unresolved_decisions": exceptions,
+                        "guardrail_blocks": 0,
+                        "high_value_blocks": 0,
+                        "conflict_blocks": 0,
+                        "novelty_blocks": 0,
+                        "verification_failures": 0,
+                    }
+                    print(f"[BATCH] Registered DEMO-60 in registry", file=sys.stderr)
+                else:
+                    print(f"[BATCH] DEMO-60 already in registry, skipping", file=sys.stderr)
+        
+        # Also register DEMO-001 if it exists
+        demo001_dir = os.path.join(self._data_dir, "DEMO-001", "generated")
+        if os.path.isdir(demo001_dir) and "DEMO-001" not in _batch_registry:
+            cases_path = os.path.join(demo001_dir, "cases.json")
+            if os.path.isfile(cases_path):
+                with open(cases_path, "r") as f:
+                    cases = _json.load(f)
+                
+                # Determine matched vs exceptions based on scenario
+                # EXACT_MATCH = matched, everything else = exception
+                matched = sum(1 for c in cases if c.get("scenario") == "EXACT_MATCH")
+                exceptions = len(cases) - matched
+                
+                _batch_registry["DEMO-001"] = {
+                    "batch_id": "DEMO-001",
+                    "name": "Demo Batch - Original",
+                    "description": "Original demo batch with 30 records",
+                    "source": "prebuilt",
+                    "status": "COMPLETED",
+                    "created_at": datetime.utcnow().isoformat(),
+                    "exception_count": exceptions,
+                    "total_records": len(cases),
+                    "matched_records": matched,
+                    "success_count": len(cases),
+                    "failure_count": 0,
+                    "processing_time_ms": 0,
+                    "match_rate": round(matched / len(cases), 4) if len(cases) > 0 else 0,
+                    "exception_rate": round(exceptions / len(cases), 4) if len(cases) > 0 else 0,
+                    "auto_resolved": 0,
+                    "human_review": 0,
+                    "unresolved": exceptions,
+                    "verification_passed": 0,
+                    "verification_failed": 0,
+                    "financial_impact_paise": 0,
+                    "auto_decisions": 0,
+                    "human_decisions": 0,
+                    "unresolved_decisions": exceptions,
+                    "guardrail_blocks": 0,
+                    "high_value_blocks": 0,
+                    "conflict_blocks": 0,
+                    "novelty_blocks": 0,
+                    "verification_failures": 0,
+                }
 
     def list_batches(self, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
         """List registered batches with pagination."""
@@ -56,6 +169,7 @@ class BatchService:
                 "status": b["status"],
                 "created_at": b.get("created_at"),
                 "exception_count": b.get("exception_count", 0),
+                "total_records": b.get("total_records", 0),
                 "success_count": b.get("success_count", 0),
                 "failure_count": b.get("failure_count", 0),
             }
@@ -90,10 +204,20 @@ class BatchService:
 
         # Check if payload contains pre-defined records
         payload = data.get("payload")
-        if payload and isinstance(payload, dict):
+        batch_logger.info(WorkflowEvent.BATCH_STARTED.value,
+                         f"Checking payload for batch: {name}",
+                         batch_id=batch_id, payload_type=type(payload).__name__,
+                         payload_provided=payload is not None,
+                         payload_keys=list(payload.keys()) if isinstance(payload, dict) else None)
+
+        # Only validate payload if it's a non-empty dict
+        if payload and isinstance(payload, dict) and len(payload) > 0:
             # Validate and store provided records
             validation = self._validate_payload(payload)
             if not validation["valid"]:
+                batch_logger.failure(WorkflowEvent.BATCH_FAILED.value,
+                                   f"Payload validation failed for batch: {name}",
+                                   batch_id=batch_id, errors=validation["errors"])
                 return {
                     "batch_id": batch_id,
                     "status": "VALIDATION_FAILED",
@@ -109,10 +233,16 @@ class BatchService:
                 len(payload.get(k, []))
                 for k in ["payments", "settlements", "refunds", "fees", "taxes", "adjustments", "cases"]
             )
+            case_count = len(payload.get("cases", []))
         else:
             # Generate synthetic data using existing BatchGenerator
             num_merchants = data.get("num_merchants", 5)
             num_cases = data.get("num_cases", 20)
+
+            batch_logger.info(WorkflowEvent.BATCH_STARTED.value,
+                             f"Generating synthetic data for batch: {name}",
+                             batch_id=batch_id, num_merchants=num_merchants,
+                             num_cases=num_cases)
 
             generator = BatchGenerator(base_seed=42, output_dir=self._data_dir)
             result = generator.generate_batch(
@@ -121,7 +251,15 @@ class BatchService:
                 num_cases=num_cases,
                 seed_offset=hash(batch_id) % 1000,
             )
-            record_count = result.get("total_records", 0)
+            # Generator returns 'total_events', not 'total_records'
+            record_count = result.get("total_events", 0) or result.get("total_records", 0)
+            # Also extract case count for exception tracking
+            counts = result.get("counts", {})
+            case_count = counts.get("cases", 0)
+
+            batch_logger.success(WorkflowEvent.BATCH_COMPLETED.value,
+                                f"Synthetic data generated for batch: {batch_id}",
+                                batch_id=batch_id, record_count=record_count, case_count=case_count)
 
         creation_time = time.time() - start_time
 
@@ -133,7 +271,8 @@ class BatchService:
             "source": source,
             "status": "CREATED",
             "created_at": datetime.utcnow().isoformat(),
-            "exception_count": record_count,
+            "exception_count": case_count,
+            "total_records": record_count,
             "success_count": 0,
             "failure_count": 0,
             "creation_time_ms": round(creation_time * 1000, 2),
@@ -178,8 +317,8 @@ class BatchService:
 
         set_correlation_ids(batch_id=batch_id)
         timer = batch_logger.start_timer()
-        batch_logger.info(WorkflowEvent.RECORDS_RECEIVED.value,
-                         f"Starting batch reconciliation",
+        batch_logger.info(WorkflowEvent.BATCH_STARTED.value,
+                         f"[BATCH] RUN_STARTED: {batch_id}",
                          batch_id=batch_id)
 
         try:
@@ -316,8 +455,8 @@ class BatchService:
             "name": batch.get("name", ""),
             "status": batch["status"],
             "total_exceptions": batch.get("exception_count", 0),
-            "resolved": batch.get("success_count", 0),
-            "unresolved": batch.get("failure_count", 0),
+            "resolved": batch.get("matched_records", 0) or 0,
+            "unresolved": batch.get("exception_count", 0) or 0,
             "escalated": 0,
             "auto_resolved": 0,
             "human_review": 0,

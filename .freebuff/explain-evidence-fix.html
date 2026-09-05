@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExplainService Evidence Fix — Root Cause & Resolution</title>
+<style>
+  :root {
+    --brand: #0066FF;
+    --brand-light: #E6EEFF;
+    --green: #059669;
+    --green-bg: #ECFDF5;
+    --red: #DC2626;
+    --red-bg: #FEF2F2;
+    --amber: #D97706;
+    --amber-bg: #FFFBEB;
+    --slate-50: #F8FAFC;
+    --slate-100: #F1F5F9;
+    --slate-200: #E2E8F0;
+    --slate-500: #64748B;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1E293B;
+    --slate-900: #0F172A;
+    --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--slate-50); color: var(--slate-800); line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+  .header { background: linear-gradient(135deg, var(--slate-900), #0c2340); color: white; padding: 36px 32px; border-radius: 16px; margin-bottom: 28px; }
+  .header h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+  .header .sub { color: #94A3B8; font-size: 14px; }
+  .section { background: white; border-radius: 12px; border: 1px solid var(--slate-200); margin-bottom: 20px; overflow: hidden; }
+  .section-header { padding: 14px 20px; border-bottom: 1px solid var(--slate-100); display: flex; align-items: center; justify-content: space-between; }
+  .section-header h2 { font-size: 15px; font-weight: 700; }
+  .section-body { padding: 20px; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-pass { background: var(--green-bg); color: var(--green); }
+  .badge-fail { background: var(--red-bg); color: var(--red); }
+  .badge-info { background: var(--brand-light); color: var(--brand); }
+  code { background: var(--slate-100); padding: 2px 6px; border-radius: 4px; font-size: 12px; font-family: var(--mono); }
+  pre { background: var(--slate-900); color: #E2E8F0; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.7; font-family: var(--mono); }
+  pre .comment { color: #6B7280; }
+  pre .old { color: #F87171; text-decoration: line-through; opacity: 0.7; }
+  pre .new { color: #34D399; font-weight: 600; }
+  pre .highlight { background: rgba(0,102,255,0.15); display: inline; padding: 0 4px; border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 8px 12px; background: var(--slate-50); font-weight: 600; color: var(--slate-600); border-bottom: 1px solid var(--slate-200); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--slate-100); vertical-align: top; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  @media (max-width: 768px) { .compare { grid-template-columns: 1fr; } }
+  .compare-card { border-radius: 10px; padding: 16px; border: 1px solid var(--slate-200); }
+  .compare-card.before { background: var(--red-bg); border-color: #FCA5A5; }
+  .compare-card.after { background: var(--green-bg); border-color: #6EE7B7; }
+  .compare-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .compare-card.before h3 { color: var(--red); }
+  .compare-card.after h3 { color: var(--green); }
+  .flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+  .flow-step { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .flow-ok { background: var(--green-bg); color: var(--green); border: 1px solid #6EE7B7; }
+  .flow-bad { background: var(--red-bg); color: var(--red); border: 1px solid #FCA5A5; }
+  .flow-arrow { color: var(--slate-500); font-size: 14px; }
+  .metric { background: var(--slate-50); border-radius: 10px; padding: 14px; border: 1px solid var(--slate-200); text-align: center; }
+  .metric .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--slate-500); font-weight: 600; }
+  .metric .value { font-size: 28px; font-weight: 800; }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .footer { text-align: center; padding: 20px; color: var(--slate-500); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>🔧 ExplainService Evidence Fix</h1>
+  <div class="sub">Root cause analysis, code change, and verification of the evidence-explain data consistency fix</div>
+</div>
+
+<!-- Problem Statement -->
+<div class="section">
+  <div class="section-header">
+    <h2>The Problem</h2>
+    <span class="badge badge-fail">✗ MISMATCH</span>
+  </div>
+  <div class="section-body">
+    <p style="font-size:14px; color:var(--slate-600); margin-bottom:16px;">
+      Two endpoints for the same exception returned <strong>different evidence counts</strong>:
+    </p>
+    <div class="compare">
+      <div class="compare-card before">
+        <h3>✗ GET /exceptions/{id}/explain (BEFORE)</h3>
+        <table>
+          <tr><td>evidence_record_count</td><td><strong>0</strong></td></tr>
+          <tr><td>evidence_coverage</td><td>UNEXPLAINED</td></tr>
+          <tr><td>evidence_summary</td><td>No evidence records found.</td></tr>
+          <tr><td>missing_evidence</td><td>["No financial records found"]</td></tr>
+        </table>
+      </div>
+      <div class="compare-card after">
+        <h3>✓ GET /exceptions/{id}/evidence (ALWAYS CORRECT)</h3>
+        <table>
+          <tr><td>record_count</td><td><strong>2</strong></td></tr>
+          <tr><td>coverage</td><td>PARTIALLY_EXPLAINED</td></tr>
+          <tr><td>evidence types</td><td>PAYMENT, SETTLEMENT</td></tr>
+          <tr><td>conflicts</td><td>[]</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Root Cause -->
+<div class="section">
+  <div class="section-header">
+    <h2>Root Cause</h2>
+    <span class="badge badge-info">DATA ACCESS MISMATCH</span>
+  </div>
+  <div class="section-body">
+    <p style="font-size:14px; color:var(--slate-600); margin-bottom:12px;">
+      Both services use the same <code>FinancialDataAdapter</code>, but access data through different methods:
+    </p>
+
+    <div class="compare">
+      <div>
+        <h3 style="font-size:13px; font-weight:700; color:var(--red); margin-bottom:8px;">✗ ExplainService (BROKEN)</h3>
+        <pre><span class="comment"># Called search_records() — returns WRAPPED results</span>
+<span class="old">records = adapter.search_records(limit=100)</span>
+
+<span class="comment"># Results look like:</span>
+<span class="comment"># {"type": "payment", "data": {payment_id: ..., amount: ...}}</span>
+
+<span class="comment"># But code reads at wrapper level:</span>
+<span class="old">rec.get("exception_id")  # → undefined</span>
+<span class="old">rec.get("record_type")   # → undefined</span></pre>
+      </div>
+      <div>
+        <h3 style="font-size:13px; font-weight:700; color:var(--green); margin-bottom:8px;">✓ IntelligenceService (CORRECT)</h3>
+        <pre><span class="comment"># Uses direct adapter methods</span>
+<span class="new">case = adapter.get_case(exception_id)</span>
+<span class="new">payment_id = case.get("payment_id", "")</span>
+<span class="new">payment = adapter.get_payment(payment_id)</span>
+<span class="new">settlements = adapter.get_settlements_for_payment(payment_id)</span></pre>
+      </div>
+    </div>
+
+    <div style="background:var(--slate-50); border-radius:8px; padding:14px; margin-top:12px; border:1px solid var(--slate-200);">
+      <p style="font-size:13px; color:var(--slate-700);">
+        <strong>Why search_records() failed:</strong> It returns results as
+        <code>{"type": "payment", "data": {...}}</code> — a wrapper dict.
+        But <code>_load_financial_context()</code> read fields like
+        <code>rec.get("exception_id")</code> at the wrapper level (doesn't exist),
+        so <strong>zero matches</strong> were found.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- The Fix -->
+<div class="section">
+  <div class="section-header">
+    <h2>The Fix</h2>
+    <span class="badge badge-pass">✓ 1 FILE CHANGED</span>
+  </div>
+  <div class="section-body">
+    <p style="font-size:14px; color:var(--slate-600); margin-bottom:12px;">
+      <strong>File:</strong> <code>backend/app/api/explain.py</code> — <code>_load_financial_context()</code>
+    </p>
+    <pre><span class="comment"># BEFORE — used search_records() which returns wrapped results</span>
+<span class="old">def _load_financial_context(self, exception_id):</span>
+<span class="old">    records = adapter.search_records(limit=100)  # BROKEN</span>
+<span class="old">    for rec in records:</span>
+<span class="old">        if rec.get("exception_id") == exception_id:  # WRONG</span>
+<span class="old">            rec_type = rec.get("record_type", ...)   # WRONG</span>
+
+<span class="comment"># AFTER — uses the same direct methods as IntelligenceService.get_evidence()</span>
+<span class="new">def _load_financial_context(self, exception_id):</span>
+<span class="new">    case = adapter.get_case(exception_id)</span>
+<span class="new">    if case is None: return context</span>
+<span class="new">    payment_id = case.get("payment_id", "")</span>
+<span class="new">    payment = adapter.get_payment(payment_id)</span>
+<span class="new">    if payment: context["payments"].append(payment)</span>
+<span class="new">    context["settlements"] = adapter.get_settlements_for_payment(payment_id)</span>
+<span class="new">    context["refunds"] = adapter.get_refunds_for_payment(payment_id)</span>
+<span class="new">    context["fees"] = adapter.get_fees_for_payment(payment_id)</span>
+<span class="new">    context["adjustments"] = adapter.get_adjustments_for_payment(payment_id)</span></pre>
+  </div>
+</div>
+
+<!-- After Fix Results -->
+<div class="section">
+  <div class="section-header">
+    <h2>After Fix — Consistency Verified</h2>
+    <span class="badge badge-pass">✓ MATCHING</span>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr><th>Case</th><th>/evidence count</th><th>/explain count</th><th>Match?</th><th>Fallback?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>CASE-DEMO-001</code></td><td>2</td><td>2</td><td><span class="badge badge-pass">✓</span></td><td>Yes</td></tr>
+        <tr><td><code>CASE-DEMO-004</code></td><td>2</td><td>2</td><td><span class="badge badge-pass">✓</span></td><td>Yes</td></tr>
+        <tr><td><code>CASE-DEMO-006</code></td><td>2</td><td>2</td><td><span class="badge badge-pass">✓</span></td><td>Yes</td></tr>
+        <tr><td><code>CASE-DEMO-010</code></td><td>1</td><td>1</td><td><span class="badge badge-pass">✓</span></td><td>Yes</td></tr>
+        <tr><td><code>CASE-DEMO-015</code></td><td>1</td><td>1</td><td><span class="badge badge-pass">✓</span></td><td>Yes</td></tr>
+        <tr><td><code>CASE-DEMO-025</code></td><td>2</td><td>2</td><td><span class="badge badge-pass">✓</span></td><td>Yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Tests -->
+<div class="section">
+  <div class="section-header">
+    <h2>Tests</h2>
+    <span class="badge badge-pass">3/3 PASSED</span>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead><tr><th>Test</th><th>Asserts</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>test_explain_and_evidence_return_same_record_count</code></td>
+          <td>explain.evidence_record_count == evidence.record_count</td>
+          <td><span class="badge badge-pass">✓ PASS</span></td>
+        </tr>
+        <tr>
+          <td><code>test_explain_evidence_not_zero_when_evidence_has_records</code></td>
+          <td>if evidence.count > 0, explain.count > 0</td>
+          <td><span class="badge badge-pass">✓ PASS</span></td>
+        </tr>
+        <tr>
+          <td><code>test_explain_evidence_summary_describes_actual_records</code></td>
+          <td>evidence_summary doesn't say "No evidence" when records exist</td>
+          <td><span class="badge badge-pass">✓ PASS</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px; font-size:13px; color:var(--slate-600);">
+      <strong>Full test suite:</strong> 23/23 explain tests pass (including existing 20 + new 3)
+    </div>
+  </div>
+</div>
+
+<!-- Exception Workflow -->
+<div class="section">
+  <div class="section-header">
+    <h2>Full Exception Workflow (Post-Fix)</h2>
+    <span class="badge badge-pass">✓ CONSISTENT</span>
+  </div>
+  <div class="section-body">
+    <div class="flow">
+      <span class="flow-step flow-ok">Exceptions List ✓</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step flow-ok">Detail ✓</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step flow-ok">Evidence (2 records) ✓</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step flow-ok">Explain (2 records) ✓</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step flow-ok">Similar (4 cases) ✓</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step flow-ok">Approve ✓</span>
+    </div>
+    <p style="font-size:13px; color:var(--slate-500); margin-top:8px;">
+      All evidence counts now match between /evidence and /explain endpoints.
+      Deterministic fallback still works correctly when LLM is unavailable.
+    </p>
+  </div>
+</div>
+
+<!-- Not Changed -->
+<div class="section">
+  <div class="section-header">
+    <h2>What Was NOT Changed</h2>
+  </div>
+  <div class="section-body">
+    <ul style="font-size:13px; color:var(--slate-600); list-style: disc; padding-left:20px; line-height:2;">
+      <li><strong>/evidence endpoint</strong> — already correct, untouched</li>
+      <li><strong>API contract</strong> — request/response schemas unchanged</li>
+      <li><strong>LLM behavior</strong> — deterministic fallback preserved</li>
+      <li><strong>IntelligenceService</strong> — already correct, untouched</li>
+      <li><strong>FinancialDataAdapter</strong> — already correct, untouched</li>
+      <li><strong>AnalyzeService</strong> — separate issue (AnalyzeService.analyze() has its own fallback path)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  <p>ExplainService Evidence Fix — Root Cause & Resolution</p>
+  <p>Generated September 5, 2026</p>
+</div>
+
+</div>
+</body>
+</html>

@@ -105,6 +105,12 @@ export interface ExceptionDetail extends ExceptionListItem {
   similar_case_count?: number;
   evidence_record_count?: number;
   updated_at?: string | null;
+  resolution_type?: ResolutionType | string | null;
+  adjustment_paise?: number | null;
+  resolution_reason?: string | null;
+  workflow_id?: string | null;
+  candidate_id?: string | null;
+  proposal_submitted_at?: string | null;
 }
 
 // ─── Evidence ────────────────────────────────────────────────────────────────

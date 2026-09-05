@@ -9,6 +9,7 @@ import {
   getSimilarCases,
   analyzeException,
   explainException,
+  resolveException,
   approveException,
   rejectException,
   escalateException,
@@ -125,41 +126,65 @@ export default function ExceptionDetailPage({
   }
 
   // Actions
-  async function handleApprove() {
+  async function handlePropose(
+    resolutionType: any,
+    adjustmentPaise: number,
+    reason?: string,
+    candidateId?: string
+  ) {
     setActionLoading(true);
     setActionResult(null);
-    const { ok } = await approveException(id, {
-      approved_by: "reviewer",
-      comments: "Approved via dashboard",
+    const { ok, error: err } = await resolveException(id, {
+      resolution_type: resolutionType,
+      adjustment_paise: adjustmentPaise,
+      reason: reason || "Resolution proposal submitted for review",
+      candidate_id: candidateId,
     });
-    setActionResult(ok ? "Approved successfully" : "Approval failed");
-    setActionLoading(false);
-    // Refresh exception
-    const { data } = await getException(id);
-    if (data?.data) setExc(data.data as ExceptionDetail);
-  }
-
-  async function handleReject() {
-    setActionLoading(true);
-    setActionResult(null);
-    const { ok } = await rejectException(id, {
-      rejected_by: "reviewer",
-      reason: "Rejected via dashboard",
-    });
-    setActionResult(ok ? "Rejected" : "Rejection failed");
+    setActionResult(
+      ok
+        ? "Resolution proposal recorded! Status set to PENDING human review."
+        : err || "Failed to submit proposal"
+    );
     setActionLoading(false);
     const { data } = await getException(id);
     if (data?.data) setExc(data.data as ExceptionDetail);
   }
 
-  async function handleEscalate() {
+  async function handleApprove(reviewer = "ops_reviewer", comments = "Approved via dashboard") {
     setActionLoading(true);
     setActionResult(null);
-    const { ok } = await escalateException(id, {
-      reason: "Escalated via dashboard for human review",
-      escalated_by: "reviewer",
+    const { ok, error: err } = await approveException(id, {
+      approved_by: reviewer,
+      comments: comments,
     });
-    setActionResult(ok ? "Escalated" : "Escalation failed");
+    setActionResult(ok ? "Approved successfully" : (err || "Approval failed"));
+    setActionLoading(false);
+    const { data } = await getException(id);
+    if (data?.data) setExc(data.data as ExceptionDetail);
+  }
+
+  async function handleReject(reviewer = "ops_reviewer", reason = "Rejected via dashboard") {
+    setActionLoading(true);
+    setActionResult(null);
+    const { ok, error: err } = await rejectException(id, {
+      rejected_by: reviewer,
+      reason: reason,
+    });
+    setActionResult(ok ? "Rejected successfully" : (err || "Rejection failed"));
+    setActionLoading(false);
+    const { data } = await getException(id);
+    if (data?.data) setExc(data.data as ExceptionDetail);
+  }
+
+  async function handleEscalate(reviewer = "ops_reviewer", reason = "Escalated for senior review") {
+    setActionLoading(true);
+    setActionResult(null);
+    const { ok, error: err } = await escalateException(id, {
+      reason: reason,
+      escalated_by: reviewer,
+      priority: "HIGH",
+    });
+    setActionResult(ok ? "Escalated successfully" : (err || "Escalation failed"));
     setActionLoading(false);
     const { data } = await getException(id);
     if (data?.data) setExc(data.data as ExceptionDetail);
@@ -273,16 +298,25 @@ export default function ExceptionDetailPage({
       )}
       {tab === "evidence" && <EvidenceTab evidence={evidence} />}
       {tab === "intelligence" && <IntelligenceTab analysis={analysis} />}
-      {tab === "candidates" && <CandidatesTab analysis={analysis} />}
+      {tab === "candidates" && (
+        <CandidatesTab
+          analysis={analysis}
+          onPropose={(c) =>
+            handlePropose(c.resolution_type, c.adjustment_paise, c.description, c.candidate_id)
+          }
+          actionLoading={actionLoading}
+        />
+      )}
       {tab === "guardrails" && <GuardrailsTab analysis={analysis} />}
       {tab === "similar" && <SimilarTab similar={similar} />}
       {tab === "explanation" && <ExplanationTab explanation={explanation} />}
       {tab === "review" && (
         <ReviewTab
           exc={exc}
-          onApprove={handleApprove}
-          onReject={handleReject}
-          onEscalate={handleEscalate}
+          onApprove={(rev, comm) => handleApprove(rev, comm)}
+          onReject={(rev, rsn) => handleReject(rev, rsn)}
+          onEscalate={(rev, rsn) => handleEscalate(rev, rsn)}
+          onPropose={(type, amt, rsn) => handlePropose(type, amt, rsn)}
           actionLoading={actionLoading}
           actionResult={actionResult}
         />
@@ -748,7 +782,15 @@ function IntelligenceTab({ analysis }: { analysis: AnalysisResult | null }) {
   );
 }
 
-function CandidatesTab({ analysis }: { analysis: AnalysisResult | null }) {
+function CandidatesTab({
+  analysis,
+  onPropose,
+  actionLoading,
+}: {
+  analysis: AnalysisResult | null;
+  onPropose?: (c: any) => void;
+  actionLoading?: boolean;
+}) {
   if (!analysis)
     return (
       <div className="card">
@@ -808,18 +850,37 @@ function CandidatesTab({ analysis }: { analysis: AnalysisResult | null }) {
                     <span className="text-xs text-slate-400">{c.source}</span>
                   </div>
                   {c.description && (
-                    <div className="text-xs text-slate-400 mt-1.5">
+                    <div className="text-xs text-slate-500 mt-1.5">
                       {c.description}
                     </div>
                   )}
                 </div>
                 <div className="text-right ml-4">
-                  <div className="text-sm font-bold tabular-nums">
+                  <div className="text-sm font-bold tabular-nums text-slate-900">
                     {formatPaise(c.adjustment_paise)}
                   </div>
                   <div className="text-[10px] text-slate-400 mt-0.5">adjustment</div>
                 </div>
               </div>
+
+              {onPropose && (
+                <div className="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                  <div className="text-[11px] text-slate-400">
+                    Strategy: <span className="font-medium text-slate-700">{c.resolution_type}</span>
+                  </div>
+                  <button
+                    onClick={() => onPropose(c)}
+                    disabled={actionLoading}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${
+                      i === 0
+                        ? "bg-brand text-white hover:bg-brand-dark"
+                        : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    {actionLoading ? "Submitting…" : i === 0 ? "Apply Recommended Proposal" : "Propose Resolution"}
+                  </button>
+                </div>
+              )}
             </div>
           ))
         )}
@@ -1050,39 +1111,47 @@ function ExplanationTab({ explanation }: { explanation: ExplanationResult | null
       <div className="card">
         <div className="card-header">
           <SectionHeader
-            title="Explanation"
+            title="AI & Deterministic Analysis"
             subtitle={
               explanation.fallback_used
-                ? "Template-based (LLM unavailable)"
+                ? "Deterministic Rule Engine (LLM Offline Fallback)"
                 : `Generated by ${explanation.llm_model || "LLM"}`
             }
           />
         </div>
         <div className="card-body space-y-4">
+          {explanation.fallback_used && (
+            <div className="flex items-start gap-2.5 p-3.5 bg-blue-50/80 border border-blue-200 rounded-lg text-xs text-blue-950">
+              <span className="font-bold text-blue-700 whitespace-nowrap">Deterministic Engine Active:</span>
+              <span className="leading-relaxed">
+                Reconciliation explanation synthesized from verified transaction ledgers and evidence graphs using deterministic financial accounting rules. Zero external LLM hallucination risk.
+              </span>
+            </div>
+          )}
           <div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Summary</div>
-            <p className="text-sm text-slate-700">{explanation.summary}</p>
+            <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Investigation Summary</div>
+            <p className="text-sm text-slate-800 leading-relaxed font-medium">{explanation.summary}</p>
           </div>
           {explanation.reason && (
             <div>
-              <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Reason</div>
-              <p className="text-sm text-slate-700">{explanation.reason}</p>
+              <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Financial Root Cause</div>
+              <p className="text-sm text-slate-700 leading-relaxed">{explanation.reason}</p>
             </div>
           )}
           {explanation.evidence_summary && (
             <div>
-              <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Evidence Summary</div>
-              <p className="text-sm text-slate-700">{explanation.evidence_summary}</p>
+              <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Evidence Breakdown</div>
+              <p className="text-sm text-slate-700 leading-relaxed">{explanation.evidence_summary}</p>
             </div>
           )}
           {explanation.uncertainty && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-              <div className="text-xs font-semibold text-amber-700 mb-1">⚠ Uncertainty</div>
-              <p className="text-xs text-amber-600">{explanation.uncertainty}</p>
+              <div className="text-xs font-semibold text-amber-700 mb-1">⚠ Audit Note / Uncertainty</div>
+              <p className="text-xs text-amber-600 leading-relaxed">{explanation.uncertainty}</p>
             </div>
           )}
           {explanation.limitations && (
-            <div className="text-xs text-slate-400 italic">{explanation.limitations}</div>
+            <div className="text-xs text-slate-400 italic pt-1">{explanation.limitations}</div>
           )}
         </div>
       </div>
@@ -1095,22 +1164,31 @@ function ReviewTab({
   onApprove,
   onReject,
   onEscalate,
+  onPropose,
   actionLoading,
   actionResult,
 }: {
   exc: ExceptionDetail;
-  onApprove: () => void;
-  onReject: () => void;
-  onEscalate: () => void;
+  onApprove: (reviewer: string, comments: string) => void;
+  onReject: (reviewer: string, reason: string) => void;
+  onEscalate: (reviewer: string, reason: string) => void;
+  onPropose: (type: any, amount: number, reason?: string) => void;
   actionLoading: boolean;
   actionResult: string | null;
 }) {
+  const [reviewerId, setReviewerId] = useState("ops_reviewer");
+  const [comments, setComments] = useState("Verified discrepancy and approved reconciliation adjustment");
+  const [rejectReason, setRejectReason] = useState("Discrepancy unsupported by ledger evidence");
+  const [escalateReason, setEscalateReason] = useState("Exceeds standard threshold — routing to Senior Finance Officer");
+
+  const isTerminal = exc.status === "APPROVED" || exc.status === "REJECTED" || exc.status === "ESCALATED";
+
   return (
     <div className="space-y-6">
       {actionResult && (
         <div
           className={`rounded-lg p-3 text-sm font-medium ${
-            actionResult.includes("failed") || actionResult.includes("not")
+            actionResult.includes("failed") || actionResult.includes("not") || actionResult.includes("Cannot")
               ? "bg-red-50 text-red-700 border border-red-200"
               : "bg-emerald-50 text-emerald-700 border border-emerald-200"
           }`}
@@ -1119,67 +1197,188 @@ function ReviewTab({
         </div>
       )}
 
-      {/* Approve */}
-      <div className="card">
-        <div className="card-body">
-          <div className="flex items-start gap-4">
-            <div className="text-2xl">✅</div>
-            <div className="flex-1">
-              <h4 className="text-sm font-bold text-slate-800">Approve Resolution</h4>
-              <p className="text-xs text-slate-400 mt-0.5 mb-3">
-                Confirm the current resolution is correct
+      {/* Terminal State Banner */}
+      {exc.status === "APPROVED" && (
+        <div className="card border-emerald-200 bg-emerald-50/50">
+          <div className="card-body flex items-center gap-3">
+            <span className="text-2xl">✓</span>
+            <div>
+              <h4 className="text-sm font-bold text-emerald-800">Resolution Finalized & Approved</h4>
+              <p className="text-xs text-emerald-700 mt-0.5">
+                This exception was approved and closed in the reconciliation ledger.
               </p>
-              <button
-                className="btn btn-success"
-                onClick={onApprove}
-                disabled={actionLoading}
-              >
-                {actionLoading ? "Processing…" : "Approve"}
-              </button>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Reject */}
-      <div className="card">
-        <div className="card-body">
-          <div className="flex items-start gap-4">
-            <div className="text-2xl">❌</div>
-            <div className="flex-1">
-              <h4 className="text-sm font-bold text-slate-800">Reject Resolution</h4>
-              <p className="text-xs text-slate-400 mt-0.5 mb-3">
-                Mark this resolution as incorrect
+      {exc.status === "REJECTED" && (
+        <div className="card border-rose-200 bg-rose-50/50">
+          <div className="card-body flex items-center gap-3">
+            <span className="text-2xl">✕</span>
+            <div>
+              <h4 className="text-sm font-bold text-rose-800">Resolution Rejected</h4>
+              <p className="text-xs text-rose-700 mt-0.5">
+                This proposed resolution was rejected by operations review.
               </p>
-              <button
-                className="btn btn-danger"
-                onClick={onReject}
-                disabled={actionLoading}
-              >
-                {actionLoading ? "Processing…" : "Reject"}
-              </button>
             </div>
           </div>
         </div>
+      )}
+
+      {exc.status === "ESCALATED" && (
+        <div className="card border-purple-200 bg-purple-50/50">
+          <div className="card-body flex items-center gap-3">
+            <span className="text-2xl">⬆</span>
+            <div>
+              <h4 className="text-sm font-bold text-purple-800">Escalated for Senior Review</h4>
+              <p className="text-xs text-purple-700 mt-0.5">
+                Currently locked pending senior compliance and financial controller sign-off.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Current Proposal Summary Card */}
+      <div className="card">
+        <div className="card-header">
+          <SectionHeader
+            title="Active Resolution Proposal"
+            subtitle={exc.resolution_type ? `Strategy: ${exc.resolution_type}` : "Awaiting proposal submission"}
+          />
+        </div>
+        <div className="card-body">
+          {exc.resolution_type ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <InfoItem label="Resolution Type" value={exc.resolution_type.replace(/_/g, " ")} />
+              <InfoItem label="Adjustment Amount" value={formatPaise(exc.adjustment_paise)} highlight />
+              <InfoItem label="Submitted Reason" value={exc.resolution_reason || "Standard correction"} />
+              <InfoItem label="Workflow ID" value={exc.workflow_id || "WF-PENDING"} mono />
+            </div>
+          ) : (
+            <div className="text-xs text-slate-500 py-2">
+              No proposal submitted yet. You can submit a proposal directly from the{" "}
+              <span className="font-semibold text-brand">Candidates</span> tab or approve current state below.
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Escalate */}
-      <div className="card">
-        <div className="card-body">
-          <div className="flex items-start gap-4">
-            <div className="text-2xl">⬆️</div>
-            <div className="flex-1">
-              <h4 className="text-sm font-bold text-slate-800">Escalate</h4>
-              <p className="text-xs text-slate-400 mt-0.5 mb-3">
-                Route to higher-level human review
-              </p>
-              <button
-                className="btn btn-warning"
-                onClick={onEscalate}
-                disabled={actionLoading}
-              >
-                {actionLoading ? "Processing…" : "Escalate"}
-              </button>
+      {/* Reviewer Details Form */}
+      {!isTerminal && (
+        <div className="card">
+          <div className="card-header">
+            <SectionHeader title="Human Review Controls" subtitle="Execute closed-loop action with audit log" />
+          </div>
+          <div className="card-body space-y-4">
+            <div>
+              <label className="text-xs font-semibold text-slate-600 block mb-1">
+                Reviewer ID / Operator
+              </label>
+              <input
+                type="text"
+                value={reviewerId}
+                onChange={(e) => setReviewerId(e.target.value)}
+                className="w-full max-w-sm px-3 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/20"
+                placeholder="e.g. ops_reviewer"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Approve */}
+        <div className="card">
+          <div className="card-body">
+            <div className="flex items-start gap-3">
+              <div className="text-xl">✅</div>
+              <div className="flex-1">
+                <h4 className="text-sm font-bold text-slate-800">Approve</h4>
+                <p className="text-xs text-slate-400 mt-0.5 mb-3">
+                  Confirm resolution and write adjustment to ledger
+                </p>
+                {!isTerminal && (
+                  <input
+                    type="text"
+                    value={comments}
+                    onChange={(e) => setComments(e.target.value)}
+                    className="w-full mb-3 px-2.5 py-1 text-xs border border-slate-200 rounded"
+                    placeholder="Approval comments"
+                  />
+                )}
+                <button
+                  className="btn btn-success w-full text-xs"
+                  onClick={() => onApprove(reviewerId, comments)}
+                  disabled={actionLoading || isTerminal}
+                >
+                  {actionLoading ? "Processing…" : isTerminal ? "Already Finalized" : "Approve Resolution"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Reject */}
+        <div className="card">
+          <div className="card-body">
+            <div className="flex items-start gap-3">
+              <div className="text-xl">❌</div>
+              <div className="flex-1">
+                <h4 className="text-sm font-bold text-slate-800">Reject</h4>
+                <p className="text-xs text-slate-400 mt-0.5 mb-3">
+                  Mark resolution as incorrect or unresolvable
+                </p>
+                {!isTerminal && (
+                  <input
+                    type="text"
+                    value={rejectReason}
+                    onChange={(e) => setRejectReason(e.target.value)}
+                    className="w-full mb-3 px-2.5 py-1 text-xs border border-slate-200 rounded"
+                    placeholder="Rejection reason (required)"
+                  />
+                )}
+                <button
+                  className="btn btn-danger w-full text-xs"
+                  onClick={() => onReject(reviewerId, rejectReason)}
+                  disabled={actionLoading || isTerminal}
+                >
+                  {actionLoading ? "Processing…" : isTerminal ? "Already Finalized" : "Reject Resolution"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Escalate */}
+        <div className="card">
+          <div className="card-body">
+            <div className="flex items-start gap-3">
+              <div className="text-xl">⬆️</div>
+              <div className="flex-1">
+                <h4 className="text-sm font-bold text-slate-800">Escalate</h4>
+                <p className="text-xs text-slate-400 mt-0.5 mb-3">
+                  Route to senior financial operations review
+                </p>
+                {!isTerminal && (
+                  <input
+                    type="text"
+                    value={escalateReason}
+                    onChange={(e) => setEscalateReason(e.target.value)}
+                    className="w-full mb-3 px-2.5 py-1 text-xs border border-slate-200 rounded"
+                    placeholder="Escalation rationale"
+                  />
+                )}
+                <button
+                  className="btn btn-warning w-full text-xs"
+                  onClick={() => onEscalate(reviewerId, escalateReason)}
+                  disabled={actionLoading || isTerminal}
+                >
+                  {actionLoading ? "Processing…" : isTerminal ? "Already Finalized" : "Escalate to Senior"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

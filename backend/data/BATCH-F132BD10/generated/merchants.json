@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Green Store",
+    "reference": "MER-GRE-001",
+    "currency": "INR",
+    "created_at": "2025-05-17T04:14:29"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Solutions",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-03-01T18:11:55"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Labs",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-03-11T04:21:35"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Blue Trading",
+    "reference": "MER-BLU-004",
+    "currency": "INR",
+    "created_at": "2025-02-04T04:31:54"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Quick Trading",
+    "reference": "MER-QUI-005",
+    "currency": "INR",
+    "created_at": "2025-05-27T20:20:57"
+  }
+]

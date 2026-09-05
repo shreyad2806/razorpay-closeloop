@@ -1,0 +1,38 @@
+[
+  {
+    "fee_id": "FEE-DEMO60-005",
+    "payment_id": "PAY-DEMO60-005",
+    "amount": 11875,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-DEMO60-015",
+    "payment_id": "PAY-DEMO60-015",
+    "amount": 30625,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-DEMO60-025",
+    "payment_id": "PAY-DEMO60-025",
+    "amount": 49375,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-DEMO60-035",
+    "payment_id": "PAY-DEMO60-035",
+    "amount": 68125,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-DEMO60-045",
+    "payment_id": "PAY-DEMO60-045",
+    "amount": 86876,
+    "fee_type": "TRANSACTION"
+  },
+  {
+    "fee_id": "FEE-DEMO60-055",
+    "payment_id": "PAY-DEMO60-055",
+    "amount": 105626,
+    "fee_type": "TRANSACTION"
+  }
+]

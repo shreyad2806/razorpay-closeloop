@@ -1,0 +1,44 @@
+[
+  {
+    "refund_id": "REF-DEMO60-007",
+    "payment_id": "PAY-DEMO60-007",
+    "amount": 218752,
+    "status": "PROCESSED",
+    "refund_timestamp": "2025-10-02T05:00:00"
+  },
+  {
+    "refund_id": "REF-DEMO60-017",
+    "payment_id": "PAY-DEMO60-017",
+    "amount": 481255,
+    "status": "PROCESSED",
+    "refund_timestamp": "2025-10-03T11:00:00"
+  },
+  {
+    "refund_id": "REF-DEMO60-027",
+    "payment_id": "PAY-DEMO60-027",
+    "amount": 743759,
+    "status": "PROCESSED",
+    "refund_timestamp": "2025-10-04T17:00:00"
+  },
+  {
+    "refund_id": "REF-DEMO60-037",
+    "payment_id": "PAY-DEMO60-037",
+    "amount": 1006262,
+    "status": "PROCESSED",
+    "refund_timestamp": "2025-10-05T23:00:00"
+  },
+  {
+    "refund_id": "REF-DEMO60-047",
+    "payment_id": "PAY-DEMO60-047",
+    "amount": 1268766,
+    "status": "PROCESSED",
+    "refund_timestamp": "2025-10-07T05:00:00"
+  },
+  {
+    "refund_id": "REF-DEMO60-057",
+    "payment_id": "PAY-DEMO60-057",
+    "amount": 1531269,
+    "status": "PROCESSED",
+    "refund_timestamp": "2025-10-08T11:00:00"
+  }
+]

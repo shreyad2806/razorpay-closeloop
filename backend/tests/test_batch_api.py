@@ -158,6 +158,121 @@ class TestCreateBatch:
         response = client.post("/batches", json={})
         assert response.status_code == 422
 
+    def test_create_batch_with_empty_payload(self, client):
+        """Empty payload should trigger synthetic generation, not validation error."""
+        response = client.post("/batches", json={
+            "name": "Empty Payload Test",
+            "payload": {},
+            "num_merchants": 2,
+            "num_cases": 3,
+        })
+        assert response.status_code == 201
+        data = response.json()
+        assert data["success"] is True
+        batch = data["data"]
+        assert batch["status"] == "CREATED"
+        assert batch["name"] == "Empty Payload Test"
+
+    def test_create_batch_with_null_payload(self, client):
+        """Null payload should trigger synthetic generation."""
+        response = client.post("/batches", json={
+            "name": "Null Payload Test",
+            "payload": None,
+            "num_merchants": 2,
+            "num_cases": 3,
+        })
+        assert response.status_code == 201
+        data = response.json()
+        assert data["success"] is True
+        batch = data["data"]
+        assert batch["status"] == "CREATED"
+
+    def test_create_batch_invalid_num_merchants(self, client):
+        """Reject invalid num_merchants."""
+        response = client.post("/batches", json={
+            "name": "Bad Merchants",
+            "num_merchants": 0,
+        })
+        assert response.status_code == 422
+
+    def test_create_batch_invalid_num_cases(self, client):
+        """Reject invalid num_cases."""
+        response = client.post("/batches", json={
+            "name": "Bad Cases",
+            "num_cases": 0,
+        })
+        assert response.status_code == 422
+
+    def test_create_batch_payload_missing_required_financial_structures(self, client):
+        """Reject payload with only partial financial structures."""
+        response = client.post("/batches", json={
+            "name": "Partial Payload",
+            "payload": {
+                "merchants": [{"merchant_id": "M-001"}],
+                # Missing payments and cases
+            },
+        })
+        assert response.status_code == 422
+        data = response.json()
+        # The error should mention missing required keys in details
+        errors = data.get("details", {}).get("errors", [])
+        assert any("payments" in str(e) for e in errors) or any("cases" in str(e) for e in errors)
+
+    def test_create_batch_invalid_payment_no_payment_id(self, client):
+        """Reject payment without payment_id."""
+        response = client.post("/batches", json={
+            "name": "Bad Payment",
+            "payload": {
+                "payments": [{"amount": 100000, "merchant_id": "M-001"}],
+                "cases": [{"case_id": "C-001", "payment_id": "P-001"}],
+            },
+        })
+        assert response.status_code == 422
+
+    def test_create_batch_invalid_payment_no_amount(self, client):
+        """Reject payment without amount."""
+        response = client.post("/batches", json={
+            "name": "Bad Payment",
+            "payload": {
+                "payments": [{"payment_id": "P-001", "merchant_id": "M-001"}],
+                "cases": [{"case_id": "C-001", "payment_id": "P-001"}],
+            },
+        })
+        assert response.status_code == 422
+
+    def test_create_batch_invalid_payment_non_numeric_amount(self, client):
+        """Reject payment with non-numeric amount."""
+        response = client.post("/batches", json={
+            "name": "Bad Payment",
+            "payload": {
+                "payments": [{"payment_id": "P-001", "amount": "invalid"}],
+                "cases": [{"case_id": "C-001", "payment_id": "P-001"}],
+            },
+        })
+        assert response.status_code == 422
+
+    def test_create_batch_invalid_case_no_case_id(self, client):
+        """Reject case without case_id."""
+        response = client.post("/batches", json={
+            "name": "Bad Case",
+            "payload": {
+                "payments": [{"payment_id": "P-001", "amount": 100000}],
+                "cases": [{"payment_id": "P-001"}],
+            },
+        })
+        assert response.status_code == 422
+
+    def test_create_batch_invalid_case_no_payment_id(self, client):
+        """Reject case without payment_id."""
+        response = client.post("/batches", json={
+            "name": "Bad Case",
+            "payload": {
+                "payments": [{"payment_id": "P-001", "amount": 100000}],
+                "cases": [{"case_id": "C-001"}],
+            },
+        })
+        assert response.status_code == 422
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # GET /batches — List Batches
@@ -394,6 +509,15 @@ class TestBatchServiceUnit:
         result = svc._validate_payload(payload)
         assert result["valid"] is False
         assert any("case_id" in e for e in result["errors"])
+
+    def test_validate_empty_payload_dict(self):
+        """Empty dict payload should not be validated (synthetic generation path)."""
+        svc = BatchService()
+        payload = {}
+        result = svc._validate_payload(payload)
+        # Empty payload is valid but will not be used - synthetic generation will occur
+        assert result["valid"] is False  # Missing required keys
+        assert any("payments" in e for e in result["errors"])
 
 
 # ─────────────────────────────────────────────────────────────────────────────

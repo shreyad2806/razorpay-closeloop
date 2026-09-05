@@ -1,0 +1,21 @@
+{
+  "batch_id": "DEMO-60",
+  "generated_at": "2026-09-05T16:22:16.709029",
+  "case_count": 60,
+  "payment_count": 60,
+  "settlement_count": 54,
+  "refund_count": 6,
+  "fee_count": 6,
+  "tax_count": 6,
+  "scenario_distribution": {
+    "EXACT_MATCH": 12,
+    "PARTIAL_SETTLEMENT": 12,
+    "TIMING_DIFFERENCE": 6,
+    "FEE_DIFFERENCE": 6,
+    "TAX_ADJUSTMENT": 6,
+    "REFUND_DIFFERENCE": 6,
+    "DUPLICATE": 6,
+    "MISSING_RECORD": 0,
+    "COMPLEX_MULTI_ADJUSTMENT": 6
+  }
+}

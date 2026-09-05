@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { listExceptions } from "@/app/lib/api";
 import { Badge, LoadingState, ErrorState, EmptyState, TableSkeleton } from "@/components/ui";
 
@@ -37,6 +38,7 @@ const STATUSES: (ExceptionStatus | "ALL")[] = [
 const RISKS: (RiskCategory | "ALL")[] = ["ALL", "LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
 export default function ExceptionsPage() {
+  const router = useRouter();
   const [exceptions, setExceptions] = useState<ExceptionListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -226,45 +228,53 @@ export default function ExceptionsPage() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((exc) => (
-                  <tr key={`${exc.exception_id}::${exc.batch_id || ''}`}>
-                    <td>
-                      <Link
-                        href={`/exceptions/${exc.exception_id}?batch=${exc.batch_id || ''}`}
-                        className="text-brand font-mono text-xs font-semibold hover:underline"
-                      >
-                        {exc.exception_id}
-                      </Link>
-                    </td>
-                    <td className="text-xs text-slate-400 font-mono">
-                      {exc.batch_id ? (
-                        <span title={exc.batch_id}>
-                          {exc.batch_id.length > 12 ? exc.batch_id.slice(0, 12) + "…" : exc.batch_id}
-                        </span>
-                      ) : (
-                        <span className="text-slate-300">—</span>
-                      )}
-                    </td>
-                    <td className="text-xs text-slate-500 font-mono">
-                      {exc.payment_id}
-                    </td>
-                    <td className="text-xs">
-                      {formatExceptionType(exc.exception_type)}
-                    </td>
-                    <td className="tabular-nums text-xs font-medium">
-                      {formatPaise(exc.difference_paise)}
-                    </td>
-                    <td>
-                      <Badge text={exc.risk_category} variant="risk" />
-                    </td>
-                    <td>
-                      <Badge text={exc.status} variant="status" />
-                    </td>
-                    <td className="text-xs text-slate-400">
-                      {fmtDate(exc.created_at)}
-                    </td>
-                  </tr>
-                ))}
+                {filtered.map((exc) => {
+                  const targetUrl = `/exceptions/${exc.exception_id}?batch=${exc.batch_id || ''}`;
+                  return (
+                    <tr
+                      key={`${exc.exception_id}::${exc.batch_id || ''}`}
+                      onClick={() => router.push(targetUrl)}
+                      className="cursor-pointer hover:bg-brand/5 transition-colors"
+                    >
+                      <td>
+                        <Link
+                          href={targetUrl}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-brand font-mono text-xs font-semibold hover:underline"
+                        >
+                          {exc.exception_id}
+                        </Link>
+                      </td>
+                      <td className="text-xs text-slate-400 font-mono">
+                        {exc.batch_id ? (
+                          <span title={exc.batch_id}>
+                            {exc.batch_id.length > 12 ? exc.batch_id.slice(0, 12) + "…" : exc.batch_id}
+                          </span>
+                        ) : (
+                          <span className="text-slate-300">—</span>
+                        )}
+                      </td>
+                      <td className="text-xs text-slate-500 font-mono">
+                        {exc.payment_id}
+                      </td>
+                      <td className="text-xs font-medium text-slate-800">
+                        {formatExceptionType(exc.exception_type)}
+                      </td>
+                      <td className={`tabular-nums text-xs font-semibold ${exc.difference_paise < 0 ? "text-rose-600" : exc.difference_paise > 0 ? "text-emerald-600" : "text-slate-700"}`}>
+                        {formatPaise(exc.difference_paise)}
+                      </td>
+                      <td>
+                        <Badge text={exc.risk_category} variant="risk" />
+                      </td>
+                      <td>
+                        <Badge text={exc.status} variant="status" />
+                      </td>
+                      <td className="text-xs text-slate-400">
+                        {fmtDate(exc.created_at)}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}

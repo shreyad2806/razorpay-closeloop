@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Green Services",
+    "reference": "MER-GRE-001",
+    "currency": "INR",
+    "created_at": "2025-03-22T11:25:24"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Crystal Services",
+    "reference": "MER-CRY-002",
+    "currency": "INR",
+    "created_at": "2025-06-25T17:02:58"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Store",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-03-03T13:29:49"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Store",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-04-29T23:45:29"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Elite Digital",
+    "reference": "MER-ELI-005",
+    "currency": "INR",
+    "created_at": "2025-05-01T07:36:55"
+  }
+]
