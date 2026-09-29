@@ -3,12 +3,33 @@ Database model for refund records.
 
 Represents refunds issued against payment transactions.
 Traceable to payment_id and case_id.
+
+CloseLoop 2.0 (architecture section 5) keeps this table and adds the real foreign
+key, an explicit currency, a reason and the payment relationship.
+
+Refund timestamp note: the pre-2.0 column is ``refund_timestamp``. The
+architecture lists the field as ``processed_at``; rather than add a second,
+duplicate column carrying the same instant, ``refund_timestamp`` remains the
+processed timestamp (smallest compatible change). See the Phase 1 report.
 """
 
-from sqlalchemy import Column, String, Integer, DateTime, Index
 from datetime import datetime
 
+from sqlalchemy import Column, DateTime, ForeignKey, Index, String
+from sqlalchemy.orm import relationship
+
 from app.database.database import Base
+from app.models.types import (
+    CurrencyType,
+    MoneyType,
+    TimestampType,
+    currency_check,
+    enum_check,
+    non_negative_check,
+)
+
+# Kept in sync with app.schemas.enums.RefundStatus by a Phase 1 drift test.
+REFUND_STATUS_VALUES = ("PROCESSED", "PENDING", "FAILED")
 
 
 class Refund(Base):
@@ -24,21 +45,44 @@ class Refund(Base):
     __tablename__ = "refunds"
 
     id = Column(String, primary_key=True)  # refund_id, e.g. REF-000001
-    payment_id = Column(String, nullable=False, index=True)  # FK to Payment
+    payment_id = Column(
+        String,
+        ForeignKey("payments.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
     case_id = Column(String, nullable=True, index=True)  # FK to Case if applicable
-    merchant_id = Column(String, nullable=True, index=True)  # FK to Merchant
+    # Phase 2 (migration 0002): promoted to a real FK — ingestion guarantees
+    # the referenced merchant exists in the provider snapshot.
+    merchant_id = Column(
+        String,
+        ForeignKey("merchants.id", ondelete="RESTRICT"),
+        nullable=True,
+        index=True,
+    )
 
-    # Financial amount (in paise, integer)
-    amount = Column(Integer, nullable=False)
+    # Financial amount in integer paise (BIGINT). Never a float. Unsigned: a
+    # refund is a positive amount moving out of the merchant's balance.
+    amount = Column(MoneyType, nullable=False)
+    currency = Column(
+        CurrencyType, nullable=False, default="INR", server_default="INR"
+    )
 
     # Status
-    status = Column(String, nullable=False, default="PROCESSED")  # RefundStatus
+    status = Column(String(16), nullable=False, default="PROCESSED")  # RefundStatus
 
-    # Timestamps
-    refund_timestamp = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    reason = Column(String(64), nullable=True)
+
+    # Timestamps (timezone-aware -> TIMESTAMPTZ on PostgreSQL)
+    refund_timestamp = Column(TimestampType, nullable=True)
+    created_at = Column(TimestampType, default=datetime.utcnow)
+
+    payment = relationship("Payment", back_populates="refunds")
 
     # Indexes for efficient querying
     __table_args__ = (
+        non_negative_check("amount", "ck_refunds_amount_non_negative"),
+        currency_check(),
+        enum_check("status", REFUND_STATUS_VALUES, "ck_refunds_status"),
         Index("ix_refunds_payment_case", "payment_id", "case_id"),
     )

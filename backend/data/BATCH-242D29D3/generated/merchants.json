@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Diamond Digital",
+    "reference": "MER-DIA-001",
+    "currency": "INR",
+    "created_at": "2025-05-05T05:00:39"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Quick Services",
+    "reference": "MER-QUI-002",
+    "currency": "INR",
+    "created_at": "2025-05-09T11:51:15"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Mart",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-01-24T13:19:06"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Diamond Trading",
+    "reference": "MER-DIA-004",
+    "currency": "INR",
+    "created_at": "2025-04-17T04:42:52"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Prime Store",
+    "reference": "MER-PRI-005",
+    "currency": "INR",
+    "created_at": "2025-02-08T06:38:29"
+  }
+]

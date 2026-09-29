@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Solutions",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-02-27T07:52:56"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Green Co",
+    "reference": "MER-GRE-002",
+    "currency": "INR",
+    "created_at": "2025-03-25T20:28:33"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Mart",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-02-13T01:50:59"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Tech Hub",
+    "reference": "MER-TEC-004",
+    "currency": "INR",
+    "created_at": "2025-05-12T10:39:12"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Enterprises",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-03-30T13:58:45"
+  }
+]

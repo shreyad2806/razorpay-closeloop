@@ -1,0 +1,38 @@
+[
+  {
+    "case_id": "CASE-000001",
+    "payment_id": "PAY-000001",
+    "merchant_id": "MER-0001",
+    "expected_amount": 7053693,
+    "actual_amount": 3001497,
+    "difference": -4052196,
+    "scenario": "PARTIAL_SETTLEMENT",
+    "observation_timestamp": "2025-03-16T00:55:40",
+    "resolvable": true,
+    "risk_category": "HIGH"
+  },
+  {
+    "case_id": "CASE-000002",
+    "payment_id": "PAY-000002",
+    "merchant_id": "MER-0002",
+    "expected_amount": 4411800,
+    "actual_amount": 5794231,
+    "difference": 1382431,
+    "scenario": "MISSING_RECORD",
+    "observation_timestamp": "2025-02-18T21:42:17",
+    "resolvable": false,
+    "risk_category": "HIGH"
+  },
+  {
+    "case_id": "CASE-000003",
+    "payment_id": "PAY-000003",
+    "merchant_id": "MER-0001",
+    "expected_amount": 4314331,
+    "actual_amount": 4314331,
+    "difference": 0,
+    "scenario": "EXACT_MATCH",
+    "observation_timestamp": "2025-03-20T07:30:45",
+    "resolvable": true,
+    "risk_category": "LOW"
+  }
+]

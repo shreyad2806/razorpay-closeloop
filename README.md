@@ -176,7 +176,7 @@ Full interactive docs at http://localhost:8000/docs
 ## Demo Workflow
 
 1. **Open Control Center** — See reconciliation overview, risk distribution, exception types
-2. **Open Exceptions** — Browse 30 curated financial reconciliation exceptions
+2. **Open Exceptions** — Browse 60 curated financial reconciliation exceptions
 3. **Select a case** — View financial difference, risk level, status
 4. **View Evidence** — See payment, settlement, refund, fee records
 5. **Run Analysis** — ML classification and resolution recommendation

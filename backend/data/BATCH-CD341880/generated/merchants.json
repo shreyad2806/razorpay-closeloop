@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Tech Labs",
+    "reference": "MER-TEC-001",
+    "currency": "INR",
+    "created_at": "2025-05-05T13:43:07"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Trading",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-06-07T22:28:50"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Goods",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-05-16T22:59:42"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Crystal Services",
+    "reference": "MER-CRY-004",
+    "currency": "INR",
+    "created_at": "2025-03-17T11:25:43"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Global Hub",
+    "reference": "MER-GLO-005",
+    "currency": "INR",
+    "created_at": "2025-02-27T18:05:19"
+  }
+]

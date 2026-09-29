@@ -54,18 +54,9 @@ def create_all_tables():
 
     Uses TestBase.metadata.create_all() — safe for tests only.
     """
-    # Import all model modules so they register with TestBase
-    # We remap the production Base to TestBase for test models
-    import app.models.payment
-    import app.models.settlement
-    import app.models.refund
-    import app.models.fee
-    import app.models.tax
-    import app.models.adjustment
-    import app.models.exception
-    import app.models.reconciliation
-    import app.models.evidence_link
-    import app.models.historical_resolution
+    # Import the full model registry so every table (and every foreign key
+    # target) is registered before metadata.create_all runs.
+    import app.models  # noqa: F401
 
     # The production models use `Base` from app.database.database.
     # For testing, we need to create those same tables in SQLite.
@@ -84,3 +75,67 @@ def reset_database():
     """Drop and recreate all tables."""
     drop_all_tables()
     create_all_tables()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Parent row helpers
+#
+# CloseLoop 2.0 (Phase 1) added real foreign keys: a refund, fee, tax,
+# adjustment or settlement can no longer be inserted without its Payment, and a
+# Payment can no longer reference a Merchant that does not exist. Tests that use
+# synthetic ids therefore need the parent rows created too. These helpers make
+# that a single call instead of duplicating insert logic in every test file.
+# ─────────────────────────────────────────────────────────────────────────────
+
+DEFAULT_TEST_MERCHANT_ID = "MER-TEST-01"
+
+
+def ensure_merchant(session, merchant_id=DEFAULT_TEST_MERCHANT_ID, name=None):
+    """Create the merchant if it is not already present. Idempotent."""
+    from app.models.merchant import Merchant
+
+    merchant = session.get(Merchant, merchant_id)
+    if merchant is None:
+        merchant = Merchant(
+            id=merchant_id,
+            name=name or f"Test Merchant {merchant_id}",
+            status="ACTIVE",
+        )
+        session.add(merchant)
+        session.flush()
+    return merchant
+
+
+def ensure_payment(
+    session,
+    payment_id,
+    merchant_id=DEFAULT_TEST_MERCHANT_ID,
+    amount=100000,
+    currency="INR",
+    status="CAPTURED",
+):
+    """Create the merchant and payment if they are not already present."""
+    from app.models.payment import Payment
+
+    payment = session.get(Payment, payment_id)
+    if payment is None:
+        ensure_merchant(session, merchant_id)
+        payment = Payment(
+            id=payment_id,
+            merchant_id=merchant_id,
+            amount=amount,
+            currency=currency,
+            status=status,
+        )
+        session.add(payment)
+        session.flush()
+    return payment
+
+
+def ensure_financial_parents(session, payment_ids, merchant_id=DEFAULT_TEST_MERCHANT_ID):
+    """Seed a merchant plus one payment per id in ``payment_ids``."""
+    ensure_merchant(session, merchant_id)
+    return [
+        ensure_payment(session, payment_id, merchant_id)
+        for payment_id in payment_ids
+    ]

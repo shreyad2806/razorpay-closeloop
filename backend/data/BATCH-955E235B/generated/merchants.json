@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Silver Labs",
+    "reference": "MER-SIL-001",
+    "currency": "INR",
+    "created_at": "2025-03-20T04:52:36"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Fresh Labs",
+    "reference": "MER-FRE-002",
+    "currency": "INR",
+    "created_at": "2025-03-04T10:57:53"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Enterprises",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-02-02T07:48:41"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Tech Trading",
+    "reference": "MER-TEC-004",
+    "currency": "INR",
+    "created_at": "2025-03-29T12:25:01"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Gold Mart",
+    "reference": "MER-GOL-005",
+    "currency": "INR",
+    "created_at": "2025-03-30T02:57:45"
+  }
+]

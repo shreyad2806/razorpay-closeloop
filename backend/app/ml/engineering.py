@@ -183,31 +183,90 @@ class FeatureEngineer:
     # Evidence Features
     # ─────────────────────────────────────────────────────────────────────────
 
+    def engineer_from_package(
+        self,
+        package: EvidencePackage,
+        payment_timestamp: Optional[datetime] = None,
+        settlement_timestamp: Optional[datetime] = None,
+        refund_timestamps: Optional[List[datetime]] = None,
+        merchant_exception_rate: float = 0.0,
+    ) -> FeatureVector:
+        """
+        Engineer a feature vector directly from an EvidencePackage.
+
+        Useful for Phase 5 production inference where Phase 4 EvidencePackage is the primary source.
+        """
+        financial = self._extract_financial(package)
+        structural = self._extract_structural(package)
+
+        has_missing = len(package.missing_evidence) > 0
+        has_conflict = package.has_conflicts()
+        total_recs = package.total_evidence_records()
+
+        coverage = 1.0 if (total_recs > 0 and not has_missing) else (0.5 if total_recs > 0 else 0.0)
+        consistency = 0.5 if has_conflict else 1.0
+        fully_exp = 1.0 if (total_recs > 1 and not has_missing and not has_conflict) else 0.0
+        partially_exp = 1.0 if (total_recs > 0 and (has_missing or has_conflict)) else 0.0
+
+        evidence = {
+            "evidence_coverage": coverage,
+            "consistency_score": consistency,
+            "fully_explained": fully_exp,
+            "partially_explained": partially_exp,
+            "has_conflict": 1.0 if has_conflict else 0.0,
+            "supporting_evidence_count": float(len(package.supporting_records)),
+            "num_candidate_explanations": 1.0 if total_recs > 0 else 0.0,
+        }
+
+        temporal = self._extract_temporal(
+            payment_timestamp, settlement_timestamp, refund_timestamps
+        )
+        merchant = self._extract_merchant(merchant_exception_rate)
+        historical = self._extract_historical()
+
+        all_features = {}
+        all_features.update(financial)
+        all_features.update(structural)
+        all_features.update(evidence)
+        all_features.update(temporal)
+        all_features.update(merchant)
+        all_features.update(historical)
+
+        errors = validate_features(all_features)
+        if errors:
+            raise ValueError(f"Feature validation failed: {errors}")
+
+        return FeatureVector(
+            features=all_features,
+            schema_version=FEATURE_SCHEMA_VERSION,
+        )
+
     def _extract_evidence(
-        self, explanation: ExplanationResult, quality: EvidenceQualityResult
+        self,
+        explanation: Optional[ExplanationResult] = None,
+        quality: Optional[EvidenceQualityResult] = None,
     ) -> Dict[str, float]:
         """
         Extract evidence features from explanation and quality results.
-
-        Features:
-        - evidence_coverage: coverage score from quality scorer
-        - consistency_score: consistency score from quality scorer
-        - fully_explained: 1.0 if fully explained
-        - partially_explained: 1.0 if partially explained
-        - has_conflict: 1.0 if conflicting explanations exist
-        - supporting_evidence_count: number of supporting evidence records
-        - num_candidate_explanations: number of candidate combinations
         """
+        coverage_score = quality.coverage_score if quality else 0.0
+        consistency_score = quality.consistency_score if quality else 1.0
+        fully_explained = 1.0 if (explanation and explanation.is_fully_explained()) else 0.0
+        partially_explained = 1.0 if (
+            explanation and explanation.explanation_status.value == "PARTIALLY_EXPLAINED"
+        ) else 0.0
+        has_conflict = 1.0 if (explanation and explanation.conflict) else 0.0
+        supporting_count = float(len(explanation.supporting_evidence_ids)) if explanation else 0.0
+        candidate_count = float(len(explanation.candidate_explanations)) if explanation else 0.0
+
         return {
-            "evidence_coverage": quality.coverage_score,
-            "consistency_score": quality.consistency_score,
-            "fully_explained": 1.0 if explanation.is_fully_explained() else 0.0,
-            "partially_explained": 1.0 if (
-                explanation.explanation_status.value == "PARTIALLY_EXPLAINED"
-            ) else 0.0,
-            "has_conflict": 1.0 if explanation.conflict else 0.0,
-            "supporting_evidence_count": float(len(explanation.supporting_evidence_ids)),
-            "num_candidate_explanations": float(len(explanation.candidate_explanations)),
+            "evidence_coverage": coverage_score,
+            "consistency_score": consistency_score,
+            "fully_explained": fully_explained,
+            "partially_explained": partially_explained,
+            "has_conflict": has_conflict,
+            "supporting_evidence_count": supporting_count,
+            "num_candidate_explanations": candidate_count,
         }
 
     # ─────────────────────────────────────────────────────────────────────────

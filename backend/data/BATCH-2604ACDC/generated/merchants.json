@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Trading",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-02-19T20:27:18"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Crystal Enterprises",
+    "reference": "MER-CRY-002",
+    "currency": "INR",
+    "created_at": "2025-04-15T05:33:44"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Gold Mart",
+    "reference": "MER-GOL-003",
+    "currency": "INR",
+    "created_at": "2025-04-29T00:50:18"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Blue Hub",
+    "reference": "MER-BLU-004",
+    "currency": "INR",
+    "created_at": "2025-04-02T03:58:01"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Gold Market",
+    "reference": "MER-GOL-005",
+    "currency": "INR",
+    "created_at": "2025-04-17T00:27:12"
+  }
+]

@@ -1,0 +1,182 @@
+[
+  {
+    "payment_id": "PAY-000001",
+    "merchant_id": "MER-0001",
+    "case_id": null,
+    "amount": 1493247,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-03-06T14:58:04"
+  },
+  {
+    "payment_id": "PAY-000002",
+    "merchant_id": "MER-0002",
+    "case_id": null,
+    "amount": 2973336,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-01-27T05:06:00"
+  },
+  {
+    "payment_id": "PAY-000003",
+    "merchant_id": "MER-0003",
+    "case_id": null,
+    "amount": 8641780,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-04-19T00:45:59"
+  },
+  {
+    "payment_id": "PAY-000004",
+    "merchant_id": "MER-0004",
+    "case_id": null,
+    "amount": 5520729,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-04-24T05:44:15"
+  },
+  {
+    "payment_id": "PAY-000005",
+    "merchant_id": "MER-0005",
+    "case_id": null,
+    "amount": 568955,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-01-19T18:24:08"
+  },
+  {
+    "payment_id": "PAY-000006",
+    "merchant_id": "MER-0001",
+    "case_id": null,
+    "amount": 5171398,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-01-30T04:50:06"
+  },
+  {
+    "payment_id": "PAY-000007",
+    "merchant_id": "MER-0002",
+    "case_id": null,
+    "amount": 9925185,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-06-16T00:51:28"
+  },
+  {
+    "payment_id": "PAY-000008",
+    "merchant_id": "MER-0003",
+    "case_id": null,
+    "amount": 3808116,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-01-31T20:44:44"
+  },
+  {
+    "payment_id": "PAY-000009",
+    "merchant_id": "MER-0004",
+    "case_id": null,
+    "amount": 6754133,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-03-29T18:37:52"
+  },
+  {
+    "payment_id": "PAY-000010",
+    "merchant_id": "MER-0005",
+    "case_id": null,
+    "amount": 660604,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-03-30T10:52:04"
+  },
+  {
+    "payment_id": "PAY-000011",
+    "merchant_id": "MER-0001",
+    "case_id": null,
+    "amount": 30685,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-05-16T21:50:05"
+  },
+  {
+    "payment_id": "PAY-000012",
+    "merchant_id": "MER-0002",
+    "case_id": null,
+    "amount": 746360,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-05-20T11:09:05"
+  },
+  {
+    "payment_id": "PAY-000013",
+    "merchant_id": "MER-0003",
+    "case_id": null,
+    "amount": 949697,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-01-05T02:35:57"
+  },
+  {
+    "payment_id": "PAY-000014",
+    "merchant_id": "MER-0004",
+    "case_id": null,
+    "amount": 4893830,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-01-02T12:20:20"
+  },
+  {
+    "payment_id": "PAY-000015",
+    "merchant_id": "MER-0005",
+    "case_id": null,
+    "amount": 2146520,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-04-19T08:21:33"
+  },
+  {
+    "payment_id": "PAY-000016",
+    "merchant_id": "MER-0001",
+    "case_id": null,
+    "amount": 9796623,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-02-21T05:44:02"
+  },
+  {
+    "payment_id": "PAY-000017",
+    "merchant_id": "MER-0002",
+    "case_id": null,
+    "amount": 2937049,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-05-30T15:32:16"
+  },
+  {
+    "payment_id": "PAY-000018",
+    "merchant_id": "MER-0003",
+    "case_id": null,
+    "amount": 859694,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-01-28T06:15:00"
+  },
+  {
+    "payment_id": "PAY-000019",
+    "merchant_id": "MER-0004",
+    "case_id": null,
+    "amount": 6678776,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-01-24T08:40:39"
+  },
+  {
+    "payment_id": "PAY-000020",
+    "merchant_id": "MER-0005",
+    "case_id": null,
+    "amount": 1577011,
+    "currency": "INR",
+    "status": "CAPTURED",
+    "payment_timestamp": "2025-06-16T00:32:40"
+  }
+]

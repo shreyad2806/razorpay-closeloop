@@ -237,12 +237,12 @@ def classify_exception_deterministic(
     if evidence.has_refunds and abs_diff == evidence.total_refunds:
         return ExceptionType.REFUND_ADJUSTMENT
 
-    # Check for fee difference
-    # If difference is proportional to fees, likely fee error
+    # Check for fee difference / mismatch
+    # If difference is proportional to fees, classify as fee mismatch
     if evidence.has_fees and evidence.total_fees > 0:
         fee_ratio = abs_diff / evidence.total_fees
-        if 0.01 <= fee_ratio <= 0.25:  # 1-25% of fees
-            return ExceptionType.FEE_DIFFERENCE
+        if 0.01 <= fee_ratio <= 1.0:  # 1-100% of fees
+            return ExceptionType.FEE_MISMATCH
 
     # Check for tax adjustment
     # If difference is proportional to taxes, likely tax error

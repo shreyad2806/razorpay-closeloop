@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Red Hub",
+    "reference": "MER-RED-001",
+    "currency": "INR",
+    "created_at": "2025-01-11T04:42:12"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Diamond Services",
+    "reference": "MER-DIA-002",
+    "currency": "INR",
+    "created_at": "2025-03-01T11:26:24"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Prime Mart",
+    "reference": "MER-PRI-003",
+    "currency": "INR",
+    "created_at": "2025-01-24T18:01:05"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Tech Enterprises",
+    "reference": "MER-TEC-004",
+    "currency": "INR",
+    "created_at": "2025-03-13T03:20:24"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Red Services",
+    "reference": "MER-RED-005",
+    "currency": "INR",
+    "created_at": "2025-05-12T05:55:28"
+  }
+]

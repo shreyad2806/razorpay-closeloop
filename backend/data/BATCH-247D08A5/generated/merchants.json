@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Star Goods",
+    "reference": "MER-STA-001",
+    "currency": "INR",
+    "created_at": "2025-04-18T05:51:19"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Prime Store",
+    "reference": "MER-PRI-002",
+    "currency": "INR",
+    "created_at": "2025-06-09T11:10:22"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Star Goods",
+    "reference": "MER-STA-003",
+    "currency": "INR",
+    "created_at": "2025-02-19T16:17:23"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Gold Goods",
+    "reference": "MER-GOL-004",
+    "currency": "INR",
+    "created_at": "2025-04-01T00:37:49"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Red Services",
+    "reference": "MER-RED-005",
+    "currency": "INR",
+    "created_at": "2025-05-09T06:49:01"
+  }
+]

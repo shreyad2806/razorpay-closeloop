@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Blue Solutions",
+    "reference": "MER-BLU-001",
+    "currency": "INR",
+    "created_at": "2025-02-18T02:14:44"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Smart Trading",
+    "reference": "MER-SMA-002",
+    "currency": "INR",
+    "created_at": "2025-01-25T03:14:51"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Hub",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-06-03T22:41:20"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Solutions",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-03-23T08:55:14"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Star Shop",
+    "reference": "MER-STA-005",
+    "currency": "INR",
+    "created_at": "2025-01-14T17:06:58"
+  }
+]

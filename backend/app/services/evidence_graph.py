@@ -120,7 +120,12 @@ class EvidenceGraphBuilder:
         for missing in package.missing_evidence:
             self._add_missing_node(G, package, missing)
 
-        # 10. Add conflict annotations to edges
+        # 10. Add supporting record nodes
+        if hasattr(package, "supporting_records") and package.supporting_records:
+            for supp in package.supporting_records:
+                self._add_supporting_node(G, package, supp)
+
+        # 11. Add conflict annotations to edges
         self._annotate_conflicts(G, package)
 
         return G
@@ -369,6 +374,27 @@ class EvidenceGraphBuilder:
             relationship="adjustment_contributes_to_exception",
             amount=record.amount,
             contribution=contribution,
+        )
+
+    def _add_supporting_node(
+        self, G: nx.DiGraph, pkg: EvidencePackage, record: EvidenceRecord
+    ):
+        """Add supporting record node (RECONCILIATION_RESULT or RECONCILIATION_RUN)."""
+        G.add_node(
+            record.record_id,
+            node_type=record.entity_type,
+            entity_id=record.record_id,
+            case_id=pkg.case_id,
+            amount=record.amount,
+            status=record.status,
+            timestamp=record.timestamp,
+            relationship_to_exception=record.relationship,
+        )
+        G.add_edge(
+            record.record_id,
+            pkg.exception_id,
+            edge_type=EDGE_RELATES_TO,
+            relationship="supporting_record_relates_to_exception",
         )
 
     def _add_missing_node(

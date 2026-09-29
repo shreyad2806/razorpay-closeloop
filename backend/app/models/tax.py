@@ -3,12 +3,29 @@ Database model for tax records.
 
 Represents taxes applied to payment transactions.
 Traceable to payment_id and case_id.
+
+CloseLoop 2.0 (architecture section 5) keeps this table and adds the real foreign
+key, an explicit currency and a jurisdiction. ``tax_type`` already existed and
+gains a CHECK constraint.
 """
 
-from sqlalchemy import Column, String, Integer, DateTime, Index
 from datetime import datetime
 
+from sqlalchemy import Column, ForeignKey, Index, String
+from sqlalchemy.orm import relationship
+
 from app.database.database import Base
+from app.models.types import (
+    CurrencyType,
+    MoneyType,
+    TimestampType,
+    currency_check,
+    enum_check,
+    non_negative_check,
+)
+
+# Kept in sync with app.schemas.enums.TaxType by a Phase 1 drift test.
+TAX_TYPE_VALUES = ("GST", "TDS", "GST_ON_FEES", "SERVICE_TAX")
 
 
 class Tax(Base):
@@ -24,20 +41,43 @@ class Tax(Base):
     __tablename__ = "taxes"
 
     id = Column(String, primary_key=True)  # tax_id, e.g. TAX-000001
-    payment_id = Column(String, nullable=False, index=True)  # FK to Payment
+    payment_id = Column(
+        String,
+        ForeignKey("payments.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
     case_id = Column(String, nullable=True, index=True)  # FK to Case if applicable
-    merchant_id = Column(String, nullable=True, index=True)  # FK to Merchant
+    # Phase 2 (migration 0002): promoted to a real FK — ingestion guarantees
+    # the referenced merchant exists in the provider snapshot.
+    merchant_id = Column(
+        String,
+        ForeignKey("merchants.id", ondelete="RESTRICT"),
+        nullable=True,
+        index=True,
+    )
 
-    # Financial amount (in paise, integer)
-    amount = Column(Integer, nullable=False)
+    # Financial amount in integer paise (BIGINT). Never a float.
+    amount = Column(MoneyType, nullable=False)
+    currency = Column(
+        CurrencyType, nullable=False, default="INR", server_default="INR"
+    )
 
     # Tax type
-    tax_type = Column(String, nullable=False)  # TaxType enum value
+    tax_type = Column(String(32), nullable=False)  # TaxType enum value
+
+    # Taxing jurisdiction (state code / region), where the provider reports it.
+    jurisdiction = Column(String(64), nullable=True)
 
     # Metadata
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(TimestampType, default=datetime.utcnow)
+
+    payment = relationship("Payment")
 
     # Indexes for efficient querying
     __table_args__ = (
+        non_negative_check("amount", "ck_taxes_amount_non_negative"),
+        currency_check(),
+        enum_check("tax_type", TAX_TYPE_VALUES, "ck_taxes_tax_type"),
         Index("ix_taxes_payment_case", "payment_id", "case_id"),
     )

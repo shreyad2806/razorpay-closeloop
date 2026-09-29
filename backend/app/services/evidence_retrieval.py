@@ -29,10 +29,10 @@ from app.schemas.evidence import (
 # Evidence Link Relationship Constants
 # ─────────────────────────────────────────────────────────────────────────────
 
-RELATIONSHIP_PRIMARY = "PRIMARY_RECORD"
+RELATIONSHIP_PRIMARY = "PRIMARY"
 RELATIONSHIP_CALCULATION = "CALCULATION_COMPONENT"
-RELATIONSHIP_SUPPORTING = "SUPPORTING_EVIDENCE"
-RELATIONSHIP_CONFLICTING = "CONFLICTING_EVIDENCE"
+RELATIONSHIP_SUPPORTING = "SUPPORTING"
+RELATIONSHIP_CONFLICTING = "CONFLICTING"
 
 
 class EvidenceRetrievalService:
@@ -151,6 +151,7 @@ class EvidenceRetrievalService:
         fees = self._retrieve_fees(payment_id, case_id)
         taxes = self._retrieve_taxes(payment_id, case_id)
         adjustments = self._retrieve_adjustments(payment_id, case_id)
+        supporting = self._retrieve_supporting_records(exception)
 
         # 2. Detect missing evidence
         missing = self._detect_missing(
@@ -196,8 +197,34 @@ class EvidenceRetrievalService:
             for sr in settlement_records:
                 sr.relationship = RELATIONSHIP_CONFLICTING
 
-        # 6. Persist evidence links
-        link_count = 0
+        # 6. Build package
+        package = EvidencePackage(
+            exception_id=exception.id,
+            case_id=case_id,
+            payment_id=payment_id,
+            merchant_id=exception.merchant_id or (payment_record.metadata.get("merchant_id") if payment_record and payment_record.metadata else None),
+            expected_amount=exception.expected_amount,
+            actual_amount=exception.actual_amount,
+            difference=exception.difference,
+            exception_type=exception.exception_type,
+            payment=payment_record,
+            settlements=settlement_records,
+            refunds=refund_records,
+            fees=fee_records,
+            taxes=tax_records,
+            adjustments=adjustment_records,
+            supporting_records=supporting,
+            total_settlement_amount=total_settlement,
+            total_refund_amount=total_refunds,
+            total_fee_amount=total_fees,
+            total_tax_amount=total_taxes,
+            total_adjustment_amount=total_adjustments,
+            missing_evidence=missing,
+            conflicts=conflicts,
+            evidence_link_count=0,
+        )
+
+        # 7. Persist evidence links & evidence nodes if requested
         if persist_links:
             link_count = self._persist_evidence_links(
                 exception_id=exception.id,
@@ -209,32 +236,10 @@ class EvidenceRetrievalService:
                 taxes=taxes,
                 adjustments=adjustments,
             )
+            self._persist_evidence_nodes(exception, package)
+            package.evidence_link_count = link_count
 
-        # 7. Build package
-        return EvidencePackage(
-            exception_id=exception.id,
-            case_id=case_id,
-            payment_id=payment_id,
-            merchant_id=None,  # Payment model doesn't store merchant_id in DB yet
-            expected_amount=exception.expected_amount,
-            actual_amount=exception.actual_amount,
-            difference=exception.difference,
-            exception_type=exception.exception_type,
-            payment=payment_record,
-            settlements=settlement_records,
-            refunds=refund_records,
-            fees=fee_records,
-            taxes=tax_records,
-            adjustments=adjustment_records,
-            total_settlement_amount=total_settlement,
-            total_refund_amount=total_refunds,
-            total_fee_amount=total_fees,
-            total_tax_amount=total_taxes,
-            total_adjustment_amount=total_adjustments,
-            missing_evidence=missing,
-            conflicts=conflicts,
-            evidence_link_count=link_count,
-        )
+        return package
 
     # ─────────────────────────────────────────────────────────────────────────
     # Individual Record Retrieval
@@ -577,3 +582,176 @@ class EvidenceRetrievalService:
         self.session.add(link)
         existing.add((entity_type, entity_id))
         return 1
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Phase 4 Extensions: Supporting Records, Evidence Persistence & Graph
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def _retrieve_supporting_records(self, exception: FinancialException) -> List[EvidenceRecord]:
+        """Retrieve supporting records like ReconciliationResult and ReconciliationRun."""
+        supporting = []
+        if exception.reconciliation_id:
+            from app.models.reconciliation import ReconciliationResult as DBReconciliationResult
+            from app.models.reconciliation_run import ReconciliationRun as DBReconciliationRun
+
+            res = (
+                self.session.query(DBReconciliationResult)
+                .filter_by(id=exception.reconciliation_id)
+                .first()
+            )
+            if res:
+                supporting.append(
+                    EvidenceRecord(
+                        record_id=res.id,
+                        entity_type="RECONCILIATION_RESULT",
+                        relationship=RELATIONSHIP_SUPPORTING,
+                        amount=res.difference,
+                        status=res.match_status,
+                        timestamp=res.reconciliation_timestamp,
+                        metadata={
+                            "expected_amount": res.expected_amount,
+                            "actual_amount": res.actual_amount,
+                            "difference": res.difference,
+                            "match_status": res.match_status,
+                            "exception_type": res.exception_type,
+                        },
+                    )
+                )
+
+                if res.reconciliation_run_id:
+                    run = (
+                        self.session.query(DBReconciliationRun)
+                        .filter_by(id=res.reconciliation_run_id)
+                        .first()
+                    )
+                    if run:
+                        supporting.append(
+                            EvidenceRecord(
+                                record_id=run.id,
+                                entity_type="RECONCILIATION_RUN",
+                                relationship=RELATIONSHIP_SUPPORTING,
+                                amount=0,
+                                status=run.status,
+                                timestamp=run.started_at,
+                                metadata={
+                                    "scope_type": run.scope_type,
+                                    "trigger": run.trigger,
+                                    "engine_version": run.engine_version,
+                                },
+                            )
+                        )
+
+        return supporting
+
+    def _persist_evidence_nodes(
+        self, exception: FinancialException, package: EvidencePackage
+    ) -> int:
+        """
+        Persist structured evidence nodes into table 'evidence'.
+        Idempotent: unique on (exception_id, entity_type, entity_id, relationship).
+        """
+        from app.models.evidence import Evidence as EvidenceModel
+        from app.services.evidence_integrity import compute_canonical_hash
+
+        existing = (
+            self.session.query(EvidenceModel)
+            .filter_by(exception_id=exception.id)
+            .all()
+        )
+        existing_keys = {
+            (ev.entity_type, ev.entity_id, ev.relationship) for ev in existing
+        }
+
+        all_records = []
+        if package.payment:
+            all_records.append(package.payment)
+        all_records.extend(package.settlements)
+        all_records.extend(package.refunds)
+        all_records.extend(package.fees)
+        all_records.extend(package.taxes)
+        all_records.extend(package.adjustments)
+        all_records.extend(package.supporting_records)
+
+        created_count = 0
+        for rec in all_records:
+            key = (rec.entity_type, rec.record_id, rec.relationship)
+            if key in existing_keys:
+                continue
+
+            raw_payload = rec.model_dump(mode="json")
+            content_hash = compute_canonical_hash(raw_payload)
+            raw_payload["content_hash"] = content_hash
+
+            ev_id = f"EV-{exception.id}-{rec.entity_type}-{rec.record_id}"
+            ev_instance = EvidenceModel(
+                id=ev_id,
+                exception_id=exception.id,
+                case_id=exception.case_id,
+                entity_type=rec.entity_type,
+                entity_id=rec.record_id,
+                relationship=rec.relationship,
+                payload=raw_payload,
+                recorded_by="RECONCILIATION",
+            )
+            self.session.add(ev_instance)
+            existing_keys.add(key)
+            created_count += 1
+
+        if created_count > 0:
+            self.session.flush()
+
+        return created_count
+
+    def calculate_coverage(self, package: EvidencePackage) -> dict:
+        """
+        Deterministically calculate evidence coverage metrics for an EvidencePackage.
+        """
+        required_types = {"PAYMENT", "SETTLEMENT", "RECONCILIATION_RESULT"}
+        if package.exception_type in {"FEE_MISMATCH", "FEE_DIFFERENCE"}:
+            required_types.add("FEE")
+        elif package.exception_type == "REFUND_ADJUSTMENT":
+            required_types.add("REFUND")
+        elif package.exception_type == "TAX_ADJUSTMENT":
+            required_types.add("TAX")
+
+        present_types = set()
+        if package.payment:
+            present_types.add("PAYMENT")
+        if package.settlements:
+            present_types.add("SETTLEMENT")
+        if package.refunds:
+            present_types.add("REFUND")
+        if package.fees:
+            present_types.add("FEE")
+        if package.taxes:
+            present_types.add("TAX")
+        if package.adjustments:
+            present_types.add("ADJUSTMENT")
+        for rec in package.supporting_records:
+            present_types.add(rec.entity_type)
+
+        missing_required = list(required_types - present_types)
+        coverage_pct = round(
+            (len(required_types - set(missing_required)) / len(required_types)) * 100.0,
+            2,
+        )
+
+        return {
+            "coverage_pct": coverage_pct,
+            "required_types": sorted(list(required_types)),
+            "present_types": sorted(list(present_types)),
+            "missing_required": sorted(missing_required),
+            "is_complete": len(missing_required) == 0,
+        }
+
+    def reconstruct_graph(self, exception_id: str):
+        """
+        Reconstruct NetworkX DiGraph directly from persisted database evidence records.
+        """
+        from app.services.evidence_graph import EvidenceGraphBuilder
+
+        pkg = self.retrieve_by_exception_id(exception_id, persist_links=False)
+        if pkg is None:
+            return None
+        builder = EvidenceGraphBuilder()
+        return builder.build(pkg)

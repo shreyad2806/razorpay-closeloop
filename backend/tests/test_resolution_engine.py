@@ -29,6 +29,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database.database import Base
 from app.models.payment import Payment
+from app.models.merchant import Merchant
 from app.models.settlement import Settlement
 from app.models.refund import Refund
 from app.models.fee import Fee
@@ -64,8 +65,17 @@ def session(engine):
     s.close()
 
 
+def _ensure_merchant(session, merchant_id="MER-TEST-01"):
+    """Phase 2: payments.merchant_id is NOT NULL; seed the parent merchant."""
+    if session.get(Merchant, merchant_id) is None:
+        session.add(Merchant(id=merchant_id, name="Test Merchant"))
+        session.flush()
+    return merchant_id
+
+
 def _seed_fee_exception(session):
     """Seed a fee difference exception with evidence."""
+    merchant_id = _ensure_merchant(session)
     exc_id = "EXC-FEE-001"
     case_id = "CASE-FEE-001"
     payment_id = "PAY-FEE-001"
@@ -83,7 +93,7 @@ def _seed_fee_exception(session):
     )
     session.add(exc)
 
-    payment = Payment(id=payment_id, amount=100000)
+    payment = Payment(id=payment_id, merchant_id=merchant_id, amount=100000)
     session.add(payment)
 
     settlement = Settlement(
@@ -118,7 +128,9 @@ def _seed_refund_exception(session):
     )
     session.add(exc)
 
-    payment = Payment(id=payment_id, amount=100000)
+    payment = Payment(
+        id=payment_id, merchant_id=_ensure_merchant(session), amount=100000
+    )
     session.add(payment)
 
     settlement = Settlement(
@@ -153,7 +165,9 @@ def _seed_exact_match(session):
     )
     session.add(exc)
 
-    payment = Payment(id=payment_id, amount=100000)
+    payment = Payment(
+        id=payment_id, merchant_id=_ensure_merchant(session), amount=100000
+    )
     session.add(payment)
 
     settlement = Settlement(
@@ -183,7 +197,9 @@ def _seed_missing_record(session):
     )
     session.add(exc)
 
-    payment = Payment(id=payment_id, amount=100000)
+    payment = Payment(
+        id=payment_id, merchant_id=_ensure_merchant(session), amount=100000
+    )
     session.add(payment)
     # No settlement — missing record
     session.flush()

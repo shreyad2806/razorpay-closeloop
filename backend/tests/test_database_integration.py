@@ -29,6 +29,7 @@ from sqlalchemy.exc import IntegrityError
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from app.models.merchant import Merchant
 from app.models.payment import Payment
 from app.models.settlement import Settlement
 from app.models.refund import Refund
@@ -46,6 +47,7 @@ from app.schemas.enums import (
 )
 from app.schemas.reconciliation import ReconciliationResult as ReconciliationResultSchema
 from app.services.persistence import PersistenceService
+from tests.db_test_helper import ensure_merchant, ensure_payment
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -54,7 +56,49 @@ from app.services.persistence import PersistenceService
 
 
 @pytest.fixture
-def sample_payment(db_session):
+def sample_merchant(db_session):
+    """Create the merchant the sample payment belongs to.
+
+    CloseLoop 2.0 (Phase 1) added a real foreign key from ``payments.merchant_id``
+    to ``merchants.id``, so the merchant must exist first.
+    """
+    return ensure_merchant(db_session, "MER-TEST-01", name="Test Merchant")
+
+
+# Merchant ids referenced by tests that build their own payment rows. Phase 1
+# added the ``payments.merchant_id -> merchants.id`` foreign key, so each one
+# must exist before it is referenced. Only merchants are pre-seeded: several
+# tests assert exact Payment row counts or ordering, so no extra payment rows
+# may be created here.
+SEEDED_MERCHANT_IDS = (
+    "MER-TEST-01",
+    "MER-01",
+    "MER-02",
+    "MER-LARGE-01",
+    "MER-PAGE-01",
+    "MER-COUNT-01",
+    "MER-ISO-01",
+    "MER-DIFF-01",
+    "MER-MATCH-01",
+    "MER-BATCH-01",
+    "MER-ROLL-01",
+    "MER-ROLL-10",
+    "MER-STAT-01",
+    "MER-SCHEMA-01",
+)
+
+
+@pytest.fixture(autouse=True)
+def seed_parent_merchants(db_session):
+    """Ensure every merchant id used by this module exists (idempotent)."""
+    for merchant_id in SEEDED_MERCHANT_IDS:
+        ensure_merchant(db_session, merchant_id)
+    db_session.commit()
+    yield
+
+
+@pytest.fixture
+def sample_payment(db_session, sample_merchant):
     """Create a sample payment record."""
     payment = Payment(
         id="PAY-TEST-001",
@@ -104,7 +148,9 @@ def sample_fee(db_session, sample_payment):
         case_id="CASE-TEST-001",
         merchant_id="MER-TEST-01",
         amount=200,
-        fee_type="PLATFORM_FEE",
+        # "PLATFORM_FEE" is not a FeeType; the Phase 1 CHECK constraint on
+        # fees.fee_type rejects it. Use the real enum value.
+        fee_type="PLATFORM",
     )
     db_session.add(fee)
     db_session.commit()
@@ -351,7 +397,7 @@ class TestModelCreation:
         """Fee model should be persisted with correct fields."""
         assert sample_fee.id == "FEE-TEST-001"
         assert sample_fee.amount == 200
-        assert sample_fee.fee_type == "PLATFORM_FEE"
+        assert sample_fee.fee_type == "PLATFORM"
 
     def test_tax_creation(self, sample_tax):
         """Tax model should be persisted with correct fields."""
@@ -434,7 +480,7 @@ class TestReadOperations:
         """Should retrieve fee by payment_id."""
         results = db_session.query(Fee).filter_by(payment_id="PAY-TEST-001").all()
         assert len(results) == 1
-        assert results[0].fee_type == "PLATFORM_FEE"
+        assert results[0].fee_type == "PLATFORM"
 
     def test_read_tax_by_payment_id(self, db_session, sample_tax):
         """Should retrieve tax by payment_id."""
@@ -600,11 +646,13 @@ class TestUpdateOperations:
     def test_update_refund_status(self, db_session, sample_refund):
         """Should update refund status."""
         r = db_session.query(Refund).filter_by(id="REF-TEST-001").first()
-        r.status = "REFUNDED"
+        # "REFUNDED" is a payment state, not a RefundStatus; the Phase 1 CHECK
+        # constraint on refunds.status rejects it. Use the real enum value.
+        r.status = "FAILED"
         db_session.commit()
 
         updated = db_session.query(Refund).filter_by(id="REF-TEST-001").first()
-        assert updated.status == "REFUNDED"
+        assert updated.status == "FAILED"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -699,13 +747,13 @@ class TestRelationships:
             id="FEE-TEST-010",
             payment_id=sample_payment.id,
             amount=100,
-            fee_type="PLATFORM_FEE",
+            fee_type="PLATFORM",
         )
         f2 = Fee(
             id="FEE-TEST-011",
             payment_id=sample_payment.id,
             amount=50,
-            fee_type="GATEWAY_FEE",
+            fee_type="TDR",
         )
         db_session.add_all([f1, f2])
         db_session.commit()
@@ -829,6 +877,9 @@ class TestRelationships:
 
     def test_settlement_filtered_by_payment_id(self, db_session, sample_payment):
         """Settlements for different payments should be isolated."""
+        # Phase 1 added the settlements -> payments foreign key, so both parents
+        # must exist before the settlements that reference them.
+        ensure_payment(db_session, "OTHER-PAY-001")
         s1 = Settlement(id="SET-FILTER-01", payment_id=sample_payment.id, amount=50000)
         s2 = Settlement(id="SET-FILTER-02", payment_id="OTHER-PAY-001", amount=30000)
         db_session.add_all([s1, s2])

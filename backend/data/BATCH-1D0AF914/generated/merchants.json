@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Goods",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-02-02T15:03:13"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Co",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-04-25T14:20:12"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Solutions",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-05-27T12:03:44"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Market",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-05-22T13:58:24"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Market",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-05-19T00:48:32"
+  }
+]

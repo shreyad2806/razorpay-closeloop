@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Hub",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-06-06T12:35:32"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Silver Digital",
+    "reference": "MER-SIL-002",
+    "currency": "INR",
+    "created_at": "2025-01-10T21:25:19"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Tech Goods",
+    "reference": "MER-TEC-003",
+    "currency": "INR",
+    "created_at": "2025-05-31T05:53:47"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Fresh Solutions",
+    "reference": "MER-FRE-004",
+    "currency": "INR",
+    "created_at": "2025-06-22T11:28:24"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Blue Shop",
+    "reference": "MER-BLU-005",
+    "currency": "INR",
+    "created_at": "2025-01-06T01:02:16"
+  }
+]

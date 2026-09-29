@@ -7,12 +7,45 @@ Traceable to payment_id and case_id.
 Adjustment sign convention:
   - Positive amount = credit (increases settlement)
   - Negative amount = debit (decreases settlement)
+
+CloseLoop 2.0 (architecture section 5) keeps this table and adds:
+  - the real foreign key to ``payments``,
+  - an explicit currency,
+  - ``origin`` (PROVIDER vs CLOSELOOP_EXECUTION), so an adjustment CloseLoop
+    caused is distinguishable from one observed in provider data,
+  - ``resolution_action_id``, which traces an executed adjustment back to the
+    action that produced it (this is the ``ResolutionAction -> Adjustment``
+    relationship required by the domain map),
+  - ``reversed_by_adjustment_id``, because corrections are reversing entries,
+    never edits.
+
+``amount`` is SIGNED by design, so no non-negative CHECK is applied here.
 """
 
-from sqlalchemy import Column, String, Integer, DateTime, Index
 from datetime import datetime
 
+from sqlalchemy import Column, ForeignKey, Index, String
+from sqlalchemy.orm import relationship
+
 from app.database.database import Base
+from app.models.types import (
+    CurrencyType,
+    MoneyType,
+    TimestampType,
+    currency_check,
+    enum_check,
+)
+
+# Kept in sync with app.schemas.enums by a Phase 1 drift test.
+ADJUSTMENT_TYPE_VALUES = (
+    "CREDIT",
+    "DEBIT",
+    "FEE_REVERSAL",
+    "PENALTY",
+    "BONUS",
+    "CORRECTION",
+)
+ADJUSTMENT_ORIGIN_VALUES = ("PROVIDER", "CLOSELOOP_EXECUTION")
 
 
 class Adjustment(Base):
@@ -28,21 +61,65 @@ class Adjustment(Base):
     __tablename__ = "adjustments"
 
     id = Column(String, primary_key=True)  # adjustment_id, e.g. ADJ-000001
-    payment_id = Column(String, nullable=False, index=True)  # FK to Payment
+    payment_id = Column(
+        String,
+        ForeignKey("payments.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
     case_id = Column(String, nullable=True, index=True)  # FK to Case if applicable
     merchant_id = Column(String, nullable=True, index=True)  # FK to Merchant
 
-    # Financial amount (in paise, integer)
-    # Positive = credit, Negative = debit
-    amount = Column(Integer, nullable=False)
+    # Financial amount in integer paise (BIGINT). Signed: + credit, - debit.
+    amount = Column(MoneyType, nullable=False)
+    currency = Column(
+        CurrencyType, nullable=False, default="INR", server_default="INR"
+    )
 
     # Adjustment type
-    adjustment_type = Column(String, nullable=False)  # AdjustmentType enum value
+    adjustment_type = Column(String(32), nullable=False)  # AdjustmentType value
+
+    # Where the adjustment came from. Defaults to PROVIDER so existing rows and
+    # existing generator output keep their current meaning.
+    origin = Column(
+        String(24),
+        nullable=False,
+        default="PROVIDER",
+        server_default="PROVIDER",
+    )
+
+    # Set only when origin == CLOSELOOP_EXECUTION.
+    resolution_action_id = Column(
+        String,
+        ForeignKey("resolution_actions.id", ondelete="RESTRICT"),
+        nullable=True,
+    )
+
+    # Reversing-entry linkage (corrections are new rows, never edits).
+    reversed_by_adjustment_id = Column(
+        String,
+        ForeignKey("adjustments.id", ondelete="RESTRICT"),
+        nullable=True,
+    )
 
     # Metadata
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(TimestampType, default=datetime.utcnow)
+
+    payment = relationship("Payment")
+    resolution_action = relationship(
+        "ResolutionAction", back_populates="adjustments"
+    )
 
     # Indexes for efficient querying
     __table_args__ = (
+        currency_check(),
+        enum_check(
+            "adjustment_type",
+            ADJUSTMENT_TYPE_VALUES,
+            "ck_adjustments_adjustment_type",
+        ),
+        enum_check("origin", ADJUSTMENT_ORIGIN_VALUES, "ck_adjustments_origin"),
         Index("ix_adjustments_payment_case", "payment_id", "case_id"),
+        Index("ix_adjustments_origin", "origin"),
+        Index("ix_adjustments_resolution_action", "resolution_action_id"),
     )

@@ -19,7 +19,17 @@ import json
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
-from sqlalchemy import Column, String, Integer, Float, Text, Index, DateTime
+from sqlalchemy import (
+    BigInteger,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.orm import Session
 from datetime import datetime
 
@@ -45,11 +55,35 @@ class CaseEmbedding(Base):
     """Database model for stored case embeddings.
 
     Uses pgvector for vector similarity search in PostgreSQL.
+
+    CloseLoop 2.0 (architecture section 5): this model already existed and is
+    EXTENDED in place rather than duplicated. The 1:1
+    ``HistoricalCase -> CaseEmbedding`` edge of the domain map is expressed as a
+    real foreign key on the shared primary key.
+
+    Phase 1 additions:
+      * a real FK to ``historical_cases`` (the shared PK *was* the relationship,
+        but nothing enforced it),
+      * ``embedding_template_version``, so a change to the text template used for
+        embedding is detectable and triggers regeneration/back-fill alongside a
+        model change,
+      * BIGINT money columns instead of ``Integer``.
+
+    DEFERRED TO PHASE 6 (Historical Memory): architecture section 6 specifies the
+    embedding column as ``vector(384)`` with an HNSW ``vector_cosine_ops`` index.
+    That column, the ``pgvector`` package and its index are Phase 6 work, because
+    Phase 6 owns embedding generation, back-fill and retrieval. Phase 1 keeps the
+    existing portable ``embedding_json`` storage so the SQLite test harness keeps
+    working without adding infrastructure.
     """
 
     __tablename__ = "case_embeddings"
 
-    id = Column(String, primary_key=True)  # case_id
+    id = Column(
+        String,
+        ForeignKey("historical_cases.id", ondelete="CASCADE"),
+        primary_key=True,
+    )  # case_id
 
     # Embedding (stored as pgvector Vector type)
     # Note: The actual Vector column is added dynamically to support
@@ -60,8 +94,8 @@ class CaseEmbedding(Base):
     exception_type = Column(String, nullable=False)
     resolution_type = Column(String, nullable=False)
     resolution_outcome = Column(String, nullable=False)
-    payment_amount = Column(Integer, nullable=False)
-    difference = Column(Integer, nullable=False)
+    payment_amount = Column(BigInteger, nullable=False)
+    difference = Column(BigInteger, nullable=False)
     supporting_evidence_count = Column(Integer, default=0)
     tags_json = Column(Text, default="[]")
 
@@ -71,10 +105,17 @@ class CaseEmbedding(Base):
     # Metadata
     embedding_model = Column(String, nullable=False)
     embedding_dimension = Column(Integer, nullable=False)
+    # Guards back-fill when the embedding text template changes.
+    embedding_template_version = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (
         Index("ix_case_embeddings_exception_type", "exception_type"),
+        Index(
+            "ix_case_embeddings_model_template",
+            "embedding_model",
+            "embedding_template_version",
+        ),
     )
 
 

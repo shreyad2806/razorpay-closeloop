@@ -19,10 +19,23 @@ import json
 from datetime import datetime
 from typing import Dict, List, Optional
 
-from sqlalchemy import Column, String, Integer, DateTime, Boolean, Float, Index, Text
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    text,
+)
 from sqlalchemy.orm import Session
 
 from app.database.database import Base
+from app.models.types import CurrencyType, TimestampType, currency_check, non_negative_check
 from app.schemas.historical_case import (
     HistoricalCase,
     HistoricalEvidenceRef,
@@ -42,6 +55,27 @@ class HistoricalCaseRecord(Base):
 
     Stores the full structured representation of a resolved financial case
     for later retrieval and learning.
+
+    CloseLoop 2.0 (architecture section 5): this model already existed and is
+    EXTENDED in place rather than duplicated. ``historical_cases`` is the
+    architecture's ``HistoricalCase`` entity - the canonical home for the model
+    is still this module, matching the pre-existing repository convention.
+
+    Added by Phase 1:
+      * ``resolution_action_id`` - traces the case back to the executed action
+        that resolved it (the ``HistoricalCase -> ResolutionAction`` edge of the
+        domain map). Nullable: cases resolved without an executed action still
+        exist.
+      * ``reconciliation_verified`` - a case only becomes trustworthy memory
+        once the closed loop verified it. Defaults to ``false`` so every
+        pre-2.0 row keeps its current meaning.
+      * ``financial_exposure_paise`` - how much money the case represented.
+      * ``currency`` - amounts are meaningless without it (architecture
+        section 6).
+      * ``promoted_at`` - when the case entered the memory.
+
+    Money columns are BIGINT paise (was ``Integer``): the architecture requires
+    integer minor units large enough for real settlement totals.
     """
 
     __tablename__ = "historical_cases"
@@ -49,6 +83,12 @@ class HistoricalCaseRecord(Base):
     id = Column(String, primary_key=True)  # case_id
 
     # References
+    #
+    # NOTE: exception_id carries no FK constraint yet. ``historical_cases`` is
+    # populated by the promotion path, and pre-2.0 code (including the demo
+    # seeders) writes cases whose exception predates the row. The constraint
+    # lands with the promotion work in Phase 6, once every write path creates
+    # the parent in the same transaction.
     exception_id = Column(String, nullable=False)
     payment_id = Column(String, nullable=False)
     merchant_id = Column(String, nullable=True)
@@ -57,21 +97,37 @@ class HistoricalCaseRecord(Base):
     exception_type = Column(String, nullable=False)
 
     # Financial context (stored as individual columns for queryability)
-    payment_amount = Column(Integer, nullable=False)
-    expected_amount = Column(Integer, nullable=False)
-    actual_amount = Column(Integer, nullable=False)
-    difference = Column(Integer, nullable=False)
-    total_refunds = Column(Integer, default=0)
-    total_fees = Column(Integer, default=0)
-    total_taxes = Column(Integer, default=0)
-    total_adjustments = Column(Integer, default=0)
+    payment_amount = Column(BigInteger, nullable=False)
+    expected_amount = Column(BigInteger, nullable=False)
+    actual_amount = Column(BigInteger, nullable=False)
+    difference = Column(BigInteger, nullable=False)  # SIGNED
+    total_refunds = Column(BigInteger, default=0)
+    total_fees = Column(BigInteger, default=0)
+    total_taxes = Column(BigInteger, default=0)
+    total_adjustments = Column(BigInteger, default=0)  # SIGNED
+    financial_exposure_paise = Column(BigInteger, nullable=True)
+    currency = Column(
+        CurrencyType, nullable=False, default="INR", server_default="INR"
+    )
 
     # Resolution
     resolution_type = Column(String, nullable=False)
     resolution_outcome = Column(String, nullable=False)
     resolution_origin = Column(String, nullable=False, default="DETERMINISTIC")
-    resolved_amount = Column(Integer, nullable=True)
+    resolved_amount = Column(BigInteger, nullable=True)
     resolution_notes = Column(Text, nullable=True)
+
+    resolution_action_id = Column(
+        String,
+        ForeignKey("resolution_actions.id", ondelete="RESTRICT"),
+        nullable=True,
+    )
+
+    # A case only becomes trustworthy memory once the closed loop verified it.
+    reconciliation_verified = Column(
+        Boolean, nullable=False, default=False, server_default=text("false")
+    )
+    promoted_at = Column(TimestampType, nullable=True)
 
     # Evidence (stored as JSON)
     evidence_refs_json = Column(Text, default="[]")
@@ -91,10 +147,15 @@ class HistoricalCaseRecord(Base):
 
     # Indexes
     __table_args__ = (
+        non_negative_check("payment_amount", "ck_historical_cases_payment_amount"),
+        non_negative_check("expected_amount", "ck_historical_cases_expected_amount"),
+        non_negative_check("actual_amount", "ck_historical_cases_actual_amount"),
+        currency_check(),
         Index("ix_historical_cases_exception_type", "exception_type"),
         Index("ix_historical_cases_resolution_type", "resolution_type"),
         Index("ix_historical_cases_resolution_outcome", "resolution_outcome"),
         Index("ix_historical_cases_created_at", "created_at"),
+        Index("ix_historical_cases_verified", "reconciliation_verified"),
     )
 
 

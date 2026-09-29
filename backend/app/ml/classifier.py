@@ -452,22 +452,32 @@ class ExceptionClassifierService:
         feature_names: List[str],
         label_names: List[str],
         model_version: str = CLASSIFIER_VERSION,
+        feature_schema_version: str = FEATURE_SCHEMA_VERSION,
     ):
         self.model = model
         self.feature_names = feature_names
         self.label_names = label_names
         self.model_version = model_version
+        self.feature_schema_version = feature_schema_version
 
-    def predict(self, feature_dict: Dict[str, float]) -> ExceptionPrediction:
+    def predict(
+        self, feature_dict: Dict[str, float], validate_schema: bool = True
+    ) -> ExceptionPrediction:
         """
         Predict exception type from a feature dictionary.
 
         Args:
             feature_dict: Feature name → value mapping
+            validate_schema: Whether to check feature names against feature_names
 
         Returns:
             ExceptionPrediction with predicted type and probabilities
         """
+        if validate_schema:
+            missing = set(self.feature_names) - set(feature_dict.keys())
+            if missing:
+                raise ValueError(f"Incompatible feature schema: missing features {missing}")
+
         # Convert to array in correct order
         X = np.array(
             [[feature_dict.get(name, 0.0) for name in self.feature_names]],
@@ -496,13 +506,61 @@ class ExceptionClassifierService:
         """Predict for multiple samples."""
         return [self.predict(fd) for fd in feature_dicts]
 
+    def persist_prediction(
+        self,
+        session,
+        exception_id: str,
+        feature_dict: Dict[str, float],
+        model_name: str = "XGBoostExceptionClassifier",
+    ):
+        """
+        Predict and persist a ModelPrediction row into the database.
+
+        Idempotent: does not alter financial truth or exception fields.
+        """
+        from app.models.model_prediction import ModelPrediction
+        from app.services.evidence_integrity import compute_canonical_hash
+
+        prediction = self.predict(feature_dict)
+        features_hash = compute_canonical_hash(feature_dict)
+        max_prob = max(prediction.probabilities.values()) if prediction.probabilities else None
+
+        pred_id = f"MPRED-{exception_id}-{self.model_version}"
+        existing = session.query(ModelPrediction).filter_by(id=pred_id).first()
+        if existing:
+            return existing
+
+        model_pred = ModelPrediction(
+            id=pred_id,
+            exception_id=exception_id,
+            model_name=model_name,
+            model_version=self.model_version,
+            feature_schema_version=self.feature_schema_version,
+            predicted_type=prediction.predicted_type,
+            probabilities=prediction.probabilities,
+            confidence=max_prob,
+            features_hash=features_hash,
+        )
+        session.add(model_pred)
+        session.flush()
+        return model_pred
+
     @classmethod
-    def from_artifact(cls, path: str) -> "ExceptionClassifierService":
+    def from_artifact(
+        cls, path: str, expected_schema_version: Optional[str] = None
+    ) -> "ExceptionClassifierService":
         """Load service from saved artifact."""
         model, metadata = ModelArtifact.load(path)
+        actual_schema_ver = metadata.get("feature_schema_version")
+        if expected_schema_version and actual_schema_ver != expected_schema_version:
+            raise ValueError(
+                f"Incompatible feature schema version: artifact has {actual_schema_ver}, expected {expected_schema_version}"
+            )
+
         return cls(
             model=model,
             feature_names=metadata["feature_names"],
             label_names=metadata["label_names"],
             model_version=metadata.get("classifier_version", CLASSIFIER_VERSION),
+            feature_schema_version=actual_schema_ver or FEATURE_SCHEMA_VERSION,
         )

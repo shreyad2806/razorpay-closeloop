@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Prime Market",
+    "reference": "MER-PRI-001",
+    "currency": "INR",
+    "created_at": "2025-05-25T00:29:59"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Trading",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-06-21T16:29:05"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Co",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-04-06T01:02:28"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Prime Services",
+    "reference": "MER-PRI-004",
+    "currency": "INR",
+    "created_at": "2025-03-27T09:56:08"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Diamond Enterprises",
+    "reference": "MER-DIA-005",
+    "currency": "INR",
+    "created_at": "2025-04-25T16:56:55"
+  }
+]

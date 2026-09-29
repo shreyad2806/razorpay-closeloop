@@ -27,7 +27,13 @@ os.environ.setdefault("DATABASE_URL", "sqlite:///test_evidence.db")
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tests.db_test_helper import get_test_session, reset_database, get_test_engine
+from tests.db_test_helper import (
+    ensure_financial_parents,
+    ensure_merchant,
+    get_test_engine,
+    get_test_session,
+    reset_database,
+)
 from app.models.refund import Refund
 from app.models.fee import Fee
 from app.models.tax import Tax
@@ -67,6 +73,30 @@ def sample_payment_data():
         "case_id": "CASE-TEST-001",
         "merchant_id": "MER-TEST-001",
     }
+
+
+# Every payment id this module references. CloseLoop 2.0 Phase 1 added real
+# foreign keys, so the Merchant and Payment parents must exist before a refund,
+# fee, tax or adjustment that points at them can be inserted.
+PARENT_PAYMENT_IDS = (
+    "PAY-TEST-001",
+    "PAY-001",
+    "PAY-002",
+    "PAY-CHAIN-001",
+    "PAY-FULL-001",
+)
+
+
+@pytest.fixture(autouse=True)
+def seed_financial_parents(session, fresh_db):
+    """Seed the parents the foreign keys now require, after the DB is reset.
+
+    Phase 2 (migration 0002) also made refunds/fees/taxes.merchant_id a real
+    FK to merchants, so the test merchant row is seeded too.
+    """
+    ensure_merchant(session, "MER-TEST-001")
+    ensure_financial_parents(session, PARENT_PAYMENT_IDS)
+    yield
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -610,11 +640,20 @@ class TestCrossModelRelationships:
 class TestGroundTruthSeparation:
     """Verify that no ground truth labels leak into evidence models."""
 
+    # Generator ground-truth labels. These exist only inside the synthetic
+    # dataset's ground-truth records and must never appear as columns on a
+    # domain model.
+    #
+    # CloseLoop 2.0 (Phase 1) note: "risk_category" was previously listed here.
+    # CLOSELOOP_2.0_ARCHITECTURE.md section 5 makes it an explicit *domain* field
+    # on FinancialException - the system-assessed risk of an exception, written
+    # by the risk/classification path. That is not a leaked generator label, so
+    # it is no longer asserted to be absent. The generator's own ground-truth
+    # record keeps its separate risk field.
     GROUND_TRUTH_FIELDS = [
         "true_exception_type",
         "true_resolution",
         "resolvable_as_ground_truth",
-        "risk_category",
     ]
 
     def test_refund_no_ground_truth_fields(self):

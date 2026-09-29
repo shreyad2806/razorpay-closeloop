@@ -8,7 +8,15 @@ DOES NOT implement similarity search — that comes later.
 This is the storage layer only.
 """
 
-from sqlalchemy import Column, String, Integer, DateTime, Boolean, Index
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Column,
+    DateTime,
+    Index,
+    Integer,
+    String,
+)
 from datetime import datetime
 
 from app.database.database import Base
@@ -39,9 +47,10 @@ class HistoricalResolution(Base):
     resolution_type = Column(String, nullable=False)  # ResolutionType enum value
     outcome = Column(String, nullable=False)  # e.g. RESOLVED, ESCALATED, UNRESOLVED
 
-    # Financial details
-    resolved_amount = Column(Integer, nullable=True)  # Amount used in resolution (paise)
-    difference_at_resolution = Column(Integer, nullable=True)  # Difference when resolved
+    # Financial details. BIGINT paise, matching every other money column
+    # (architecture section 6); was Integer before Phase 1.
+    resolved_amount = Column(BigInteger, nullable=True)  # paise
+    difference_at_resolution = Column(BigInteger, nullable=True)  # paise, signed
 
     # Classification
     exception_type = Column(String, nullable=True)  # What the exception was classified as

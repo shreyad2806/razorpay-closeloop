@@ -125,7 +125,7 @@ def main():
         print("Scenario Distribution:")
         # Count scenarios in cases
         scenario_counts = {}
-        for case in dataset["cases"]:
+        for case in dataset["cases"  ]:
             s = case.scenario.value
             scenario_counts[s] = scenario_counts.get(s, 0) + 1
         for scenario, count in sorted(scenario_counts.items()):

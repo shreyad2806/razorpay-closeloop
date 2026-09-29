@@ -30,7 +30,11 @@ os.environ.setdefault("DATABASE_URL", "sqlite:///test_evidence_retrieval.db")
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tests.db_test_helper import get_test_session, reset_database
+from tests.db_test_helper import (
+    ensure_financial_parents,
+    get_test_session,
+    reset_database,
+)
 from app.models.exception import FinancialException
 from app.models.refund import Refund
 from app.models.fee import Fee
@@ -69,6 +73,26 @@ def session():
 def service(session):
     """Provide an evidence retrieval service."""
     return EvidenceRetrievalService(session)
+
+
+# Every payment id this module references. CloseLoop 2.0 Phase 1 added real
+# foreign keys, so the Merchant and Payment parents must exist before a refund,
+# fee, tax or adjustment that points at them can be inserted.
+PARENT_PAYMENT_IDS = (
+    "PAY-001",
+    "PAY-B01",
+    "PAY-B02",
+    "PAY-B03",
+    "PAY-C01",
+    "PAY-MISSING-001",
+)
+
+
+@pytest.fixture(autouse=True)
+def seed_financial_parents(session, fresh_db):
+    """Seed the parents the foreign keys now require, after the DB is reset."""
+    ensure_financial_parents(session, PARENT_PAYMENT_IDS)
+    yield
 
 
 def _create_exception(

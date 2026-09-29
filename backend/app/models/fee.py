@@ -3,12 +3,36 @@ Database model for fee records.
 
 Represents fees charged on payment transactions.
 Traceable to payment_id and case_id.
+
+CloseLoop 2.0 (architecture section 5) keeps this table and adds the real foreign
+key, an explicit currency, a provider processing timestamp and the payment
+relationship. ``fee_type`` already existed and gains a CHECK constraint.
 """
 
-from sqlalchemy import Column, String, Integer, DateTime, Index
 from datetime import datetime
 
+from sqlalchemy import Column, ForeignKey, Index, String
+from sqlalchemy.orm import relationship
+
 from app.database.database import Base
+from app.models.types import (
+    CurrencyType,
+    MoneyType,
+    TimestampType,
+    currency_check,
+    enum_check,
+    non_negative_check,
+)
+
+# Kept in sync with app.schemas.enums.FeeType by a Phase 1 drift test.
+FEE_TYPE_VALUES = (
+    "TRANSACTION",
+    "PLATFORM",
+    "TDR",
+    "GST_ON_FEES",
+    "REFUND_FEE",
+    "CHARGEBACK_FEE",
+)
 
 
 class Fee(Base):
@@ -24,20 +48,43 @@ class Fee(Base):
     __tablename__ = "fees"
 
     id = Column(String, primary_key=True)  # fee_id, e.g. FEE-000001
-    payment_id = Column(String, nullable=False, index=True)  # FK to Payment
+    payment_id = Column(
+        String,
+        ForeignKey("payments.id", ondelete="RESTRICT"),
+        nullable=False,
+        index=True,
+    )
     case_id = Column(String, nullable=True, index=True)  # FK to Case if applicable
-    merchant_id = Column(String, nullable=True, index=True)  # FK to Merchant
+    # Phase 2 (migration 0002): promoted to a real FK — ingestion guarantees
+    # the referenced merchant exists in the provider snapshot.
+    merchant_id = Column(
+        String,
+        ForeignKey("merchants.id", ondelete="RESTRICT"),
+        nullable=True,
+        index=True,
+    )
 
-    # Financial amount (in paise, integer)
-    amount = Column(Integer, nullable=False)
+    # Financial amount in integer paise (BIGINT). Never a float.
+    amount = Column(MoneyType, nullable=False)
+    currency = Column(
+        CurrencyType, nullable=False, default="INR", server_default="INR"
+    )
 
     # Fee type
-    fee_type = Column(String, nullable=False)  # FeeType enum value
+    fee_type = Column(String(32), nullable=False)  # FeeType enum value
+
+    # Provider processing time; ``created_at`` is when CloseLoop recorded it.
+    processed_at = Column(TimestampType, nullable=True)
 
     # Metadata
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(TimestampType, default=datetime.utcnow)
+
+    payment = relationship("Payment")
 
     # Indexes for efficient querying
     __table_args__ = (
+        non_negative_check("amount", "ck_fees_amount_non_negative"),
+        currency_check(),
+        enum_check("fee_type", FEE_TYPE_VALUES, "ck_fees_fee_type"),
         Index("ix_fees_payment_case", "payment_id", "case_id"),
     )

@@ -107,6 +107,9 @@ class EvidencePackage(BaseModel):
     adjustments: List[EvidenceRecord] = Field(
         default_factory=list, description="Adjustment records"
     )
+    supporting_records: List[EvidenceRecord] = Field(
+        default_factory=list, description="Supporting evidence records"
+    )
 
     # Financial summary (deterministic calculation from retrieved records)
     total_settlement_amount: int = Field(
@@ -162,4 +165,5 @@ class EvidencePackage(BaseModel):
         count += len(self.fees)
         count += len(self.taxes)
         count += len(self.adjustments)
+        count += len(self.supporting_records)
         return count

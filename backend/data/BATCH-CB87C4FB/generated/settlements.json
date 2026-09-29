@@ -1,0 +1,52 @@
+[
+  {
+    "settlement_id": "SET-000001",
+    "payment_id": "PAY-000001",
+    "merchant_id": "MER-0001",
+    "case_id": null,
+    "amount": 4530304,
+    "currency": "INR",
+    "status": "SETTLED",
+    "settlement_timestamp": "2025-03-15T19:07:39"
+  },
+  {
+    "settlement_id": "SET-000002",
+    "payment_id": "PAY-000002",
+    "merchant_id": "MER-0002",
+    "case_id": null,
+    "amount": 6970778,
+    "currency": "INR",
+    "status": "SETTLED",
+    "settlement_timestamp": "2025-04-13T04:14:44"
+  },
+  {
+    "settlement_id": "SET-000003",
+    "payment_id": "PAY-000003",
+    "merchant_id": "MER-0003",
+    "case_id": null,
+    "amount": 8803569,
+    "currency": "INR",
+    "status": "SETTLED",
+    "settlement_timestamp": "2025-02-26T13:06:08"
+  },
+  {
+    "settlement_id": "SET-000004",
+    "payment_id": "PAY-000004",
+    "merchant_id": "MER-0001",
+    "case_id": null,
+    "amount": 5161090,
+    "currency": "INR",
+    "status": "SETTLED",
+    "settlement_timestamp": "2025-03-22T12:23:43"
+  },
+  {
+    "settlement_id": "SET-000005",
+    "payment_id": "PAY-000005",
+    "merchant_id": "MER-0002",
+    "case_id": null,
+    "amount": 829196,
+    "currency": "INR",
+    "status": "SETTLED",
+    "settlement_timestamp": "2025-03-31T02:54:29"
+  }
+]
