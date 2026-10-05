@@ -19,7 +19,7 @@ these DTOs into domain rows.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Annotated, Optional
+from typing import Annotated, Optional, Dict
 
 from pydantic import BeforeValidator, BaseModel, ConfigDict, Field, StrictInt, StrictStr
 
@@ -36,6 +36,7 @@ from app.schemas.enums import (
     SettlementComponentType,
     SettlementStatus,
     TaxType,
+    ProviderExecutionStatus,
 )
 
 
@@ -193,4 +194,35 @@ __all__ = [
     "ProviderChargeback",
     "ProviderFee",
     "ProviderTax",
+    "ProviderExecutionRequest",
+    "ProviderExecutionResult",
 ]
+
+
+class ProviderExecutionRequest(BaseModel):
+    """Payload to request mutation across the provider boundary."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    action_type: StrictStr = Field(..., description="Type of operation, e.g. ADJUSTMENT, FEE_CORRECTION")
+    action_id: StrictStr = Field(..., description="Identifier for this action request")
+    target_entity_id: StrictStr = Field(..., description="Provider reference ID to mutate (e.g. payment_id)")
+    amount_paise: StrictInt = Field(..., ge=0, description="Amount to adjust in paise")
+    currency: Currency = Currency.INR
+    idempotency_key: StrictStr = Field(..., description="Strict idempotency token for provider deduplication")
+    metadata: Optional[Dict[str, str]] = Field(default=None, description="Safe primitives for provider execution")
+
+
+class ProviderExecutionResult(BaseModel):
+    """Result payload returned by the provider boundary after a mutation attempt."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    status: ProviderExecutionStatus = Field(..., description="Outcome of the mutation")
+    provider_reference_id: Optional[StrictStr] = Field(default=None, description="Provider ID generated for this mutation")
+    amount_paise: StrictInt = Field(default=0, description="Amount actually mutated in paise")
+    currency: Currency = Currency.INR
+    error_code: Optional[StrictStr] = Field(default=None, description="Explicit error code if failed")
+    error_message: Optional[StrictStr] = Field(default=None, description="Explicit error message if failed")
+    idempotency_key: StrictStr = Field(..., description="The idempotency key that was requested")
+    executed_at: Optional[DateTimeField] = None

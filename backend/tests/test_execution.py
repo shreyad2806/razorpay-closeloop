@@ -206,6 +206,7 @@ class TestValidExecution:
         request = _make_action_request(
             guardrail_decision="HUMAN_REVIEW",
             authorization_source="HUMAN_APPROVAL",
+            approval_record={"decision": "APPROVED"}
         )
         result = service.execute(request)
         assert result.status == ExecutionStatus.EXECUTED
@@ -485,6 +486,8 @@ class TestEdgeCases:
             case_id="CASE-001",
             candidate_id="CAND-001",
             authorization_source="HUMAN_APPROVAL",
+            guardrail_decision="HUMAN_REVIEW",
+            approval_record={"decision": "APPROVED"}
         )
         result = service.execute(request)
         assert result.case_id == "CASE-001"

@@ -33,6 +33,8 @@ from app.providers.dto import (
     ProviderSettlement,
     ProviderSettlementLine,
     ProviderTax,
+    ProviderExecutionRequest,
+    ProviderExecutionResult,
 )
 
 
@@ -87,3 +89,13 @@ class PaymentProvider(ABC):
     @abstractmethod
     def get_taxes(self) -> list[ProviderTax]:
         """Taxes applied to the payments in the snapshot."""
+
+    # -- mutation (Phase 9 execution boundary) -------------------------------
+
+    @abstractmethod
+    def execute(self, request: ProviderExecutionRequest) -> ProviderExecutionResult:
+        """Attempt to execute a financial mutation against the external provider.
+        
+        Returns a ProviderExecutionResult containing SUCCESS, FAILED, TIMEOUT,
+        or UNKNOWN, encapsulating the true status as reported by the system.
+        """

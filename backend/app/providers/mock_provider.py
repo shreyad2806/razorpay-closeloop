@@ -32,6 +32,8 @@ from app.providers.dto import (
     ProviderSettlement,
     ProviderSettlementLine,
     ProviderTax,
+    ProviderExecutionRequest,
+    ProviderExecutionResult,
 )
 from app.schemas.enums import (
     ChargebackStatus,
@@ -44,6 +46,7 @@ from app.schemas.enums import (
     SettlementComponentType,
     SettlementStatus,
     TaxType,
+    ProviderExecutionStatus,
 )
 
 PROVIDER_NAME = "mock"
@@ -532,3 +535,52 @@ class MockProvider(PaymentProvider):
                 source_entity_type="FEE",
                 source_entity_id=f"fee_demo_{i:03d}",
             )
+
+    # -- mutation (Phase 9 execution boundary) -------------------------------
+
+    def execute(self, request: ProviderExecutionRequest) -> ProviderExecutionResult:
+        now = datetime.now(timezone.utc).replace(tzinfo=None)
+        
+        # Simulated determinism for testing
+        mock_outcome = (request.metadata or {}).get("mock_outcome")
+        if mock_outcome == "FAILED":
+            return ProviderExecutionResult(
+                status=ProviderExecutionStatus.FAILED,
+                amount_paise=0,
+                currency=request.currency,
+                error_code="MOCK_FAILURE",
+                error_message="Simulated provider failure",
+                idempotency_key=request.idempotency_key,
+                executed_at=now,
+            )
+        if mock_outcome == "TIMEOUT":
+            return ProviderExecutionResult(
+                status=ProviderExecutionStatus.TIMEOUT,
+                amount_paise=0,
+                currency=request.currency,
+                error_code="MOCK_TIMEOUT",
+                error_message="Simulated provider timeout",
+                idempotency_key=request.idempotency_key,
+                executed_at=now,
+            )
+        if mock_outcome == "UNKNOWN":
+            return ProviderExecutionResult(
+                status=ProviderExecutionStatus.UNKNOWN,
+                amount_paise=0,
+                currency=request.currency,
+                error_code="MOCK_UNKNOWN",
+                error_message="Simulated unknown outcome",
+                idempotency_key=request.idempotency_key,
+                executed_at=now,
+            )
+
+        provider_reference_id = f"mock_{request.action_type.lower()}_{request.target_entity_id}_{request.idempotency_key[-6:]}"
+        
+        return ProviderExecutionResult(
+            status=ProviderExecutionStatus.SUCCESS,
+            provider_reference_id=provider_reference_id,
+            amount_paise=request.amount_paise,
+            currency=request.currency,
+            idempotency_key=request.idempotency_key,
+            executed_at=now,
+        )

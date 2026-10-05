@@ -75,6 +75,15 @@ class SettlementStatus(str, Enum):
     PROCESSING = "PROCESSING"
 
 
+class ProviderExecutionStatus(str, Enum):
+    """Outcomes of a mutation attempt across the provider boundary."""
+
+    SUCCESS = "SUCCESS"
+    FAILED = "FAILED"
+    TIMEOUT = "TIMEOUT"
+    UNKNOWN = "UNKNOWN"
+
+
 class RefundStatus(str, Enum):
     """Status values for refund records."""
 

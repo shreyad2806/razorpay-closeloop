@@ -27,6 +27,11 @@ from app.schemas.execution import (
     is_valid_transition,
 )
 from app.services.idempotency import ConcurrencyGuard, IdempotencyStore
+from app.schemas.enums import Currency
+from app.providers.base import PaymentProvider
+from app.providers.dto import ProviderExecutionRequest, ProviderExecutionResult
+from app.schemas.enums import ProviderExecutionStatus
+from app.providers.mock_provider import MockProvider
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -42,10 +47,11 @@ class ResolutionExecutionService:
     Uses IdempotencyStore and ConcurrencyGuard for duplicate/concurrent protection.
     """
 
-    def __init__(self):
+    def __init__(self, provider: Optional[PaymentProvider] = None):
         self._executed_keys: Dict[str, ExecutionResult] = {}
         self._idempotency_store = IdempotencyStore()
         self._concurrency_guard = ConcurrencyGuard(self._idempotency_store)
+        self.provider = provider or MockProvider()
 
     @property
     def concurrency_guard(self) -> ConcurrencyGuard:
@@ -201,6 +207,30 @@ class ResolutionExecutionService:
         elif guardrail_decision == "HUMAN_REVIEW" and normalized_auth_source not in human_sources:
             errors.append("HUMAN_REVIEW execution requires HUMAN_APPROVAL authorization")
 
+        if guardrail_decision == "HUMAN_REVIEW":
+            approval = action_request.get("approval_record")
+            if not approval:
+                errors.append("Missing approval record for HUMAN_REVIEW")
+            else:
+                if approval.get("decision") != "APPROVED":
+                    errors.append(f"Approval not APPROVED, got: {approval.get('decision')}")
+                
+                expires_at = approval.get("expires_at")
+                if expires_at:
+                    if isinstance(expires_at, str):
+                        try:
+                            # Handle standard iso formats and simple strings
+                            expires_at = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
+                        except ValueError:
+                            pass
+                    if isinstance(expires_at, datetime) and datetime.utcnow() > expires_at.replace(tzinfo=None):
+                        errors.append("Approval has expired")
+                
+                req_digest = action_request.get("current_evidence_digest")
+                if req_digest and approval.get("evidence_digest"):
+                    if approval.get("evidence_digest") != req_digest:
+                        errors.append("Evidence digest mismatch (drift detected)")
+
         # Verification must have passed
         if not action_request.get("verification_passed"):
             errors.append("Verification has not passed")
@@ -303,18 +333,39 @@ class ResolutionExecutionService:
         action_request: Dict[str, Any],
         before_state: FinancialStateSnapshot,
     ) -> AdjustmentRecord:
-        """Execute a simulated financial adjustment.
-
-        In production, this would call the actual financial API.
-        Here it creates an adjustment record.
-        """
+        """Execute a financial adjustment through the PaymentProvider boundary."""
         requested = action_request.get("financial_adjustment_paise", 0)
         resolution_type = action_request.get("resolution_type", "")
+        currency_str = action_request.get("currency", "INR")
+        
+        try:
+            currency = Currency(currency_str)
+        except ValueError:
+            raise ValueError(f"Currency mismatch or invalid: {currency_str}")
 
         # Validate the adjustment is sensible
         if requested < 0:
             raise ValueError(f"Negative adjustment not allowed: {requested}")
 
+        provider_req = ProviderExecutionRequest(
+            action_type=resolution_type,
+            action_id=action_request.get("action_id", ""),
+            target_entity_id=before_state.exception_id,
+            amount_paise=requested,
+            currency=currency,
+            idempotency_key=action_request.get("idempotency_key", ""),
+            metadata=action_request.get("metadata", {})
+        )
+        
+        provider_result = self.provider.execute(provider_req)
+        
+        if provider_result.status == ProviderExecutionStatus.FAILED:
+            raise RuntimeError(f"Provider rejected execution: {provider_result.error_code} - {provider_result.error_message}")
+        if provider_result.status == ProviderExecutionStatus.TIMEOUT:
+            raise RuntimeError(f"Provider execution timed out")
+        if provider_result.status == ProviderExecutionStatus.UNKNOWN:
+            raise RuntimeError(f"Provider execution outcome unknown")
+        
         # Determine adjustment type from resolution type
         adj_type = "CORRECTION"
         if "FEE" in resolution_type.upper():
@@ -331,15 +382,15 @@ class ResolutionExecutionService:
         elif "REFUND" in resolution_type.upper():
             affected = [f"REF-{before_state.exception_id}"]
 
-        adjustment_id = f"ADJ-{uuid.uuid4().hex[:8].upper()}"
+        adjustment_id = provider_result.provider_reference_id or f"ADJ-{uuid.uuid4().hex[:8].upper()}"
 
         return AdjustmentRecord(
             adjustment_id=adjustment_id,
             adjustment_type=adj_type,
-            amount_paise=requested,
+            amount_paise=provider_result.amount_paise,
             requested_amount_paise=requested,
             affected_records=affected,
-            status="applied",
+            status=provider_result.status.value,
         )
 
     # ─────────────────────────────────────────────────────────────────────────
