@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Crystal Market",
+    "reference": "MER-CRY-001",
+    "currency": "INR",
+    "created_at": "2025-02-21T14:14:47"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Gold Trading",
+    "reference": "MER-GOL-002",
+    "currency": "INR",
+    "created_at": "2025-04-14T12:20:04"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Shop",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-01-02T23:34:26"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Royal Co",
+    "reference": "MER-ROY-004",
+    "currency": "INR",
+    "created_at": "2025-01-16T16:55:01"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Fresh Trading",
+    "reference": "MER-FRE-005",
+    "currency": "INR",
+    "created_at": "2025-04-29T18:59:32"
+  }
+]

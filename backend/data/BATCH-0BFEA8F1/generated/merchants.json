@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Mart",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-04-10T07:59:04"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Store",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-03-17T21:48:05"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Store",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-06-23T15:36:42"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Market",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-01-04T02:36:52"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Royal Solutions",
+    "reference": "MER-ROY-005",
+    "currency": "INR",
+    "created_at": "2025-04-30T10:56:07"
+  }
+]

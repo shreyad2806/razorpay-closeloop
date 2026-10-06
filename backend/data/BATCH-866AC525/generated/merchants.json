@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Royal Market",
+    "reference": "MER-ROY-001",
+    "currency": "INR",
+    "created_at": "2025-01-18T05:20:42"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Global Hub",
+    "reference": "MER-GLO-002",
+    "currency": "INR",
+    "created_at": "2025-01-07T16:18:46"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Fresh Co",
+    "reference": "MER-FRE-003",
+    "currency": "INR",
+    "created_at": "2025-02-11T04:59:09"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Elite Trading",
+    "reference": "MER-ELI-004",
+    "currency": "INR",
+    "created_at": "2025-03-01T23:50:17"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Quick Solutions",
+    "reference": "MER-QUI-005",
+    "currency": "INR",
+    "created_at": "2025-03-21T17:39:31"
+  }
+]

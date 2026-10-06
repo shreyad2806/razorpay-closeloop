@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Hub",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-05-07T02:20:50"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Star Enterprises",
+    "reference": "MER-STA-002",
+    "currency": "INR",
+    "created_at": "2025-05-21T17:37:44"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Smart Goods",
+    "reference": "MER-SMA-003",
+    "currency": "INR",
+    "created_at": "2025-03-20T16:18:02"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Global Digital",
+    "reference": "MER-GLO-004",
+    "currency": "INR",
+    "created_at": "2025-05-10T11:14:55"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Quick Trading",
+    "reference": "MER-QUI-005",
+    "currency": "INR",
+    "created_at": "2025-05-07T07:33:11"
+  }
+]

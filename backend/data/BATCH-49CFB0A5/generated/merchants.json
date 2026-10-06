@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Services",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-01-03T05:31:07"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Elite Trading",
+    "reference": "MER-ELI-002",
+    "currency": "INR",
+    "created_at": "2025-02-03T06:30:44"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Digital",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-04-11T06:25:35"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Tech Shop",
+    "reference": "MER-TEC-004",
+    "currency": "INR",
+    "created_at": "2025-02-25T14:08:28"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Star Services",
+    "reference": "MER-STA-005",
+    "currency": "INR",
+    "created_at": "2025-05-11T10:55:50"
+  }
+]

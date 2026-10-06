@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Digital",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-02-28T10:30:35"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Royal Goods",
+    "reference": "MER-ROY-002",
+    "currency": "INR",
+    "created_at": "2025-05-20T12:59:40"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Gold Mart",
+    "reference": "MER-GOL-003",
+    "currency": "INR",
+    "created_at": "2025-03-26T17:54:54"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Green Market",
+    "reference": "MER-GRE-004",
+    "currency": "INR",
+    "created_at": "2025-05-23T14:02:07"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Tech Services",
+    "reference": "MER-TEC-005",
+    "currency": "INR",
+    "created_at": "2025-06-26T01:24:39"
+  }
+]

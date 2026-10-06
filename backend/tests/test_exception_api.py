@@ -17,13 +17,20 @@ Tests:
 import pytest
 from fastapi.testclient import TestClient
 
+from app.api.auth_dependencies import get_current_principal
 from app.api.services.exception_service import ExceptionService, _exception_registry
 from app.main import app
+from auth_test_helper import (
+    LEGACY_TEST_SUBJECT,
+    authenticated_test_client,
+)
 
 
 @pytest.fixture
 def client():
-    return TestClient(app, raise_server_exceptions=False)
+    # Phase 12: every request is authenticated with a REAL, verified token
+    # (deterministic HS256 test key) and passes through real RBAC checks.
+    return authenticated_test_client(app)
 
 
 @pytest.fixture(autouse=True)
@@ -330,7 +337,7 @@ class TestRejectException:
         """Reject unknown exception returns 404."""
         response = client.post(
             "/exceptions/NONEXISTENT/reject",
-            json={"rejected_by": "r@e.com", "reason": "Bad"},
+            json={"rejected_by": "reviewer@example.com", "reason": "Bad"},
         )
         assert response.status_code == 404
 
@@ -342,7 +349,7 @@ class TestRejectException:
             exc_id = cases[0]["exception_id"]
             response = client.post(
                 f"/exceptions/{exc_id}/reject",
-                json={"rejected_by": "r@e.com", "reason": ""},
+                json={"rejected_by": "reviewer@example.com", "reason": ""},
             )
             assert response.status_code == 422
 
@@ -354,7 +361,7 @@ class TestRejectException:
             exc_id = cases[0]["exception_id"]
             response = client.post(
                 f"/exceptions/{exc_id}/reject",
-                json={"rejected_by": "r@e.com", "reason": "Wrong type"},
+                json={"rejected_by": "reviewer@example.com", "reason": "Wrong type"},
             )
             data = response.json()["data"]
             assert "feedback_id" in data
@@ -449,7 +456,7 @@ class TestStateTransitions:
             # Reject
             client.post(
                 f"/exceptions/{exc_id}/reject",
-                json={"rejected_by": "r@e.com", "reason": "Bad"},
+                json={"rejected_by": "reviewer@example.com", "reason": "Bad"},
             )
             # Try to approve — should fail because status is REJECTED
             response = client.post(
@@ -520,7 +527,7 @@ class TestExceptionSafety:
             exc_id = cases[0]["exception_id"]
             response = client.post(
                 f"/exceptions/{exc_id}/reject",
-                json={"rejected_by": "r@e.com", "reason": "Wrong"},
+                json={"rejected_by": "reviewer@example.com", "reason": "Wrong"},
             )
             data = response.json()["data"]
             assert "feedback_id" in data

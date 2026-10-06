@@ -1,0 +1,49 @@
+{
+  "seed": 103,
+  "generated_at": "2026-10-05T18:36:09.119820Z",
+  "config": {
+    "num_merchants": 5,
+    "num_cases": 20,
+    "currency": "INR",
+    "date_range_start": "2025-01-01T00:00:00",
+    "date_range_end": "2025-06-30T00:00:00",
+    "fee_rate_bps": 200,
+    "tax_rate_bps": 1800
+  },
+  "counts": {
+    "merchants": 5,
+    "payments": 20,
+    "settlements": 19,
+    "refunds": 2,
+    "fees": 22,
+    "taxes": 21,
+    "adjustments": 1,
+    "cases": 20
+  },
+  "scenario_distribution": {
+    "TIMING_DIFFERENCE": 3,
+    "EXACT_MATCH": 8,
+    "COMPLEX_MULTI_ADJUSTMENT": 3,
+    "TAX_ADJUSTMENT": 2,
+    "PARTIAL_SETTLEMENT": 1,
+    "FEE_DIFFERENCE": 3
+  },
+  "risk_distribution": {
+    "HIGH": 4,
+    "LOW": 8,
+    "MEDIUM": 8
+  },
+  "resolvable_count": 20,
+  "unresolved_count": 0,
+  "validation": {
+    "valid": true,
+    "error_count": 0,
+    "warning_count": 0,
+    "errors": [],
+    "warnings": []
+  },
+  "batch_id": "BATCH-A9C22883",
+  "batch_seed": 103,
+  "generation_time_seconds": 0.001,
+  "events_per_second": 85852.89
+}

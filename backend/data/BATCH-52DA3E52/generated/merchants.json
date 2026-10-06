@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Labs",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-06-25T08:01:10"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Elite Goods",
+    "reference": "MER-ELI-002",
+    "currency": "INR",
+    "created_at": "2025-02-09T07:37:17"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Market",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-05-30T11:52:17"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Green Market",
+    "reference": "MER-GRE-004",
+    "currency": "INR",
+    "created_at": "2025-03-31T06:04:53"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Tech Trading",
+    "reference": "MER-TEC-005",
+    "currency": "INR",
+    "created_at": "2025-01-23T19:35:27"
+  }
+]

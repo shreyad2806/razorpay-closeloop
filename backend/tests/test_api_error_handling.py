@@ -17,6 +17,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
+from auth_test_helper import authenticated_test_client
 from app.api.errors import (
     BusinessRuleException,
     ConflictException,
@@ -45,8 +46,8 @@ from app.api.errors import (
 
 @pytest.fixture
 def client():
-    """Create test client."""
-    return TestClient(app, raise_server_exceptions=False)
+    """Create test client (Phase 12: authenticated with a verified token)."""
+    return authenticated_test_client(app)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

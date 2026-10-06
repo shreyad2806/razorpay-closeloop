@@ -1,0 +1,23 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Global Solutions",
+    "reference": "MER-GLO-001",
+    "currency": "INR",
+    "created_at": "2025-06-05T09:07:08"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Gold Hub",
+    "reference": "MER-GOL-002",
+    "currency": "INR",
+    "created_at": "2025-02-21T09:06:57"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Prime Solutions",
+    "reference": "MER-PRI-003",
+    "currency": "INR",
+    "created_at": "2025-06-25T06:37:38"
+  }
+]

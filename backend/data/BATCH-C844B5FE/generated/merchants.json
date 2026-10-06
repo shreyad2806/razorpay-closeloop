@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Solutions",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-02-21T19:43:24"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Tech Goods",
+    "reference": "MER-TEC-002",
+    "currency": "INR",
+    "created_at": "2025-05-23T02:25:32"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Fresh Co",
+    "reference": "MER-FRE-003",
+    "currency": "INR",
+    "created_at": "2025-05-21T06:29:08"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Star Solutions",
+    "reference": "MER-STA-004",
+    "currency": "INR",
+    "created_at": "2025-04-10T23:48:31"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Elite Labs",
+    "reference": "MER-ELI-005",
+    "currency": "INR",
+    "created_at": "2025-03-16T03:00:46"
+  }
+]

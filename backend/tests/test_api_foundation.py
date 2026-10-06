@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.main import app
+from auth_test_helper import authenticated_test_client
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -19,8 +20,9 @@ from app.main import app
 
 @pytest.fixture
 def client():
-    """Create test client."""
-    return TestClient(app, raise_server_exceptions=False)
+    # Phase 12: every request is authenticated with a REAL, verified token and
+    # passes through real RBAC checks (unauthenticated requests get 401/403).
+    return authenticated_test_client(app)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

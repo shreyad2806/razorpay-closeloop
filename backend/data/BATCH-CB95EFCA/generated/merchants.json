@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Fresh Goods",
+    "reference": "MER-FRE-001",
+    "currency": "INR",
+    "created_at": "2025-03-17T07:20:15"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Silver Enterprises",
+    "reference": "MER-SIL-002",
+    "currency": "INR",
+    "created_at": "2025-05-22T22:01:48"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Diamond Trading",
+    "reference": "MER-DIA-003",
+    "currency": "INR",
+    "created_at": "2025-04-22T18:22:38"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Prime Shop",
+    "reference": "MER-PRI-004",
+    "currency": "INR",
+    "created_at": "2025-06-29T17:13:14"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Labs",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-06-28T13:50:02"
+  }
+]

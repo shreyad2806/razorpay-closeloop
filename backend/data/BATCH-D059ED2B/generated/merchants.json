@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Elite Hub",
+    "reference": "MER-ELI-001",
+    "currency": "INR",
+    "created_at": "2025-06-28T01:30:25"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Blue Mart",
+    "reference": "MER-BLU-002",
+    "currency": "INR",
+    "created_at": "2025-04-29T14:49:23"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Services",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-04-04T21:21:06"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Quick Trading",
+    "reference": "MER-QUI-004",
+    "currency": "INR",
+    "created_at": "2025-02-17T22:53:48"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Global Trading",
+    "reference": "MER-GLO-005",
+    "currency": "INR",
+    "created_at": "2025-02-14T14:53:07"
+  }
+]

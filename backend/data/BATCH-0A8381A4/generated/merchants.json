@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Enterprises",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-04-05T16:01:04"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Prime Trading",
+    "reference": "MER-PRI-002",
+    "currency": "INR",
+    "created_at": "2025-06-20T11:23:44"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Blue Trading",
+    "reference": "MER-BLU-003",
+    "currency": "INR",
+    "created_at": "2025-01-28T17:58:54"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Gold Market",
+    "reference": "MER-GOL-004",
+    "currency": "INR",
+    "created_at": "2025-05-26T13:10:53"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Smart Labs",
+    "reference": "MER-SMA-005",
+    "currency": "INR",
+    "created_at": "2025-02-11T07:04:04"
+  }
+]

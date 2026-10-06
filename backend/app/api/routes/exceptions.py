@@ -15,7 +15,10 @@ Endpoints:
 
 from typing import Optional
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
+
+from app.api.auth_dependencies import require_permission
+from app.auth.principal import Permission, Principal
 
 from app.api.dependencies import get_exception_service
 from app.api.errors import ConflictException, NotFoundException, ValidationException
@@ -133,7 +136,13 @@ async def get_exception(exception_id: str):
         403: {"model": ErrorResponse, "description": "Guardrail rejected the resolution"},
     },
 )
-async def resolve_exception(exception_id: str, request: ResolveRequest):
+async def resolve_exception(
+    exception_id: str,
+    request: ResolveRequest,
+    principal: Principal = Depends(
+        require_permission(Permission.INITIATE_RESOLUTION)
+    ),
+):
     """Submit a resolution proposal (does NOT bypass guardrails).
 
     **Resolution types**: REFUND_ADJUSTMENT, FEE_REVERSAL, SETTLEMENT_CORRECTION, etc.
@@ -176,7 +185,13 @@ async def resolve_exception(exception_id: str, request: ResolveRequest):
         **_ERRORS_409,
     },
 )
-async def approve_exception(exception_id: str, request: ApproveRequest):
+async def approve_exception(
+    exception_id: str,
+    request: ApproveRequest,
+    principal: Principal = Depends(
+        require_permission(Permission.APPROVE_RESOLUTION)
+    ),
+):
     """Approve a resolution.
 
     Records the approval with the reviewer identity and optional comments.
@@ -196,7 +211,18 @@ async def approve_exception(exception_id: str, request: ApproveRequest):
             f"Cannot approve exception in '{exc.get('status')}' status"
         )
 
-    result = svc.approve_exception(exception_id, request.model_dump())
+    # SECURITY: the approver identity comes from the authenticated principal,
+    # never from the request payload. A contradictory payload identity is a
+    # forgery attempt and is rejected.
+    authenticated_actor = principal.actor_id()
+    if request.approved_by and request.approved_by != authenticated_actor:
+        raise ValidationException(
+            "approved_by does not match the authenticated identity"
+        )
+
+    approval_data = request.model_dump()
+    approval_data["approved_by"] = authenticated_actor
+    result = svc.approve_exception(exception_id, approval_data)
     if "error" in result:
         raise ValidationException(result["error"])
     return ApiResponse(success=True, data=result)
@@ -216,7 +242,13 @@ async def approve_exception(exception_id: str, request: ApproveRequest):
         **_ERRORS_422,
     },
 )
-async def reject_exception(exception_id: str, request: RejectRequest):
+async def reject_exception(
+    exception_id: str,
+    request: RejectRequest,
+    principal: Principal = Depends(
+        require_permission(Permission.REJECT_RESOLUTION)
+    ),
+):
     """Reject a resolution.
 
     Records the rejection with the reviewer identity and mandatory reason.
@@ -236,7 +268,16 @@ async def reject_exception(exception_id: str, request: RejectRequest):
             f"Cannot reject exception in '{exc.get('status')}' status"
         )
 
-    result = svc.reject_exception(exception_id, request.model_dump())
+    # SECURITY: the rejecting identity comes from the authenticated principal.
+    authenticated_actor = principal.actor_id()
+    if request.rejected_by and request.rejected_by != authenticated_actor:
+        raise ValidationException(
+            "rejected_by does not match the authenticated identity"
+        )
+
+    rejection_data = request.model_dump()
+    rejection_data["rejected_by"] = authenticated_actor
+    result = svc.reject_exception(exception_id, rejection_data)
     if "error" in result:
         raise ValidationException(result["error"])
     return ApiResponse(success=True, data=result)
@@ -257,7 +298,13 @@ async def reject_exception(exception_id: str, request: RejectRequest):
         **_ERRORS_422,
     },
 )
-async def escalate_exception(exception_id: str, request: EscalateRequest):
+async def escalate_exception(
+    exception_id: str,
+    request: EscalateRequest,
+    principal: Principal = Depends(
+        require_permission(Permission.INITIATE_RESOLUTION)
+    ),
+):
     """Escalate an exception for manual human review.
 
     Records the escalation with:
@@ -282,7 +329,7 @@ async def escalate_exception(exception_id: str, request: EscalateRequest):
     result = svc.escalate_exception(
         exception_id,
         reason=request.reason,
-        escalated_by=request.escalated_by,
+        escalated_by=principal.actor_id(),
     )
     if "error" in result:
         raise ValidationException(result["error"])
