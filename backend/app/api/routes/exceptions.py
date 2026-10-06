@@ -7,20 +7,21 @@ Uses typed Pydantic schemas for all requests and responses.
 Endpoints:
 - GET  /exceptions                        — List exceptions with filtering
 - GET  /exceptions/{id}                   — Get exception details
+- GET  /exceptions/{id}/audit            — Get audit trail for exception (Phase 13)
 - POST /exceptions/{id}/resolve           — Submit a resolution
 - POST /exceptions/{id}/approve           — Approve a resolution
 - POST /exceptions/{id}/reject            — Reject a resolution
 - POST /exceptions/{id}/escalate          — Escalate for human review
 """
 
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends, Query
 
 from app.api.auth_dependencies import require_permission
 from app.auth.principal import Permission, Principal
 
-from app.api.dependencies import get_exception_service
+from app.api.dependencies import get_exception_service, get_audit_service
 from app.api.errors import ConflictException, NotFoundException, ValidationException
 from app.api.schemas import (
     ApiResponse,
@@ -34,6 +35,7 @@ from app.api.schemas import (
     RiskCategory,
 )
 from app.api.errors import ErrorResponse
+from app.services.audit_log import AuditLogService
 
 router = APIRouter(prefix="/exceptions", tags=["Exceptions"])
 
@@ -41,6 +43,8 @@ router = APIRouter(prefix="/exceptions", tags=["Exceptions"])
 _ERRORS_404 = {404: {"model": ErrorResponse, "description": "Exception not found"}}
 _ERRORS_409 = {409: {"model": ErrorResponse, "description": "Conflict — invalid state transition or duplicate operation"}}
 _ERRORS_422 = {422: {"model": ErrorResponse, "description": "Validation error"}}
+_ERRORS_401 = {401: {"model": ErrorResponse, "description": "Authentication required"}}
+_ERRORS_403 = {403: {"model": ErrorResponse, "description": "Permission denied"}}
 
 
 @router.get(
@@ -116,6 +120,67 @@ async def get_exception(exception_id: str):
     if exc is None:
         raise NotFoundException("Exception", exception_id)
     return ApiResponse(success=True, data=exc)
+
+
+@router.get(
+    "/{exception_id}/audit",
+    summary="Get audit trail",
+    description=(
+        "Retrieve the audit trail for a specific exception. "
+        "Returns immutable audit events in chronological order. "
+        "Actor identity comes from the validated audit record, not the current session."
+    ),
+    response_model=ApiResponse,
+    responses={**_ERRORS_404, **_ERRORS_401, **_ERRORS_403},
+)
+async def get_exception_audit(
+    exception_id: str,
+    principal: Principal = Depends(require_permission(Permission.VIEW_AUDIT)),
+) -> ApiResponse:
+    """Get the audit trail for an exception.
+
+    Returns all audit events for the exception, ordered by timestamp.
+    The events are immutable and actor identity comes from the backend.
+    Uses the in-memory AuditLogService for Phase 13.
+    """
+    # Verify exception exists
+    svc = get_exception_service()
+    exc = svc.get_exception(exception_id)
+    if exc is None:
+        raise NotFoundException("Exception", exception_id)
+
+    # Get audit events from the shared service
+    audit_svc = get_audit_service()
+
+    # Get all events and filter by exception_id
+    all_events = audit_svc.get_all_events()
+    events = [e for e in all_events if e.exception_id == exception_id]
+
+    # Sort by timestamp
+    events.sort(key=lambda e: e.timestamp)
+
+    # Convert to serializable format using correct schema fields
+    audit_data = [
+        {
+            "event_id": e.event_id,
+            "event_type": e.event_type.value if hasattr(e.event_type, "value") else str(e.event_type),
+            "exception_id": e.exception_id,
+            "workflow_id": e.workflow_id,
+            "actor": e.actor,
+            "actor_type": e.actor_type.value if hasattr(e.actor_type, "value") else str(e.actor_type),
+            "decision": e.decision,
+            "confidence": e.confidence,
+            "risk": e.risk,
+            "timestamp": e.timestamp.isoformat() if e.timestamp else None,
+            "final_outcome": e.final_outcome.value if e.final_outcome else None,
+            "error": e.error,
+            "correction_of": e.correction_of,
+            "correction_reason": e.correction_reason,
+        }
+        for e in events
+    ]
+
+    return ApiResponse(success=True, data=audit_data, count=len(audit_data))
 
 
 @router.post(

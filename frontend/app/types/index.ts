@@ -80,6 +80,34 @@ export interface HealthResponse {
   phases: string[];
 }
 
+// ─── Authentication (Phase 13) ──────────────────────────────────────────────────
+
+export interface CurrentPrincipal {
+  subject: string;
+  actor_id: string;
+  roles: string[];
+  permissions: string[];
+}
+
+// ─── Audit (Phase 13) ───────────────────────────────────────────────────────────
+
+export interface AuditEvent {
+  event_id: string;
+  event_type: string;
+  exception_id: string;
+  workflow_id: string;
+  actor: string;
+  actor_type: string;
+  timestamp: string | null;
+  decision: string | null;
+  confidence: number | null;
+  risk: string | null;
+  final_outcome: string | null;
+  error: string | null;
+  correction_of: string | null;
+  correction_reason: string | null;
+}
+
 // ─── Exception ───────────────────────────────────────────────────────────────
 
 export interface ExceptionListItem {

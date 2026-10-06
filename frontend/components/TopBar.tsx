@@ -1,18 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getHealth } from "@/app/lib/api";
+import { getHealth, getAuthToken, clearAuthToken } from "@/app/lib/api";
 
 export function TopBar() {
   // Start with undefined so we can render nothing during SSR
   // and avoid hydration mismatch
   const [status, setStatus] = useState<"ok" | "error" | "checking" | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     const check = async () => {
       const { ok } = await getHealth();
       if (mounted) setStatus(ok ? "ok" : "error");
+      // Check auth state (Phase 13)
+      if (mounted) setIsAuthenticated(!!getAuthToken());
     };
     check();
     const interval = setInterval(check, 30000);
@@ -21,6 +24,13 @@ export function TopBar() {
       clearInterval(interval);
     };
   }, []);
+
+  const handleLogout = () => {
+    clearAuthToken();
+    setIsAuthenticated(false);
+    // In production, this would redirect to Cognito logout
+    window.location.reload();
+  };
 
   // Render nothing during SSR to avoid hydration mismatch
   // The client will render the actual status after useEffect runs
@@ -95,6 +105,21 @@ export function TopBar() {
         <span className="text-slate-200 hidden md:inline">|</span>
         <span className="text-slate-500 font-medium hidden md:inline">
           Financial Safety Guardrails Active
+        </span>
+        <span className="text-slate-200 hidden lg:inline">|</span>
+        {/* Phase 13: Auth state */}
+        <span className="flex items-center gap-2 hidden md:inline">
+          <span className="text-slate-500 font-medium">
+            {isAuthenticated ? "Authenticated" : "Not Authenticated"}
+          </span>
+          {isAuthenticated && (
+            <button
+              onClick={handleLogout}
+              className="text-brand hover:underline font-medium"
+            >
+              Logout
+            </button>
+          )}
         </span>
         <span className="text-slate-200 hidden lg:inline">|</span>
         <span className="text-slate-400 hidden lg:inline">v1.0.0</span>

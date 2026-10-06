@@ -6,7 +6,7 @@ Services are singletons — created once and reused.
 """
 
 from functools import lru_cache
-from typing import Optional
+from typing import Optional, Generator
 
 from app.api.analyze import AnalyzeService
 from app.api.explain import ExplainService
@@ -17,6 +17,8 @@ from app.services.feedback import FeedbackService
 from app.services.learning_metrics import LearningMetricsService, SafetyThresholds
 from app.schemas.learning_metrics import SafetyMetricStatus
 from app.services.mlflow_model_registry import MLflowModelRegistry
+from app.database.database import SessionLocal
+from sqlalchemy.orm import Session
 
 # Module-level singleton for MLflow registry
 _mlflow_registry = MLflowModelRegistry()
@@ -416,3 +418,22 @@ def get_model_service() -> ModelService:
 @lru_cache()
 def get_learning_service() -> LearningService:
     return LearningService()
+
+
+def get_db() -> Generator[Session, None, None]:
+    """Get a database session dependency.
+
+    The session is automatically closed after the request.
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@lru_cache()
+def get_audit_service():
+    """Get the singleton AuditLogService."""
+    from app.services.audit_log import AuditLogService
+    return AuditLogService()

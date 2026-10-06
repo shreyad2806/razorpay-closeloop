@@ -32,6 +32,25 @@ import type {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
+// ─── Authentication State (Phase 13) ─────────────────────────────────────────────
+// Token is managed externally (e.g., Cognito). This is a placeholder for when
+// real authentication is integrated. No fake production auth.
+// ─────────────────────────────────────────────────────────────────────────────
+
+let authToken: string | null = null;
+
+export function setAuthToken(token: string | null) {
+  authToken = token;
+}
+
+export function getAuthToken(): string | null {
+  return authToken;
+}
+
+export function clearAuthToken() {
+  authToken = null;
+}
+
 // ─── Fetch wrapper with error handling ───────────────────────────────────────
 
 async function apiFetch<T>(
@@ -39,11 +58,18 @@ async function apiFetch<T>(
   options?: RequestInit
 ): Promise<{ data: T | null; error: string | null; ok: boolean }> {
   try {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...(options?.headers || {}),
+    };
+
+    // Add Authorization header if token is available (Phase 13)
+    if (authToken) {
+      headers["Authorization"] = `Bearer ${authToken}`;
+    }
+
     const res = await fetch(`${API_BASE}${path}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(options?.headers || {}),
-      },
+      headers,
       ...options,
     });
 
@@ -78,6 +104,20 @@ async function apiPost<T>(
 
 export async function getHealth() {
   return apiFetch<HealthResponse>("/health");
+}
+
+// ─── Authentication (Phase 13) ──────────────────────────────────────────────────
+
+export async function getCurrentPrincipal() {
+  return apiFetch<{ subject: string; actor_id: string; roles: string[]; permissions: string[] }>("/auth/me");
+}
+
+// ─── Audit (Phase 13) ───────────────────────────────────────────────────────────
+
+export async function getExceptionAudit(exceptionId: string) {
+  return apiFetch<{ event_id: string; event_type: string; exception_id: string; workflow_id: string; actor: string; actor_type: string; timestamp: string | null; decision: string | null; confidence: number | null; risk: string | null; final_outcome: string | null; error: string | null; correction_of: string | null; correction_reason: string | null }[]>(
+    `/exceptions/${encodeURIComponent(exceptionId)}/audit`
+  );
 }
 
 // ─── Exceptions ──────────────────────────────────────────────────────────────
