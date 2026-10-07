@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.structured_logging import (
     WorkflowEvent, system_logger, api_logger,
 )
+from app.core import observability as obs
+from app.api.observability_middleware import ObservabilityMiddleware
 from app.api.analyze import AnalyzeRequest, AnalyzeResponse, AnalyzeService
 from app.api.errors import (
     BusinessRuleException,
@@ -66,6 +68,18 @@ app = FastAPI(
 async def lifespan(app: FastAPI):
     """Application startup and shutdown lifecycle."""
     # ── Startup ──
+    # Phase 14: initialise local-first telemetry (no exporter required).
+    try:
+        obs_info = obs.init_observability()
+        system_logger.info(
+            WorkflowEvent.STARTUP.value,
+            "Observability initialised",
+            otel_available=obs_info.get("otel_available", False),
+        )
+    except Exception as e:
+        system_logger.warning(WorkflowEvent.DEPENDENCY_UNAVAILABLE.value,
+                            f"Observability init skipped: {type(e).__name__}")
+
     system_logger.info(WorkflowEvent.STARTUP.value, "CloseLoop starting up")
 
     # Check database connectivity
@@ -137,6 +151,16 @@ async def lifespan(app: FastAPI):
     # ── Shutdown ──
     system_logger.info(WorkflowEvent.SHUTDOWN.value, "CloseLoop shutting down")
 
+    # Flush telemetry (best-effort; never blocks shutdown).
+    try:
+        from opentelemetry.trace import get_tracer_provider  # type: ignore
+        provider = get_tracer_provider()
+        shutdown = getattr(provider, "shutdown", None)
+        if callable(shutdown):
+            shutdown()
+    except Exception:
+        pass
+
 
 app.router.lifespan_context = lifespan
 
@@ -151,6 +175,7 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["X-Request-ID"],
 )
+app.add_middleware(ObservabilityMiddleware)
 app.add_middleware(RequestIDMiddleware)
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -206,8 +231,70 @@ def health():
     return {
         "status": "ok",
         "version": "1.0.0",
-        "phases": ["1-12", "13.9"],
+        "phases": ["1-12", "13.9", "14"],
     }
+
+
+@app.get(
+    "/ready",
+    tags=["System"],
+    summary="Readiness check",
+    description=(
+        "Report whether the service can currently operate its required "
+        "dependencies. Returns 200 when ready, 503 when a required dependency "
+        "is unavailable. Optional dependencies are reported but never mark the "
+        "service unready. No secrets or credentials are exposed."
+    ),
+)
+def ready():
+    """Readiness probe (Phase 14).
+
+    Required: database connectivity.
+    Optional (reported only): ML classifier, LLM config, observability.
+    """
+    from fastapi.responses import JSONResponse
+
+    checks = {
+        "database": False,
+        "ml_classifier": False,
+        "llm": False,
+        "observability": False,
+    }
+
+    # ── Required: database ──
+    try:
+        from sqlalchemy import text as _text
+        from app.database.database import engine
+        with engine.connect() as conn:
+            conn.execute(_text("SELECT 1"))
+        checks["database"] = True
+    except Exception:
+        checks["database"] = False
+
+    # ── Optional dependencies (never fail readiness) ──
+    try:
+        from app.ml.classifier import ExceptionClassifier  # noqa: F401
+        checks["ml_classifier"] = True
+    except Exception:
+        checks["ml_classifier"] = False
+    try:
+        from app.llm.config import LLMConfig
+        checks["llm"] = bool(LLMConfig.from_env().enabled)
+    except Exception:
+        checks["llm"] = False
+    try:
+        checks["observability"] = obs.is_initialised() or obs.is_otel_available()
+    except Exception:
+        checks["observability"] = False
+
+    required_ok = checks["database"]
+    body = {
+        "status": "ready" if required_ok else "not_ready",
+        "version": "1.0.0",
+        "checks": checks,
+        "required": ["database"],
+    }
+    return JSONResponse(status_code=200 if required_ok else 503, content=body)
 
 
 @app.post(

@@ -20,7 +20,7 @@ it must NEVER default to AUTO.
 
 import time
 import traceback
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from app.core.structured_logging import (
     WorkflowEvent, guardrail_logger, set_correlation_ids,
@@ -30,6 +30,15 @@ from app.schemas.decision_matrix import AutomationDecision
 from app.schemas.evidence_guard import EvidenceAction
 from app.schemas.exposure_guard import ExposureAction
 from app.schemas.guardrail_engine import GuardrailEngineResult
+from app.core import observability as obs
+
+
+def _policy_outcome(result: Any) -> Dict[str, Any]:
+    """Telemetry-only view of a guardrail decision. Never re-decides."""
+    decision = getattr(result, "decision", None)
+    value = str(getattr(decision, "value", decision) or "UNKNOWN")
+    obs.record_counter(obs.MetricName.POLICY_DECISIONS, 1, {"decision": value})
+    return {"policy.decision": value}
 from app.schemas.resolution_engine import ResolutionEngineResult
 from app.services.confidence_gate import ConfidenceGate
 from app.services.decision_matrix import AutomationDecisionMatrix
@@ -77,6 +86,13 @@ class GuardrailEngine:
         self.fallback_guard = fallback_guard or FallbackGuard()
         self.decision_matrix = decision_matrix or AutomationDecisionMatrix()
 
+    @obs.observed(
+        obs.SpanName.POLICY_EVALUATE,
+        metric=obs.MetricName.POLICY_EVALUATIONS,
+        error_metric=obs.MetricName.POLICY_FAILURES,
+        attributes={"operation": "evaluate_guardrails"},
+        outcome_resolver=_policy_outcome,
+    )
     def evaluate(
         self,
         engine_result: ResolutionEngineResult,

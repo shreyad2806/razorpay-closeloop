@@ -16,7 +16,7 @@ Similarity is an intelligence signal, not a financial decision.
 """
 
 import json
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from sqlalchemy import (
@@ -36,6 +36,18 @@ from datetime import datetime
 from app.database.database import Base
 from app.schemas.historical_case import HistoricalCase
 from app.schemas.similarity import SimilarCase, SimilaritySearchResult
+from app.core import observability as obs
+
+
+def _retrieval_outcome(result: Any) -> Dict[str, Any]:
+    """Telemetry-only retrieval summary. Never logs embeddings."""
+    candidates = getattr(result, "results", None)
+    if candidates is None:
+        candidates = getattr(result, "similar_cases", None)
+    count = len(candidates) if isinstance(candidates, (list, tuple)) else 0
+    return {"historical.candidates": count}
+
+
 from app.services.embedding_service import (
     EMBEDDING_DIMENSION,
     EMBEDDING_MODEL_NAME,
@@ -241,6 +253,14 @@ class SimilarityService:
                 count += 1
         return count
 
+    @obs.observed(
+        obs.SpanName.HISTORICAL_RETRIEVE,
+        metric=obs.MetricName.HISTORICAL_RETRIEVALS,
+        error_metric=obs.MetricName.HISTORICAL_FAILURES,
+        duration_metric=obs.MetricName.HISTORICAL_DURATION,
+        attributes={"operation": "similarity_search"},
+        outcome_resolver=_retrieval_outcome,
+    )
     def search(
         self,
         query_case: Dict,

@@ -38,11 +38,32 @@ from __future__ import annotations
 import uuid
 from collections import deque
 from datetime import datetime
-from typing import Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional
 
 from sqlalchemy.orm import Session
 
 from app.domain.state_machines import EXCEPTION, allowed_transitions
+from app.core import observability as obs
+
+
+def _closed_loop_outcome(result: Any) -> Dict[str, Any]:
+    """Telemetry-only view of a post-execution verification result.
+
+    Records what the existing Phase 10 decision *was* — never computes it.
+    """
+    verified = bool(getattr(result, "financially_verified", False))
+    decision = getattr(result, "decision", None)
+    decision_value = str(getattr(decision, "value", decision) or "UNKNOWN")
+    if verified:
+        obs.record_counter(obs.MetricName.POST_EXECUTION_VERIFIED, 1)
+    else:
+        obs.record_counter(obs.MetricName.POST_EXECUTION_FAILED, 1, {"decision": decision_value})
+    return {
+        "verification.decision": decision_value,
+        "verification.financially_verified": verified,
+        "verification.exception_closed": bool(getattr(result, "exception_closed", False)),
+        "verification.escalated": bool(getattr(result, "exception_escalated", False)),
+    }
 from app.ingestion.service import IngestionService
 from app.models.adjustment import Adjustment as DBAdjustment
 from app.models.exception import FinancialException
@@ -124,6 +145,14 @@ class PostExecutionReconciliationService:
 
     # ------------------------------------------------------------------ public
 
+    @obs.observed(
+        obs.SpanName.POST_EXECUTION_RECONCILE,
+        metric=obs.MetricName.POST_EXECUTION_RUNS,
+        error_metric=obs.MetricName.POST_EXECUTION_FAILED,
+        duration_metric=obs.MetricName.POST_EXECUTION_DURATION,
+        attributes={"operation": "verify_and_close"},
+        outcome_resolver=_closed_loop_outcome,
+    )
     def verify_and_close(
         self,
         execution_result: ExecutionResult,

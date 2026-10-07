@@ -24,6 +24,7 @@ from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Optional
 from uuid import uuid4
 
+from app.core import observability as obs
 from app.core.structured_logging import (
     WorkflowEvent, mcp_logger, set_correlation_ids,
 )
@@ -39,6 +40,18 @@ from mcp.schemas import (
     MCPToolStatus,
 )
 from mcp.tools.registry import MCPToolRegistry
+
+
+def _mcp_outcome(result: Any) -> Dict[str, Any]:
+    """Telemetry-only view of an MCP tool response. Never re-authorizes."""
+    attrs: Dict[str, Any] = {}
+    success = getattr(result, "success", None)
+    if success is not None:
+        attrs["mcp.success"] = bool(success)
+    tool_name = getattr(result, "tool_name", None)
+    if tool_name:
+        attrs["mcp.tool"] = str(tool_name)
+    return attrs
 
 
 def _gen_id(prefix: str) -> str:
@@ -139,6 +152,14 @@ class MCPServer:
     # Tool Invocation
     # ─────────────────────────────────────────────────────────────────────
 
+    @obs.observed(
+        obs.SpanName.MCP_TOOL,
+        metric=obs.MetricName.MCP_INVOCATIONS,
+        error_metric=obs.MetricName.MCP_FAILURES,
+        duration_metric=obs.MetricName.MCP_DURATION,
+        attributes={"operation": "mcp_invoke"},
+        outcome_resolver=_mcp_outcome,
+    )
     def invoke(self, request: MCPToolRequest) -> MCPToolResponse:
         """Invoke a tool through the MCP server.
 

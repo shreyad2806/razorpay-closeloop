@@ -25,7 +25,7 @@ DOES NOT:
 """
 
 import time
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from sqlalchemy.orm import Session
 
@@ -43,6 +43,17 @@ from app.services.explanation_engine import DeterministicExplanationEngine
 from app.services.evidence_quality import EvidenceQualityScorer
 from app.services.evidence_graph import EvidenceGraphBuilder
 from app.ml.resolution import EXCEPTION_TO_RESOLUTION_MAP
+from app.core import observability as obs
+
+
+def _proposal_outcome(result: Any) -> Dict[str, Any]:
+    """Telemetry-only view of a resolution proposal. Never re-decides."""
+    if result is None:
+        obs.record_counter(obs.MetricName.RESOLUTION_HUMAN_REVIEW, 1, {"reason": "no_proposal"})
+        return {"resolution.proposed": False}
+    status = getattr(result, "selection_status", None)
+    status_value = str(getattr(status, "value", status) or "UNKNOWN")
+    return {"resolution.proposed": True, "resolution.selection_status": status_value}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -100,6 +111,13 @@ class ResolutionEngine:
         self.resolution_predictor = resolution_predictor
         self.similarity_service = similarity_service
 
+    @obs.observed(
+        obs.SpanName.RESOLUTION_PROPOSE,
+        metric=obs.MetricName.RESOLUTION_PROPOSALS,
+        error_metric=obs.MetricName.RESOLUTION_FAILURES,
+        attributes={"operation": "propose_resolution"},
+        outcome_resolver=_proposal_outcome,
+    )
     def resolve(self, exception_id: str) -> Optional[ResolutionEngineResult]:
         """Run the full resolution pipeline for an exception.
 

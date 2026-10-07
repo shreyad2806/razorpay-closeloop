@@ -24,6 +24,27 @@ from app.schemas.financial import (
     Tax,
 )
 from app.schemas.reconciliation import ReconciliationResult
+from app.core import observability as obs
+
+
+def _reconciliation_outcome(summary: Any) -> Dict[str, Any]:
+    """Telemetry-only summary of a batch reconciliation. Never authoritative."""
+    matched = int(getattr(summary, "matched_cases", 0) or 0)
+    exceptions = int(getattr(summary, "exception_cases", 0) or 0)
+    missing = int(getattr(summary, "missing_cases", 0) or 0)
+    duplicate = int(getattr(summary, "duplicate_cases", 0) or 0)
+    total = int(getattr(summary, "total_cases", 0) or 0)
+    obs.record_counter(obs.MetricName.RECONCILIATION_MATCHED, matched, {"source": "batch"})
+    obs.record_gauge(
+        obs.MetricName.RECONCILIATION_MISMATCHED,
+        exceptions + missing + duplicate,
+        {"source": "batch"},
+    )
+    return {
+        "reconciliation.matched": matched,
+        "reconciliation.exception": exceptions,
+        "reconciliation.total": total,
+    }
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -150,6 +171,14 @@ class BatchReconciler:
             "cases": cases,
         }
 
+    @obs.observed(
+        obs.SpanName.RECONCILIATION,
+        metric=obs.MetricName.RECONCILIATION_RUNS,
+        error_metric=obs.MetricName.RECONCILIATION_FAILURES,
+        duration_metric=obs.MetricName.RECONCILIATION_DURATION,
+        attributes={"operation": "reconcile_batch"},
+        outcome_resolver=_reconciliation_outcome,
+    )
     def reconcile_batch(
         self,
         batch_id: str,

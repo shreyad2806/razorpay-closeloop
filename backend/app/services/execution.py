@@ -32,6 +32,18 @@ from app.providers.base import PaymentProvider
 from app.providers.dto import ProviderExecutionRequest, ProviderExecutionResult
 from app.schemas.enums import ProviderExecutionStatus
 from app.providers.mock_provider import MockProvider
+from app.core import observability as obs
+
+
+def _execution_outcome(result: Any) -> Dict[str, Any]:
+    """Telemetry-only view of a provider execution result."""
+    status = getattr(result, "status", None)
+    value = str(getattr(status, "value", status) or "UNKNOWN")
+    if value == "SUCCESS":
+        obs.record_counter(obs.MetricName.EXECUTION_SUCCESS, 1, {"outcome": "success"})
+    elif value in ("FAILED", "TIMEOUT", "UNKNOWN"):
+        obs.record_counter(obs.MetricName.EXECUTION_FAILED, 1, {"outcome": value.lower()})
+    return {"execution.status": value}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -63,6 +75,14 @@ class ResolutionExecutionService:
         """Access the idempotency store for testing/integration."""
         return self._idempotency_store
 
+    @obs.observed(
+        obs.SpanName.PROVIDER_EXECUTE,
+        metric=obs.MetricName.EXECUTION_ATTEMPTS,
+        error_metric=obs.MetricName.EXECUTION_FAILED,
+        duration_metric=obs.MetricName.EXECUTION_DURATION,
+        attributes={"operation": "execute_resolution"},
+        outcome_resolver=_execution_outcome,
+    )
     def execute(
         self,
         action_request: Dict[str, Any],

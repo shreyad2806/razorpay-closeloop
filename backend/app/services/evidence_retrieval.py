@@ -17,6 +17,7 @@ from app.models.fee import Fee
 from app.models.tax import Tax
 from app.models.adjustment import Adjustment
 from app.models.evidence_link import EvidenceLink
+from app.core import observability as obs
 from app.schemas.evidence import (
     EvidencePackage,
     EvidenceRecord,
@@ -56,6 +57,10 @@ class EvidenceRetrievalService:
     # Public API
     # ─────────────────────────────────────────────────────────────────────────
 
+    @obs.observed(
+        obs.SpanName.EVIDENCE,
+        attributes={"operation": "retrieve_evidence"},
+    )
     def retrieve_by_exception_id(
         self, exception_id: str, persist_links: bool = True
     ) -> Optional[EvidencePackage]:

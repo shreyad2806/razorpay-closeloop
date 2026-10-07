@@ -16,10 +16,11 @@ Structure:
 import time as _time
 import uuid
 from datetime import datetime
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from langgraph.graph import END, START, StateGraph
 
+from app.core import observability as obs
 from app.core.structured_logging import (
     WorkflowEvent, agent_logger, set_correlation_ids,
 )
@@ -351,6 +352,24 @@ def create_initial_state(
     return AgentState(metadata=metadata)
 
 
+def _langgraph_outcome(result: Any) -> Dict[str, Any]:
+    """Telemetry-only view of a completed workflow run. Never re-decides."""
+    decision = getattr(result, "decision", None) or getattr(result, "final_decision", None)
+    decision_value = str(getattr(decision, "value", decision) or "") if decision is not None else ""
+    attrs: Dict[str, Any] = {"workflow.completed": True}
+    if decision_value:
+        attrs["workflow.decision"] = decision_value
+    return attrs
+
+
+@obs.observed(
+    obs.SpanName.LANGGRAPH_WORKFLOW,
+    metric=obs.MetricName.LANGGRAPH_RUNS,
+    error_metric=obs.MetricName.LANGGRAPH_FAILURES,
+    duration_metric=obs.MetricName.LANGGRAPH_DURATION,
+    attributes={"operation": "run_workflow"},
+    outcome_resolver=_langgraph_outcome,
+)
 def run_workflow(
     exception_id: str,
     case_id: Optional[str] = None,

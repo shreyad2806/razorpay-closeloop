@@ -15,7 +15,7 @@ This classifier predicts a category — it does NOT modify financial amounts.
 import json
 import os
 from datetime import datetime
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import joblib
 import numpy as np
@@ -32,6 +32,19 @@ from sklearn.preprocessing import LabelEncoder
 
 from app.schemas.enums import ExceptionType
 from app.schemas.ml_dataset import FEATURE_SCHEMA_VERSION, MLSample
+from app.core import observability as obs
+
+
+def _ml_outcome(result: Any) -> Dict[str, Any]:
+    """Telemetry-only ML summary. Records counts/labels, never feature vectors."""
+    try:
+        import numpy as _np
+
+        arr = _np.asarray(result).ravel().tolist()
+        classes = sorted({str(int(v)) for v in arr})
+        return {"ml.prediction_count": len(arr), "ml.predicted_classes": len(classes)}
+    except Exception:
+        return {}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -245,6 +258,14 @@ class ExceptionClassifier:
             "seed": self.seed,
         }
 
+    @obs.observed(
+        obs.SpanName.ML_PREDICT,
+        metric=obs.MetricName.ML_PREDICTIONS,
+        error_metric=obs.MetricName.ML_FAILURES,
+        duration_metric=obs.MetricName.ML_DURATION,
+        attributes={"model": "exception_classifier", "feature_schema_version": FEATURE_SCHEMA_VERSION},
+        outcome_resolver=_ml_outcome,
+    )
     def predict(self, X: np.ndarray) -> np.ndarray:
         """Predict exception type classes."""
         return self.model.predict(X)
