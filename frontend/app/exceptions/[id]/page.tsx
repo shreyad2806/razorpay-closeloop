@@ -24,6 +24,9 @@ import {
   Toast,
 } from "@/components/ui";
 import EvidenceGraph from "@/components/EvidenceGraph";
+import { AuditTimeline } from "@/components/AuditTimeline";
+import { ClosedLoopStages } from "@/components/ClosedLoopStages";
+import { useAuth, PERMISSION, PermissionGate } from "@/app/lib/auth-context";
 import {
   formatPaise,
   formatPct,
@@ -49,7 +52,8 @@ type Tab =
   | "guardrails"
   | "similar"
   | "explanation"
-  | "review";
+  | "review"
+  | "audit";
 
 const TABS: { key: Tab; label: string; count?: number }[] = [
   { key: "summary", label: "Summary" },
@@ -61,6 +65,7 @@ const TABS: { key: Tab; label: string; count?: number }[] = [
   { key: "similar", label: "Similar Cases" },
   { key: "explanation", label: "Explanation" },
   { key: "review", label: "Review" },
+  { key: "audit", label: "Audit" },
 ];
 
 export default function ExceptionDetailPage({
@@ -83,6 +88,14 @@ export default function ExceptionDetailPage({
   // Action states
   const [actionLoading, setActionLoading] = useState(false);
   const [actionResult, setActionResult] = useState<string | null>(null);
+
+  // Phase 13 — permissions come exclusively from GET /auth/me via AuthProvider.
+  // These gate UI affordances only; the backend re-checks every operation.
+  const { can, loading: authLoading } = useAuth();
+  const canViewAudit = can(PERMISSION.VIEW_AUDIT);
+  const canInitiate = can(PERMISSION.INITIATE_RESOLUTION);
+  const canApprove = can(PERMISSION.APPROVE_RESOLUTION);
+  const canReject = can(PERMISSION.REJECT_RESOLUTION);
 
   useEffect(() => {
     let mounted = true;
@@ -132,6 +145,10 @@ export default function ExceptionDetailPage({
     reason?: string,
     candidateId?: string
   ) {
+    if (!can(PERMISSION.INITIATE_RESOLUTION)) {
+      setActionResult("Missing initiate:resolution permission — proposal not sent.");
+      return;
+    }
     setActionLoading(true);
     setActionResult(null);
     const { ok, error: err } = await resolveException(id, {
@@ -151,6 +168,10 @@ export default function ExceptionDetailPage({
   }
 
   async function handleApprove(reviewer = "ops_reviewer", comments = "Approved via dashboard") {
+    if (!can(PERMISSION.APPROVE_RESOLUTION)) {
+      setActionResult("Missing approve:resolution permission — approval not sent.");
+      return;
+    }
     setActionLoading(true);
     setActionResult(null);
     const { ok, error: err } = await approveException(id, {
@@ -164,6 +185,10 @@ export default function ExceptionDetailPage({
   }
 
   async function handleReject(reviewer = "ops_reviewer", reason = "Rejected via dashboard") {
+    if (!can(PERMISSION.REJECT_RESOLUTION)) {
+      setActionResult("Missing reject:resolution permission — rejection not sent.");
+      return;
+    }
     setActionLoading(true);
     setActionResult(null);
     const { ok, error: err } = await rejectException(id, {
@@ -177,6 +202,10 @@ export default function ExceptionDetailPage({
   }
 
   async function handleEscalate(reviewer = "ops_reviewer", reason = "Escalated for senior review") {
+    if (!can(PERMISSION.INITIATE_RESOLUTION)) {
+      setActionResult("Missing initiate:resolution permission — escalation not sent.");
+      return;
+    }
     setActionLoading(true);
     setActionResult(null);
     const { ok, error: err } = await escalateException(id, {
@@ -209,8 +238,9 @@ export default function ExceptionDetailPage({
   const similarCount = similar?.count || similar?.similar_cases?.length || 0;
   const candidateCount = analysis?.candidates?.length || 0;
 
-  // Update tab counts
-  const tabsWithCounts = TABS.map((t) => {
+  // Update tab counts. Audit visibility requires the backend view:audit
+  // permission — the tab is not offered to principals that lack it.
+  const tabsWithCounts = TABS.filter((t) => t.key !== "audit" || canViewAudit).map((t) => {
     if (t.key === "evidence") return { ...t, count: evidenceCount || undefined };
     if (t.key === "similar") return { ...t, count: similarCount || undefined };
     if (t.key === "candidates") return { ...t, count: candidateCount || undefined };
@@ -305,6 +335,7 @@ export default function ExceptionDetailPage({
             handlePropose(c.resolution_type, c.adjustment_paise, c.description, c.candidate_id)
           }
           actionLoading={actionLoading}
+          canPropose={canInitiate}
         />
       )}
       {tab === "guardrails" && <GuardrailsTab analysis={analysis} />}
@@ -313,6 +344,9 @@ export default function ExceptionDetailPage({
       {tab === "review" && (
         <ReviewTab
           exc={exc}
+          canApprove={canApprove}
+          canReject={canReject}
+          canEscalate={canInitiate}
           onApprove={(rev, comm) => handleApprove(rev, comm)}
           onReject={(rev, rsn) => handleReject(rev, rsn)}
           onEscalate={(rev, rsn) => handleEscalate(rev, rsn)}
@@ -320,6 +354,24 @@ export default function ExceptionDetailPage({
           actionLoading={actionLoading}
           actionResult={actionResult}
         />
+      )}
+      {tab === "audit" && (
+        <PermissionGate
+          permission={PERMISSION.VIEW_AUDIT}
+          fallback={
+            authLoading ? null : (
+              <div className="card" data-testid="audit-permission-denied">
+                <div className="card-body text-xs text-slate-500">
+                  This principal does not hold the{' '}
+                  <code className="font-mono">{PERMISSION.VIEW_AUDIT}</code>{' '}
+                  permission. The audit trail is read-only and requires it.
+                </div>
+              </div>
+            )
+          }
+        >
+          <AuditTimeline exceptionId={id} />
+        </PermissionGate>
       )}
     </div>
   );
@@ -786,10 +838,12 @@ function CandidatesTab({
   analysis,
   onPropose,
   actionLoading,
+  canPropose = true,
 }: {
   analysis: AnalysisResult | null;
   onPropose?: (c: any) => void;
   actionLoading?: boolean;
+  canPropose?: boolean;
 }) {
   if (!analysis)
     return (
@@ -868,17 +922,32 @@ function CandidatesTab({
                   <div className="text-[11px] text-slate-400">
                     Strategy: <span className="font-medium text-slate-700">{c.resolution_type}</span>
                   </div>
-                  <button
-                    onClick={() => onPropose(c)}
-                    disabled={actionLoading}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${
-                      i === 0
-                        ? "bg-brand text-white hover:bg-brand-dark"
-                        : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
-                    }`}
-                  >
-                    {actionLoading ? "Submitting…" : i === 0 ? "Apply Recommended Proposal" : "Propose Resolution"}
-                  </button>
+                  <div className="text-right">
+                    <button
+                      onClick={() => onPropose(c)}
+                      disabled={actionLoading || !canPropose}
+                      data-testid="propose-button"
+                      title={canPropose ? undefined : "Requires initiate:resolution"}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-sm ${
+                        i === 0
+                          ? "bg-brand text-white hover:bg-brand-dark"
+                          : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                      }`}
+                    >
+                      {actionLoading
+                        ? "Submitting…"
+                        : !canPropose
+                          ? "Propose Resolution (locked)"
+                          : i === 0
+                            ? "Apply Recommended Proposal"
+                            : "Propose Resolution"}
+                    </button>
+                    {!canPropose && (
+                      <div className="text-[11px] text-rose-500 mt-1" data-testid="propose-locked">
+                        Requires <code className="font-mono">initiate:resolution</code>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -1161,6 +1230,9 @@ function ExplanationTab({ explanation }: { explanation: ExplanationResult | null
 
 function ReviewTab({
   exc,
+  canApprove,
+  canReject,
+  canEscalate,
   onApprove,
   onReject,
   onEscalate,
@@ -1169,6 +1241,9 @@ function ReviewTab({
   actionResult,
 }: {
   exc: ExceptionDetail;
+  canApprove: boolean;
+  canReject: boolean;
+  canEscalate: boolean;
   onApprove: (reviewer: string, comments: string) => void;
   onReject: (reviewer: string, reason: string) => void;
   onEscalate: (reviewer: string, reason: string) => void;
@@ -1185,6 +1260,13 @@ function ReviewTab({
 
   return (
     <div className="space-y-6">
+      {/* Execution vs verification — rendered from backend state only */}
+      <ClosedLoopStages
+        status={exc.status}
+        resolutionType={exc.resolution_type}
+        workflowId={exc.workflow_id}
+      />
+
       {actionResult && (
         <div
           className={`rounded-lg p-3 text-sm font-medium ${
@@ -1308,14 +1390,26 @@ function ReviewTab({
                     className="w-full mb-3 px-2.5 py-1 text-xs border border-slate-200 rounded"
                     placeholder="Approval comments"
                   />
-                )}
-                <button
+                )}                <button
                   className="btn btn-success w-full text-xs"
                   onClick={() => onApprove(reviewerId, comments)}
-                  disabled={actionLoading || isTerminal}
+                  disabled={actionLoading || isTerminal || !canApprove}
+                  data-testid="approve-button"
+                  title={canApprove ? undefined : "Requires approve:resolution"}
                 >
-                  {actionLoading ? "Processing…" : isTerminal ? "Already Finalized" : "Approve Resolution"}
+                  {actionLoading
+                    ? "Processing…"
+                    : isTerminal
+                      ? "Already Finalized"
+                      : canApprove
+                        ? "Approve Resolution"
+                        : "Approve Resolution (locked)"}
                 </button>
+                {!canApprove && !isTerminal && (
+                  <p className="text-[11px] text-rose-500 mt-1.5" data-testid="approve-locked">
+                    Requires <code className="font-mono">approve:resolution</code>
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -1343,10 +1437,23 @@ function ReviewTab({
                 <button
                   className="btn btn-danger w-full text-xs"
                   onClick={() => onReject(reviewerId, rejectReason)}
-                  disabled={actionLoading || isTerminal}
+                  disabled={actionLoading || isTerminal || !canReject}
+                  data-testid="reject-button"
+                  title={canReject ? undefined : "Requires reject:resolution"}
                 >
-                  {actionLoading ? "Processing…" : isTerminal ? "Already Finalized" : "Reject Resolution"}
+                  {actionLoading
+                    ? "Processing…"
+                    : isTerminal
+                      ? "Already Finalized"
+                      : canReject
+                        ? "Reject Resolution"
+                        : "Reject Resolution (locked)"}
                 </button>
+                {!canReject && !isTerminal && (
+                  <p className="text-[11px] text-rose-500 mt-1.5" data-testid="reject-locked">
+                    Requires <code className="font-mono">reject:resolution</code>
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -1374,10 +1481,23 @@ function ReviewTab({
                 <button
                   className="btn btn-warning w-full text-xs"
                   onClick={() => onEscalate(reviewerId, escalateReason)}
-                  disabled={actionLoading || isTerminal}
+                  disabled={actionLoading || isTerminal || !canEscalate}
+                  data-testid="escalate-button"
+                  title={canEscalate ? undefined : "Requires initiate:resolution"}
                 >
-                  {actionLoading ? "Processing…" : isTerminal ? "Already Finalized" : "Escalate to Senior"}
+                  {actionLoading
+                    ? "Processing…"
+                    : isTerminal
+                      ? "Already Finalized"
+                      : canEscalate
+                        ? "Escalate to Senior"
+                        : "Escalate to Senior (locked)"}
                 </button>
+                {!canEscalate && !isTerminal && (
+                  <p className="text-[11px] text-rose-500 mt-1.5" data-testid="escalate-locked">
+                    Requires <code className="font-mono">initiate:resolution</code>
+                  </p>
+                )}
               </div>
             </div>
           </div>

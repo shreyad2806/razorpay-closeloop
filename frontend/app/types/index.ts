@@ -25,13 +25,29 @@ export type ResolutionType =
   | "UNKNOWN";
 
 export type ExceptionStatus =
+  // legacy values still returned by older records
   | "PENDING"
   | "IN_PROGRESS"
   | "RESOLVED"
-  | "ESCALATED"
   | "UNRESOLVED"
+  | "OPEN"
+  | "MATCHED"
+  // Phase 13: full section 7.3 backend lifecycle (backend is authoritative)
+  | "DETECTED"
+  | "INVESTIGATING"
+  | "ANALYZED"
+  | "RESOLUTION_PROPOSED"
+  | "AUTO_APPROVED"
+  | "HUMAN_REVIEW"
   | "APPROVED"
-  | "REJECTED";
+  | "REJECTED"
+  | "EXECUTING"
+  | "VERIFYING"
+  | "RECONCILING"
+  | "CLOSED"
+  | "ESCALATED"
+  | "FAILED"
+  | "ROLLED_BACK";
 
 export type BatchStatus =
   | "CREATED"

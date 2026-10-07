@@ -9,12 +9,13 @@ Minimal behavioral tests for Phase 13 additions:
 - No optimistic approval
 - Provider SUCCESS ≠ CLOSED
 
-Note: Frontend test framework not yet configured.
-These are documentation tests demonstrating the intended behavior.
+Note: These are documentation tests only. The executable Phase 13
+frontend suite lives in ``frontend/tests/frontend-phase13.test.tsx`` and
+runs under ``npm test`` (Jest + ts-jest + @testing-library/react).
 """
 
-# NOTE: Frontend test framework not configured in package.json
-# These tests document the intended Phase 13 behavior
+# These tests document the intended Phase 13 behavior.
+# Runtime coverage (22 tests) is provided by tests/frontend-phase13.test.tsx.
 
 def test_auth_state_display():
     """

@@ -6,6 +6,8 @@
 import type {
   ApiResponse,
   HealthResponse,
+  CurrentPrincipal,
+  AuditEvent,
   ExceptionListItem,
   ExceptionDetail,
   EvidenceResponse,
@@ -60,7 +62,9 @@ async function apiFetch<T>(
   try {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      ...(options?.headers || {}),
+      ...(options?.headers && Object.fromEntries(
+        Object.entries(options.headers).map(([k, v]) => [k, String(v)]),
+      ) || {}),
     };
 
     // Add Authorization header if token is available (Phase 13)
@@ -108,16 +112,40 @@ export async function getHealth() {
 
 // ─── Authentication (Phase 13) ──────────────────────────────────────────────────
 
-export async function getCurrentPrincipal() {
-  return apiFetch<{ subject: string; actor_id: string; roles: string[]; permissions: string[] }>("/auth/me");
+/**
+ * Phase 13 — `/auth/me` and `/exceptions/{id}/audit` are wrapped in the
+ * standard `{ success, data }` envelope. Unwrapping happens here, at the
+ * transport boundary, so consumers receive the payload itself and can never
+ * accidentally read envelope fields as principal/audit fields.
+ */
+export type ApiResult<T> = {
+  data: T | null;
+  error: string | null;
+  ok: boolean;
+};
+
+export async function getCurrentPrincipal(): Promise<ApiResult<CurrentPrincipal>> {
+  const res = await apiFetch<ApiResponse<CurrentPrincipal>>("/auth/me");
+  const payload = res.data?.data ?? null;
+  if (!res.ok) return { data: null, error: res.error, ok: false };
+  if (!payload) {
+    return { data: null, error: "Malformed /auth/me response", ok: false };
+  }
+  return { data: payload, error: null, ok: true };
 }
 
 // ─── Audit (Phase 13) ───────────────────────────────────────────────────────────
 
-export async function getExceptionAudit(exceptionId: string) {
-  return apiFetch<{ event_id: string; event_type: string; exception_id: string; workflow_id: string; actor: string; actor_type: string; timestamp: string | null; decision: string | null; confidence: number | null; risk: string | null; final_outcome: string | null; error: string | null; correction_of: string | null; correction_reason: string | null }[]>(
+export async function getExceptionAudit(exceptionId: string): Promise<ApiResult<AuditEvent[]>> {
+  const res = await apiFetch<ApiResponse<AuditEvent[]>>(
     `/exceptions/${encodeURIComponent(exceptionId)}/audit`
   );
+  if (!res.ok) return { data: null, error: res.error, ok: false };
+  const payload = res.data?.data;
+  if (!Array.isArray(payload)) {
+    return { data: null, error: "Malformed audit response", ok: false };
+  }
+  return { data: payload, error: null, ok: true };
 }
 
 // ─── Exceptions ──────────────────────────────────────────────────────────────
