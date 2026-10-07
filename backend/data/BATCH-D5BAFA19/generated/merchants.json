@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Green Solutions",
+    "reference": "MER-GRE-001",
+    "currency": "INR",
+    "created_at": "2025-05-27T04:30:54"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Smart Labs",
+    "reference": "MER-SMA-002",
+    "currency": "INR",
+    "created_at": "2025-01-26T16:00:36"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Royal Market",
+    "reference": "MER-ROY-003",
+    "currency": "INR",
+    "created_at": "2025-02-17T18:12:26"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Blue Hub",
+    "reference": "MER-BLU-004",
+    "currency": "INR",
+    "created_at": "2025-06-21T07:09:21"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Crystal Services",
+    "reference": "MER-CRY-005",
+    "currency": "INR",
+    "created_at": "2025-01-15T05:06:19"
+  }
+]

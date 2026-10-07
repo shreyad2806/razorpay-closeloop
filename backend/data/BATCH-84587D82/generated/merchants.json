@@ -1,0 +1,37 @@
+[
+  {
+    "merchant_id": "MER-0001",
+    "name": "Smart Market",
+    "reference": "MER-SMA-001",
+    "currency": "INR",
+    "created_at": "2025-01-20T16:29:06"
+  },
+  {
+    "merchant_id": "MER-0002",
+    "name": "Red Enterprises",
+    "reference": "MER-RED-002",
+    "currency": "INR",
+    "created_at": "2025-05-24T02:35:20"
+  },
+  {
+    "merchant_id": "MER-0003",
+    "name": "Crystal Services",
+    "reference": "MER-CRY-003",
+    "currency": "INR",
+    "created_at": "2025-03-25T18:39:38"
+  },
+  {
+    "merchant_id": "MER-0004",
+    "name": "Elite Co",
+    "reference": "MER-ELI-004",
+    "currency": "INR",
+    "created_at": "2025-03-31T03:24:35"
+  },
+  {
+    "merchant_id": "MER-0005",
+    "name": "Green Labs",
+    "reference": "MER-GRE-005",
+    "currency": "INR",
+    "created_at": "2025-06-15T01:37:55"
+  }
+]
