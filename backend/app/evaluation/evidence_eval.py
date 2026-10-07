@@ -90,7 +90,7 @@ def evaluate_evidence(
             weak = case.evidence.coverage < 0.5 or case.evidence.has_conflict
             correct = result.top1_auto_correct
             try:
-                policy_decision = automation_decision_for_case(case, engine)
+                policy_decision = automation_decision_for_case(case, result, engine)
             except Exception:  # pragma: no cover - defensive
                 policy_decision = "ERROR"
             if weak:

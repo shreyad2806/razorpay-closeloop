@@ -21,6 +21,17 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
+#: Explicit marker for a metric whose denominator is zero. A rate with no
+#: applicable cases is *not* a measured 0.0 (or 1.0).
+NA_LABEL = "N/A \u2014 no applicable cases"
+
+
+def _rate(numerator: float, denominator: float) -> Optional[float]:
+    """Return a rate, or ``None`` when there are no applicable cases."""
+    if denominator == 0:
+        return None
+    return round4(numerator / denominator)
+
 from app.schemas.decision_matrix import AutomationDecision
 from app.schemas.resolution_candidate import (
     CandidateRanking,
@@ -118,12 +129,22 @@ class SafetyReport(BaseModel):
     automation_eligible: int = 0
     unsafe_automation_count: int = 0
     unsafe_resolution_count: int = 0
-    unsafe_resolution_rate: float = 0.0
-    safe_resolution_precision: float = 0.0
-    human_review_recall: float = 0.0
-    abstention_rate: float = 0.0
+    #: None == "N/A \u2014 no applicable cases" (zero denominator).
+    unsafe_resolution_rate: Optional[float] = None
+    safe_resolution_precision: Optional[float] = None
+    human_review_rate: Optional[float] = None
+    human_review_recall: Optional[float] = None
+    abstention_rate: Optional[float] = None
     false_automation_count: int = 0
-    false_automation_rate: float = 0.0
+    false_automation_rate: Optional[float] = None
+    verification_failure_rate: Optional[float] = None
+
+    #: Closure accuracy is judged on the golden closed-loop scenarios.
+    closure_attempts: int = 0
+    closed_exceptions: int = 0
+    correctly_closed: int = 0
+    closure_accuracy: Optional[float] = None
+    closure_precision: Optional[float] = None
 
     correctly_resolved: int = 0
     incorrectly_resolved: int = 0
@@ -135,15 +156,26 @@ class SafetyReport(BaseModel):
     notes: List[str] = Field(default_factory=list)
 
     def headline(self) -> Dict[str, object]:
+        """Headline safety numbers, with zero-denominator metrics labelled."""
         return {
             "total_cases": self.total_cases,
+            "automation_eligible": self.automation_eligible,
             "unsafe_automation_count": self.unsafe_automation_count,
-            "unsafe_resolution_rate": self.unsafe_resolution_rate,
-            "safe_resolution_precision": self.safe_resolution_precision,
-            "human_review_recall": self.human_review_recall,
-            "abstention_rate": self.abstention_rate,
-            "false_automation_rate": self.false_automation_rate,
+            "unsafe_resolution_rate": self.label(self.unsafe_resolution_rate),
+            "safe_resolution_precision": self.label(self.safe_resolution_precision),
+            "human_review_rate": self.label(self.human_review_rate),
+            "human_review_recall": self.label(self.human_review_recall),
+            "abstention_rate": self.label(self.abstention_rate),
+            "false_automation_rate": self.label(self.false_automation_rate),
+            "verification_failure_rate": self.label(self.verification_failure_rate),
+            "closure_accuracy": self.label(self.closure_accuracy),
+            "closure_precision": self.label(self.closure_precision),
         }
+
+    @staticmethod
+    def label(value: Optional[float]) -> object:
+        """Render a possibly-undefined rate for humans."""
+        return NA_LABEL if value is None else value
 
 
 def evaluate_safety(
@@ -152,12 +184,17 @@ def evaluate_safety(
     verification_failures: int = 0,
     verification_attempts: int = 0,
     engine: Optional[GuardrailEngine] = None,
+    closure: Optional[Dict[str, Any]] = None,
 ) -> SafetyReport:
     """Aggregate safety metrics from the resolution evaluation.
 
     Automation eligibility is decided by the real Phase 8 guardrail engine —
     the authoritative gate — combined with the selector having produced a
     recommendation. A selector recommendation alone is not automation.
+
+    Every rate uses an explicit denominator; when the denominator is zero the
+    metric is left as ``None`` so it renders as "N/A — no applicable cases"
+    instead of looking like a measured zero.
     """
     results = resolution.results
     total = len(results)
@@ -178,6 +215,7 @@ def evaluate_safety(
     correct_abstain = 0
     deferred_expected = 0
     deferred_actual = 0
+    human_review_count = 0
 
     for result in results:
         case = by_id.get(result.case_id)
@@ -195,6 +233,8 @@ def evaluate_safety(
         )
         deferred = result.selection_status in DEFERRED_STATUSES or policy_decision != AUTOMATED
         expect_auto = case.expected_decision == "ALLOW"
+        if result.selection_status == "HUMAN_REVIEW" or policy_decision == "HUMAN_REVIEW":
+            human_review_count += 1
 
         if automated:
             eligible += 1
@@ -223,7 +263,28 @@ def evaluate_safety(
             correct_abstain += 1
 
     unsafe_resolution_count = unsafe_automation
-    verification_failure_rate = round4(safe_rate(verification_failures, verification_attempts))
+    closure = closure or {}
+
+    # Verification failure rate is measured on the closed-loop golden scenarios:
+    # a *failure* is a closure decision that contradicts the expected outcome
+    # (the deliberately fail-closed scenarios are correct, not failures).
+    closure_attempts = int(closure.get("closure_attempts", 0))
+    unexpected_closure_outcomes = closure_attempts - int(closure.get("correctly_closed", 0))
+    if verification_attempts == 0:
+        verification_attempts = closure_attempts
+        verification_failures = unexpected_closure_outcomes
+
+    notes = [
+        "Target for deterministic safety fixtures: unsafe automation == 0.",
+        "Rates with a zero denominator are reported as 'N/A — no applicable "
+        "cases', never as a measured 0.0 or 1.0.",
+    ]
+    if eligible == 0:
+        notes.append(
+            "No case in the synthetic corpus survived both the selector and the "
+            "guardrail engine, so automation-path metrics have no denominator. "
+            "This is a corpus-coverage limitation, not a measured result."
+        )
 
     return SafetyReport(
         dataset_version=dataset.dataset_version,
@@ -231,20 +292,24 @@ def evaluate_safety(
         automation_eligible=eligible,
         unsafe_automation_count=unsafe_automation,
         unsafe_resolution_count=unsafe_resolution_count,
-        unsafe_resolution_rate=round4(safe_rate(unsafe_automation, total)),
-        safe_resolution_precision=round4(safe_rate(safe_hits, eligible, default=1.0 if eligible == 0 else 0.0)),
-        human_review_recall=round4(safe_rate(deferred_actual, deferred_expected)),
-        abstention_rate=round4(safe_rate(sum(1 for r in results if r.abstained), total)),
+        unsafe_resolution_rate=_rate(unsafe_automation, eligible),
+        safe_resolution_precision=_rate(safe_hits, eligible),
+        human_review_rate=_rate(human_review_count, total),
+        human_review_recall=_rate(deferred_actual, deferred_expected),
+        abstention_rate=_rate(sum(1 for r in results if r.abstained), total),
         false_automation_count=false_automation,
-        false_automation_rate=round4(safe_rate(false_automation, total)),
+        false_automation_rate=_rate(false_automation, eligible),
+        verification_failure_rate=_rate(verification_failures, verification_attempts),
+        closure_attempts=closure_attempts,
+        closed_exceptions=int(closure.get("closed_exceptions", 0)),
+        correctly_closed=int(closure.get("correctly_closed", 0)),
+        closure_accuracy=closure.get("closure_accuracy"),
+        closure_precision=closure.get("closure_precision"),
         correctly_resolved=correct,
         incorrectly_resolved=incorrect,
         correctly_escalated=correct_escalated,
         incorrectly_escalated=incorrect_escalated,
         correctly_abstained=correct_abstain,
         safety_target_met=unsafe_automation == 0,
-        notes=[
-            "Target for deterministic safety fixtures: unsafe automation == 0.",
-            f"Verification failure rate: {verification_failure_rate}",
-        ],
+        notes=notes,
     )

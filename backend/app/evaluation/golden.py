@@ -58,6 +58,9 @@ class GoldenResult(BaseModel):
     expected: str
     observed: Dict[str, Any] = Field(default_factory=dict)
     failures: List[str] = Field(default_factory=list)
+    #: ``True``/``False`` when the scenario reaches a closure decision, ``None``
+    #: for scenarios that never get that far (no closure to judge).
+    expect_closed: Optional[bool] = None
 
 
 # ============================================================================
@@ -465,14 +468,42 @@ def _proposal():
     )
 
 
+def _resolution_record(session, exception, status: str = "EXECUTED"):
+    """Persist the resolution the closed-loop service verifies.
+
+    ``verify_and_close`` takes the persisted Phase-10 ``Resolution`` row (not a
+    transient proposal) so its legal ``EXECUTED -> VERIFIED`` transition can be
+    exercised.
+    """
+    from app.models.resolution import Resolution
+
+    resolution = Resolution(
+        id="RES-GOLDEN-P15",
+        exception_id=exception.id,
+        resolution_type="FEE_ADJUSTMENT",
+        amount_paise=DIFFERENCE_PAISE,
+        status=status,
+    )
+    session.add(resolution)
+    session.flush()
+    return resolution
+
+
 def _run_closed_loop(session, settlement_amount: int, adjustment_paise: int = DIFFERENCE_PAISE, provider=None):
-    """Stage, execute and verify. Returns (execution_result, verification_result)."""
+    """Stage, execute and verify.
+
+    Returns ``(execution_result, verification_result, status_after_execute)``.
+    The status is captured *before* verification because verification may
+    legally transition the execution to ``VERIFICATION_FAILED``; asserting on
+    the post-verification status would confuse the two contracts.
+    """
     provider = provider or stage_fee_mismatch_provider(settlement_amount)
     exception, _ = detect_and_persist(session, provider)
 
     execution = ResolutionExecutionService().execute(
         action_request(financial_adjustment_paise=adjustment_paise), _financial_state()
     )
+    status_after_execute = getattr(execution.status, "value", str(execution.status))
     verification = _closed_loop_service(session).verify_and_close(
         execution,
         exception=exception,
@@ -480,9 +511,9 @@ def _run_closed_loop(session, settlement_amount: int, adjustment_paise: int = DI
         case_id=CASE_ID,
         batch_id=BATCH_ID,
         payment_id=PAYMENT_ID,
-        resolution=_proposal(),
+        resolution=_resolution_record(session, exception),
     )
-    return execution, verification
+    return execution, verification, status_after_execute
 
 
 def golden_6_provider_success_reconciliation_failure(session) -> GoldenResult:
@@ -490,9 +521,8 @@ def golden_6_provider_success_reconciliation_failure(session) -> GoldenResult:
     failures: List[str] = []
     # The provider still reports the wrong settlement, so post-execution
     # reconciliation must still mismatch.
-    execution, verification = _run_closed_loop(session, ACTUAL_WRONG_PAISE)
+    execution, verification, execution_status = _run_closed_loop(session, ACTUAL_WRONG_PAISE)
 
-    execution_status = getattr(execution.status, "value", str(execution.status))
     if execution_status != ExecutionStatus.EXECUTED.value:
         failures.append(f"execution did not succeed: {execution_status}")
     if verification.financially_verified:
@@ -504,6 +534,7 @@ def golden_6_provider_success_reconciliation_failure(session) -> GoldenResult:
         scenario_id="G6",
         title="Provider success + reconciliation failure",
         passed=not failures,
+        expect_closed=False,
         expected="execution success → verification failure → NOT CLOSED → escalation",
         observed={
             "execution_status": execution_status,
@@ -532,7 +563,7 @@ def golden_7_provider_timeout(session) -> GoldenResult:
         case_id=CASE_ID,
         batch_id=BATCH_ID,
         payment_id=PAYMENT_ID,
-        resolution=_proposal(),
+        resolution=_resolution_record(session, exception),
     )
 
     if verification.financially_verified:
@@ -544,6 +575,7 @@ def golden_7_provider_timeout(session) -> GoldenResult:
         scenario_id="G7",
         title="Provider timeout / read failure",
         passed=not failures,
+        expect_closed=False,
         expected="fail closed — not verified, not closed",
         observed={
             "financially_verified": verification.financially_verified,
@@ -558,7 +590,9 @@ def golden_7_provider_timeout(session) -> GoldenResult:
 def golden_9_unknown_provider_result(session) -> GoldenResult:
     """G9 — an unknown/non-success execution status cannot close."""
     failures: List[str] = []
-    provider = stage_fee_mismatch_provider(EXPECTED_PAISE)
+    # The exception must exist so the closed-loop service has something to
+    # refuse to close; the settlement therefore stays wrong.
+    provider = stage_fee_mismatch_provider(ACTUAL_WRONG_PAISE)
     exception, _ = detect_and_persist(session, provider)
 
     # A synthetic non-success execution result: provider reported neither
@@ -578,7 +612,7 @@ def golden_9_unknown_provider_result(session) -> GoldenResult:
         case_id=CASE_ID,
         batch_id=BATCH_ID,
         payment_id=PAYMENT_ID,
-        resolution=_proposal(),
+        resolution=_resolution_record(session, exception),
     )
 
     if verification.financially_verified:
@@ -590,6 +624,7 @@ def golden_9_unknown_provider_result(session) -> GoldenResult:
         scenario_id="G9",
         title="Unknown provider result",
         passed=not failures,
+        expect_closed=False,
         expected="not verified / escalation",
         observed={
             "execution_status": status,
@@ -616,6 +651,7 @@ def golden_10_successful_closed_loop(session) -> GoldenResult:
     settlement.amount = EXPECTED_PAISE
     session.commit()
 
+    resolution = _resolution_record(session, exception)
     execution = ResolutionExecutionService().execute(action_request(), _financial_state())
     verification = _closed_loop_service(session).verify_and_close(
         execution,
@@ -624,7 +660,7 @@ def golden_10_successful_closed_loop(session) -> GoldenResult:
         case_id=CASE_ID,
         batch_id=BATCH_ID,
         payment_id=PAYMENT_ID,
-        resolution=_proposal(),
+        resolution=resolution,
     )
 
     if not verification.financially_verified:
@@ -636,12 +672,15 @@ def golden_10_successful_closed_loop(session) -> GoldenResult:
         scenario_id="G10",
         title="Correct resolution → verified → closed",
         passed=not failures,
+        expect_closed=True,
         expected="execution → re-ingestion → deterministic reconciliation → verified → closure",
         observed={
             "financially_verified": verification.financially_verified,
             "exception_closed": verification.exception_closed,
             "decision": getattr(verification.decision, "value", str(verification.decision)),
             "difference": getattr(verification, "difference", None),
+            "resolution_status": resolution.status,
+            "resolved_through_verification": verification.resolution_verified,
             "match_status": getattr(verification, "match_status", None),
         },
         failures=failures,
@@ -668,6 +707,44 @@ DB_SCENARIOS = (
 def run_stage_scenarios() -> List[GoldenResult]:
     """Run the database-free golden scenarios."""
     return [scenario() for scenario in STAGE_SCENARIOS]
+
+
+def closure_metrics(results: List[GoldenResult]) -> Dict[str, Any]:
+    """Closure accuracy over the scenarios that reach a closure decision.
+
+    Denominators are explicit: if no scenario reaches a closure decision the
+    accuracy is reported as ``None`` ("N/A — no applicable cases") rather than
+    as a measured zero.
+    """
+
+    evaluated = [r for r in results if r.expect_closed is not None]
+    if not evaluated:
+        return {
+            "closure_attempts": 0,
+            "closed_exceptions": 0,
+            "correctly_closed": 0,
+            "closure_accuracy": None,
+            "closure_precision": None,
+        }
+    closed = sum(1 for r in evaluated if bool(r.observed.get("exception_closed")))
+    correct = sum(
+        1 for r in evaluated if bool(r.observed.get("exception_closed")) == r.expect_closed
+    )
+    closed_and_correct = sum(
+        1
+        for r in evaluated
+        if r.expect_closed and bool(r.observed.get("exception_closed"))
+    )
+    return {
+        "closure_attempts": len(evaluated),
+        "closed_exceptions": closed,
+        "correctly_closed": correct,
+        # Decision accuracy: did the closed-loop service close exactly the
+        # scenarios that should have been closed?
+        "closure_accuracy": round(correct / len(evaluated), 4),
+        # Literal "correctly closed / all closed" — N/A when nothing closed.
+        "closure_precision": round(closed_and_correct / closed, 4) if closed else None,
+    }
 
 
 def golden_summary(results: List[GoldenResult]) -> Dict[str, Any]:

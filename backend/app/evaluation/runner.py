@@ -21,6 +21,7 @@ from app.evaluation.evidence_eval import EvidenceReport, evaluate_evidence
 from app.evaluation.golden import (
     DB_SCENARIOS,
     GoldenResult,
+    closure_metrics,
     run_stage_scenarios,
 )
 from app.evaluation.leakage import LeakageReport, audit_dataset
@@ -28,12 +29,17 @@ from app.evaluation.ml_eval import MLClassificationReport, evaluate_classifier
 from app.evaluation.policy_eval import PolicyReport, evaluate_policy
 from app.evaluation.resolution_eval import ResolutionReport, evaluate_resolution
 from app.evaluation.retrieval_eval import RetrievalReport, evaluate_retrieval
-from app.evaluation.safety import SafetyReport, evaluate_safety
+from app.evaluation.safety import NA_LABEL, SafetyReport, evaluate_safety
 from app.evaluation.versioning import (
     DEFAULT_EVAL_SEED,
     EVALUATOR_VERSION,
     SYNTHETIC_DATASET_SCHEMA_VERSION,
 )
+
+
+def _na(value: Any) -> Any:
+    """Label an undefined rate instead of printing a misleading zero."""
+    return NA_LABEL if value is None else value
 
 
 class EvaluationRunReport(BaseModel):
@@ -66,7 +72,10 @@ class EvaluationRunReport(BaseModel):
     notes: List[str] = Field(default_factory=list)
 
     def headline(self) -> Dict[str, Any]:
-        """The numbers that matter most for a safety review."""
+        """The numbers that matter most for a safety review.
+
+        Zero-denominator rates are rendered as "N/A — no applicable cases".
+        """
         safety = self.safety or {}
         ml = self.ml or {}
         return {
@@ -76,23 +85,29 @@ class EvaluationRunReport(BaseModel):
             "leakage_free": (self.leakage or {}).get("leakage_free"),
             "accuracy": ml.get("accuracy"),
             "macro_f1": ml.get("f1_macro"),
+            "automation_eligible": safety.get("automation_eligible"),
             "unsafe_automation_count": safety.get("unsafe_automation_count"),
-            "unsafe_resolution_rate": safety.get("unsafe_resolution_rate"),
-            "safe_resolution_precision": safety.get("safe_resolution_precision"),
-            "human_review_recall": safety.get("human_review_recall"),
-            "abstention_rate": safety.get("abstention_rate"),
+            "unsafe_resolution_rate": _na(safety.get("unsafe_resolution_rate")),
+            "safe_resolution_precision": _na(safety.get("safe_resolution_precision")),
+            "human_review_rate": _na(safety.get("human_review_rate")),
+            "human_review_recall": _na(safety.get("human_review_recall")),
+            "abstention_rate": _na(safety.get("abstention_rate")),
+            "closure_accuracy": _na(safety.get("closure_accuracy")),
             "golden_passed": (self.golden or {}).get("passed"),
             "golden_total": (self.golden or {}).get("total"),
         }
 
 
-def _core_evaluation(dataset: EvaluationDataset) -> Dict[str, Any]:
+def _core_evaluation(
+    dataset: EvaluationDataset,
+    closure: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Run every evaluator. Pure with respect to production state."""
     ml: MLClassificationReport = evaluate_classifier(dataset)
     disagreement: DisagreementReport = measure_disagreement(dataset)
     retrieval: RetrievalReport = evaluate_retrieval(dataset)
     resolution: ResolutionReport = evaluate_resolution(dataset)
-    safety: SafetyReport = evaluate_safety(dataset, resolution)
+    safety: SafetyReport = evaluate_safety(dataset, resolution, closure=closure)
     evidence: EvidenceReport = evaluate_evidence(dataset, resolution=resolution)
     policy: PolicyReport = evaluate_policy()
     leakage: LeakageReport = audit_dataset(dataset)
@@ -118,16 +133,19 @@ def run_evaluation(
 ) -> EvaluationRunReport:
     """Run the full Phase 15 evaluation.
 
-    ``session`` (optional) enables the database-backed golden scenarios.
+    ``session`` (optional) enables the database-backed golden scenarios. Pass a
+    callable to have a fresh session created per scenario — the scenarios share
+    well-known record ids, so they are only isolated if they do not share a
+    database.
     """
     dataset = build_synthetic_dataset_v1(per_family=per_family, seed=seed)
-    core = _core_evaluation(dataset)
 
     golden_results: List[GoldenResult] = run_stage_scenarios()
     if session is not None:
+        session_factory = session if callable(session) else (lambda: session)
         for scenario in DB_SCENARIOS:
             try:
-                golden_results.append(scenario(session))
+                golden_results.append(scenario(session_factory()))
             except Exception as exc:  # pragma: no cover - defensive
                 golden_results.append(
                     GoldenResult(
@@ -139,11 +157,14 @@ def run_evaluation(
                     )
                 )
 
+    core = _core_evaluation(dataset, closure=closure_metrics(golden_results))
+
     golden = {
         "evaluator_version": EVALUATOR_VERSION,
         "total": len(golden_results),
         "passed": sum(1 for r in golden_results if r.passed),
         "failed": sum(1 for r in golden_results if not r.passed),
+        "closure": closure_metrics(golden_results),
         "results": [r.model_dump() for r in golden_results],
     }
 
@@ -177,25 +198,67 @@ def run_evaluation(
     return report
 
 
+#: Fields that legitimately differ between two runs and are excluded from the
+#: determinism comparison.
+NON_DETERMINISTIC_FIELDS = ("run_id", "timestamp")
+
+
+def _flatten_diff(first: Any, second: Any, prefix: str = "") -> Dict[str, Any]:
+    """Flatten the differences between two report payloads into dotted paths."""
+    out: Dict[str, Any] = {}
+    if isinstance(first, dict) and isinstance(second, dict):
+        for key in sorted(set(first) | set(second)):
+            out.update(_flatten_diff(first.get(key), second.get(key), f"{prefix}{key}."))
+    elif isinstance(first, list) and isinstance(second, list):
+        if first != second:
+            out[prefix.rstrip(".")] = {
+                "first": f"<{len(first)} items>",
+                "second": f"<{len(second)} items>",
+                "note": "same length, different content" if len(first) == len(second) else "length differs",
+            }
+    elif first != second:
+        out[prefix.rstrip(".")] = {"first": first, "second": second}
+    return out
+
+
+def _deterministic_payload(report: EvaluationRunReport) -> Dict[str, Any]:
+    """Everything that must match between two identical evaluation runs."""
+    payload = report.model_dump()
+    for field in NON_DETERMINISTIC_FIELDS:
+        payload.pop(field, None)
+    return payload
+
+
 def reproducibility_check(
     per_family: int = 12,
     seed: int = DEFAULT_EVAL_SEED,
+    session: Any = None,
 ) -> Dict[str, Any]:
-    """Run the evaluation twice and compare fingerprints and headline metrics."""
-    first = run_evaluation(per_family=per_family, seed=seed)
-    second = run_evaluation(per_family=per_family, seed=seed)
+    """Run the whole evaluation twice and compare every deterministic field.
 
-    a = first.headline()
-    b = second.headline()
-    keys = sorted(set(a) | set(b))
-    differences = {k: {"first": a.get(k), "second": b.get(k)} for k in keys if a.get(k) != b.get(k)}
+    Compared exactly: dataset version/fingerprint, split ids, sample counts,
+    feature and model versions, ML metrics, confusion matrix, calibration,
+    retrieval metrics, resolution metrics, policy matrix, evidence metrics,
+    safety metrics and every golden-case outcome. Only ``run_id`` and
+    ``timestamp`` are excluded.
+    """
+    first = run_evaluation(per_family=per_family, seed=seed, session=session)
+    second = run_evaluation(per_family=per_family, seed=seed, session=session)
+
+    a = _deterministic_payload(first)
+    b = _deterministic_payload(second)
+    differences = _flatten_diff(a, b)
 
     return {
         "seed": seed,
+        "sections_compared": sorted(a.keys()),
+        "dataset_version_first": first.dataset_version,
+        "dataset_version_second": second.dataset_version,
         "dataset_fingerprint_first": first.dataset_fingerprint,
         "dataset_fingerprint_second": second.dataset_fingerprint,
         "fingerprint_match": first.dataset_fingerprint == second.dataset_fingerprint,
         "headline_match": not differences,
         "differences": differences,
-        "reproducible": (first.dataset_fingerprint == second.dataset_fingerprint) and not differences,
+        "reproducible": (first.dataset_fingerprint == second.dataset_fingerprint)
+        and not differences,
     }

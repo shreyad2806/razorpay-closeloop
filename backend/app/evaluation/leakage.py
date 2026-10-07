@@ -174,6 +174,66 @@ def audit_temporal_ordering(dataset: EvaluationDataset) -> List[LeakageFinding]:
     ]
 
 
+def audit_duplicates(dataset: EvaluationDataset) -> List[LeakageFinding]:
+    """Duplicate case ids, and identical feature rows shared across splits.
+
+    A feature row that appears in two splits is the same case seen twice: the
+    model can memorise it. Within a single split it is only a warning (two
+    genuinely different cases may legitimately share a coarse feature vector).
+    """
+    findings: List[LeakageFinding] = []
+
+    ids = [case.case_id for case in dataset.cases]
+    duplicated_ids = sorted({cid for cid in set(ids) if ids.count(cid) > 1})
+    if duplicated_ids:
+        findings.append(
+            LeakageFinding(
+                kind="DUPLICATE_CASE_ID",
+                severity="critical",
+                description=f"{len(duplicated_ids)} case id(s) appear more than once",
+                evidence={"case_ids": duplicated_ids[:20]},
+            )
+        )
+
+    split_of: Dict[str, str] = {}
+    for split, split_ids in dataset.splits.items():
+        for case_id in split_ids:
+            split_of[case_id] = split
+
+    rows: Dict[tuple, List[str]] = {}
+    for case in dataset.cases:
+        signature = tuple(sorted(case.features.items()))
+        rows.setdefault(signature, []).append(case.case_id)
+
+    for case_ids in rows.values():
+        if len(case_ids) < 2:
+            continue
+        splits = {split_of.get(cid) for cid in case_ids} - {None}
+        if len(splits) > 1:
+            findings.append(
+                LeakageFinding(
+                    kind="DUPLICATE_FEATURE_ROW",
+                    severity="critical",
+                    description=(
+                        "Identical feature rows appear in more than one split "
+                        f"({sorted(splits)})"
+                    ),
+                    evidence={"case_ids": case_ids[:20]},
+                )
+            )
+        else:
+            findings.append(
+                LeakageFinding(
+                    kind="REPEATED_FEATURE_ROW",
+                    severity="warning",
+                    description="Identical feature rows within one split",
+                    evidence={"case_ids": case_ids[:20]},
+                )
+            )
+
+    return findings
+
+
 def audit_family_isolation(dataset: EvaluationDataset) -> List[LeakageFinding]:
     """A family must not straddle train and test.
 
@@ -210,6 +270,7 @@ def audit_dataset(dataset: EvaluationDataset) -> LeakageReport:
     findings.extend(audit_feature_keys(dataset.cases))
     findings.extend(audit_split_disjointness(dataset))
     findings.extend(audit_temporal_ordering(dataset))
+    findings.extend(audit_duplicates(dataset))
     findings.extend(audit_family_isolation(dataset))
 
     return LeakageReport(
