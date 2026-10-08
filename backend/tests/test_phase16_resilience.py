@@ -873,6 +873,58 @@ def test_conflicting_evidence_reproduces_the_phase15_finding(db_session):
     assert provider.write_count == 0
 
 
+def test_phase15_auto_threshold_misalignment_is_reproduced():
+    """Phase 15 finding 2: selector/guardrail threshold misalignment made
+    AUTO unreachable on the synthetic corpus. Reproduced as a failure
+    scenario and recorded — NOT fixed.
+
+    Consequence is measurement loss, not a safety loss: the automation rate
+    over the corpus is zero, so the gate never fires there; the gate itself
+    is not dead code (a clean LOW-risk row still resolves to AUTO, asserted
+    below), so the condition is threshold alignment rather than an unsafe or
+    broken authorization path.
+    """
+    from app.evaluation.dataset import build_synthetic_dataset_v1
+    from app.evaluation.policy_eval import PolicyRow, _engine_result
+    from app.evaluation.resolution_eval import evaluate_resolution
+    from app.evaluation.safety import automation_decision_for_case
+    from app.services.guardrail_engine import GuardrailEngine
+
+    dataset = build_synthetic_dataset_v1(per_family=3)
+    report = evaluate_resolution(dataset)
+    engine = GuardrailEngine()
+    by_id = {result.case_id: result for result in report.results}
+    decisions = [
+        automation_decision_for_case(case, by_id[case.case_id], engine)
+        for case in dataset.cases
+    ]
+
+    # The rate is measurable over the whole corpus and it is zero:
+    # confidence peaks near 0.5 (< 0.75) and adjustments above 10 000 paise
+    # are MEDIUM risk, so no case can satisfy the AUTO gate.
+    assert len(decisions) == len(dataset.cases)
+    assert "AUTO" not in decisions
+    assert decisions.count("HUMAN_REVIEW") >= 1  # not a trivial all-UNRESOLVED corpus
+
+    # The AUTO path itself still works on clean input — alignment, not a
+    # dead gate, is what is missing.
+    clean = PolicyRow(
+        row_id="AUTO-REACHABLE-CONTROL",
+        description="clean LOW-risk row proving the AUTO gate is live",
+        confidence=0.99,
+        evidence_coverage=0.95,
+        evidence_consistency=0.95,
+        historical_similarity=0.95,
+        exposure_paise=10_000,
+        deterministic_consistent=True,
+        authorized=True,
+        approval_required=False,
+        dependencies_healthy=True,
+        expected="AUTO",
+    )
+    assert engine.evaluate(_engine_result(clean)).decision.value == "AUTO"
+
+
 def test_missing_evidence_cannot_become_an_approval():
     service = ResolutionExecutionService(provider=staged())
     execution = service.execute(
